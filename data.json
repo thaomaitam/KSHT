@@ -1,0 +1,4354 @@
+{
+  "products": [
+    {
+      "id": "p_1765293174827_ldjgmignd",
+      "name": "Cọ Cán Gỗ TB Cao Cấp",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "image": "https://i.postimg.cc/7ZgRnx05/Picture1.png",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố",
+          "price": 69500
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố",
+          "price": 89500
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố",
+          "price": 101500
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố",
+          "price": 121500
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố",
+          "price": 164500
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố",
+          "price": 184500
+        }
+      ],
+      "isHot": true
+    },
+    {
+      "id": "p_1765293445391_r4f592une",
+      "name": "Cọ Cán Gỗ TB New Cao Cấp",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "image": "https://i.postimg.cc/1RGMdW4W/tbnew.png",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố",
+          "price": 70000
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố",
+          "price": 90000
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố",
+          "price": 102000
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố",
+          "price": 122000
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố",
+          "price": 165000
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố",
+          "price": 185000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765293574947_ox3lqrri3",
+      "name": "Cọ Nhựa MT Loại 1",
+      "category": "PAINT_BRUSH",
+      "description": "Lông Cọ Dài 51mm",
+      "image": "https://i.postimg.cc/xCRJvbTK/mt.png",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố",
+          "price": 52000
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố",
+          "price": 68000
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố",
+          "price": 84000
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố",
+          "price": 100000
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố",
+          "price": 118000
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố",
+          "price": 150000
+        }
+      ],
+      "isHot": true
+    },
+    {
+      "id": "p_1765293709415_2j8rng6cd",
+      "name": "Cọ Lông Thỏ - Cán Gỗ",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "image": "https://i.postimg.cc/Z5SWMcBg/longtho.png",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố",
+          "price": 93000
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố",
+          "price": 117000
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố",
+          "price": 148200
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố",
+          "price": 165000
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố",
+          "price": 218400
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố",
+          "price": 257400
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765293844041_g5132loyj",
+      "name": "Cọ Lông Thỏ - Cán Nhựa",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "image": "https://i.postimg.cc/YqpcDL2G/nhhua.png",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố",
+          "price": 45000
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố",
+          "price": 60000
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố",
+          "price": 82500
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố",
+          "price": 97500
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố",
+          "price": 120000
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố",
+          "price": 135000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765293951420_xg8wsjszf",
+      "name": "Cọ Nhựa Rẻ",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "image": "https://i.postimg.cc/Vvf7gM9N/re.png",
+      "variants": [
+        {
+          "size": "0.5\"",
+          "unit": "Lố",
+          "price": 14500
+        },
+        {
+          "size": "1\"",
+          "unit": "Lố",
+          "price": 16500
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố",
+          "price": 22000
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố",
+          "price": 27000
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố",
+          "price": 32500
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố",
+          "price": 41500
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố",
+          "price": 51000
+        }
+      ],
+      "isHot": true
+    },
+    {
+      "id": "p_1765294065886_2vzp474h2",
+      "name": "Cọ Nâu Việt Mỹ",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "image": "https://i.postimg.cc/t4Wh1JP3/nau.png",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố",
+          "price": 50500
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố",
+          "price": 71500
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố",
+          "price": 88000
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố",
+          "price": 109000
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố",
+          "price": 129000
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố",
+          "price": 165000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765294164948_86zzk86lm",
+      "name": "Cọ Xanh Việt Mỹ",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "image": "https://i.postimg.cc/dVjjHD1Y/xanh.png",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố",
+          "price": 72500
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố",
+          "price": 101500
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố",
+          "price": 124500
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố",
+          "price": 162000
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố",
+          "price": 251000
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố",
+          "price": 319000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765294251844_gk5hvu8q2",
+      "name": "Cọ Hồng Việt Mỹ",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "image": "https://i.postimg.cc/nrKXFjNB/hong.png",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố",
+          "price": 80500
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố",
+          "price": 106500
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố",
+          "price": 141000
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố",
+          "price": 179500
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố",
+          "price": 262000
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố",
+          "price": 328000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765294385818_u7s8d4wyg",
+      "name": "Cọ Thăng Long ",
+      "category": "PAINT_BRUSH",
+      "description": "Loại đắt tiền.\nMua 10 lố tặng 3.5 lố",
+      "image": "https://i.postimg.cc/4d6fVCPD/thanglong.png",
+      "variants": [
+        {
+          "size": "0.5\"",
+          "unit": "Lố",
+          "price": 67200
+        },
+        {
+          "size": "1\"",
+          "unit": "Lố",
+          "price": 82800
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố",
+          "price": 106800
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố",
+          "price": 130800
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố",
+          "price": 190800
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố",
+          "price": 262800
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố",
+          "price": 346800
+        }
+      ],
+      "isHot": true
+    },
+    {
+      "id": "p_1765294472366_f7zeyqz8d",
+      "name": "Cọ Đũa",
+      "category": "ACCESSORY",
+      "description": "Bó 10 cây",
+      "image": "https://i.postimg.cc/hjSwyHgp/codua.png",
+      "variants": [
+        {
+          "size": "CĐ",
+          "unit": "Cây",
+          "price": 4800
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765294576857_ogj4wz5ht",
+      "name": "Cọ Vẻ Vỉ",
+      "category": "ACCESSORY",
+      "description": "Vỉ 12 cây cọ",
+      "image": "https://i.postimg.cc/kMH1KV6D/VI.png",
+      "variants": [
+        {
+          "size": "CVV",
+          "unit": "Vỉ",
+          "price": 24000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765294634808_2bn0mdkkx",
+      "name": "Cọ Bút",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/tgRwDK9M/COBUT.png",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "Cây",
+          "price": 2500
+        },
+        {
+          "size": "Trung",
+          "unit": "Cây",
+          "price": 3000
+        },
+        {
+          "size": "Lớn",
+          "unit": "Cây",
+          "price": 3400
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765294687804_fphfck3gt",
+      "name": "Cọ Bút Bộ",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/XJR2Mm0p/butbo.png",
+      "variants": [
+        {
+          "size": "CBB",
+          "unit": "Vỉ",
+          "price": 35000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765294751374_43onr2kvv",
+      "name": "Lăn Eco Đỏ",
+      "category": "ROLLER",
+      "description": "",
+      "image": "https://i.postimg.cc/tRFkZrjT/ecodo.png",
+      "variants": [
+        {
+          "size": "10cm",
+          "unit": "Cây",
+          "price": 9500
+        },
+        {
+          "size": "15cm",
+          "unit": "Cây",
+          "price": 12500
+        },
+        {
+          "size": "23cm",
+          "unit": "Cây",
+          "price": 16500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765294816804_aab8540rj",
+      "name": "Lăn Eco Xanh",
+      "category": "ROLLER",
+      "description": "",
+      "image": "https://i.postimg.cc/GhqkGVSk/ecoxanh.png",
+      "variants": [
+        {
+          "size": "10cm",
+          "unit": "Cây",
+          "price": 11500
+        },
+        {
+          "size": "15cm",
+          "unit": "Cây",
+          "price": 15000
+        },
+        {
+          "size": "23cm",
+          "unit": "Cây",
+          "price": 18500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765294875978_g8a2w0po1",
+      "name": "Lăn VM ASIA - CÁN ĐỎ",
+      "category": "ROLLER",
+      "description": "",
+      "image": "https://i.postimg.cc/wTG16pGf/asia.png",
+      "variants": [
+        {
+          "size": "23CM",
+          "unit": "Cây",
+          "price": 16900
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765294927129_jjipw5la3",
+      "name": "VM Xám",
+      "category": "ROLLER",
+      "description": "",
+      "image": "https://i.postimg.cc/ZRwTVPky/XAM.png",
+      "variants": [
+        {
+          "size": "23cm",
+          "unit": "Cây",
+          "price": 15300
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765294966893_ewiyda1de",
+      "name": "VM 21",
+      "category": "ROLLER",
+      "description": "",
+      "image": "https://i.postimg.cc/sxBRmt41/21.png",
+      "variants": [
+        {
+          "size": "21cm",
+          "unit": "Cây",
+          "price": 13700
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765295008653_nrbziuw36",
+      "name": "VM 15",
+      "category": "ROLLER",
+      "description": "",
+      "image": "https://i.postimg.cc/q7kVStGp/15.png",
+      "variants": [
+        {
+          "size": "15cm",
+          "unit": "Cây",
+          "price": 11500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765295046836_i88nhuf0g",
+      "name": "VM 11",
+      "category": "ROLLER",
+      "description": "",
+      "image": "https://i.postimg.cc/jShdDYgY/11.png",
+      "variants": [
+        {
+          "size": "11cm",
+          "unit": "Cây",
+          "price": 10000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765295099197_p7fb4ociq",
+      "name": "Lăn Mini VM",
+      "category": "ROLLER",
+      "description": "",
+      "image": "https://i.postimg.cc/9Q1CWtM8/mmm.png",
+      "variants": [
+        {
+          "size": "3cm",
+          "unit": "Cây",
+          "price": 4500
+        },
+        {
+          "size": "6cm",
+          "unit": "Cây",
+          "price": 5100
+        },
+        {
+          "size": "10cm",
+          "unit": "Cây",
+          "price": 6600
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765295183338_yxmcgi6z6",
+      "name": "Lăn Mini VA",
+      "category": "ROLLER",
+      "description": "Miễn Ship Toàn Quốc khi mua từ 2 Thùng",
+      "image": "https://i.postimg.cc/5t6dbhDF/va.png",
+      "variants": [
+        {
+          "size": "3cm",
+          "unit": "Thùng",
+          "price": 390000
+        },
+        {
+          "size": "6cm",
+          "unit": "Thùng",
+          "price": 430000
+        },
+        {
+          "size": "10cm",
+          "unit": "Thùng",
+          "price": 530000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765295379508_r71xm9olg",
+      "name": "Lăn Mini NT",
+      "category": "ROLLER",
+      "description": "Miễn Ship Toàn Quốc Khi Mua Từ 2 Thùng",
+      "image": "https://i.postimg.cc/0NJWtPLB/nt.png",
+      "variants": [
+        {
+          "size": "3cm - Cán Đen ",
+          "unit": "Thùng",
+          "price": 380000
+        },
+        {
+          "size": "6cm - Cán Đen",
+          "unit": "Thùng",
+          "price": 420000
+        },
+        {
+          "size": "10cm - Cán Đen",
+          "unit": "Thùng",
+          "price": 520000
+        },
+        {
+          "size": "3cm - Cán Đỏ",
+          "unit": "Thùng",
+          "price": 400000
+        },
+        {
+          "size": "6cm - Cán Đỏ",
+          "unit": "Thùng",
+          "price": 440000
+        },
+        {
+          "size": "10cm - Cán Đỏ",
+          "unit": "Thùng",
+          "price": 540000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765295467792_97dih3hcy",
+      "name": "Cây Đánh Bột",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/jC0d7xYC/db.png",
+      "variants": [
+        {
+          "size": "Lục Giác",
+          "unit": "Cây",
+          "price": 19500
+        },
+        {
+          "size": "Gài",
+          "unit": "Cây",
+          "price": 21500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765295603353_uvwysgeti",
+      "name": "Thước Hồ Nhôm",
+      "category": "ACCESSORY",
+      "description": "Bó 10 cây - Chiều Dài 2m\n",
+      "image": "https://i.postimg.cc/BnNLdFGx/nhom.png",
+      "variants": [
+        {
+          "size": "400g",
+          "unit": "Cây",
+          "price": 47000
+        },
+        {
+          "size": "500g",
+          "unit": "Cây",
+          "price": 50000
+        },
+        {
+          "size": "600g",
+          "unit": "Cây",
+          "price": 53000
+        },
+        {
+          "size": "700g",
+          "unit": "Cây",
+          "price": 55000
+        },
+        {
+          "size": "800g",
+          "unit": "Cây",
+          "price": 64000
+        },
+        {
+          "size": "900g",
+          "unit": "Cây",
+          "price": 68000
+        },
+        {
+          "size": "1Kg",
+          "unit": "Cây",
+          "price": 71000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765295712131_fci5ekk44",
+      "name": "Thước Hồ Nhôm Đặc Biệt - Vàng",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/bvQMyq3y/dv.png",
+      "variants": [
+        {
+          "size": "900g",
+          "unit": "Cây",
+          "price": 85000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765295768127_lca8g5ulu",
+      "name": "Thước Hồ Nhôm Đặc Biệt - Nâu",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/bvQMyq3y/dv.png",
+      "variants": [
+        {
+          "size": "600g",
+          "unit": "Cây",
+          "price": 63000
+        },
+        {
+          "size": "700g",
+          "unit": "Cây",
+          "price": 65000
+        },
+        {
+          "size": "800g",
+          "unit": "Cây",
+          "price": 68000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765295917773_rhz2q2ulm",
+      "name": "Sơn Win",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/sD709jCt/win.png",
+      "variants": [
+        {
+          "size": "Mã Thường",
+          "unit": "Thùng",
+          "price": 290000
+        },
+        {
+          "size": "Mã Đặc Biệt",
+          "unit": "Thùng",
+          "price": 307000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765296064586_146uy80vy",
+      "name": "Ke Chữ Thập",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/tCqVDkL5/ke.png",
+      "variants": [
+        {
+          "size": "1 li",
+          "unit": "Bịch",
+          "price": 81000
+        },
+        {
+          "size": "1.5 li",
+          "unit": "Bịch",
+          "price": 81000
+        },
+        {
+          "size": "2 li",
+          "unit": "Bịch",
+          "price": 81000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765296138885_apc8xe2hn",
+      "name": "Ke Cân Bằng / Đai Gạch",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/SR3FXD8n/da.png",
+      "variants": [
+        {
+          "size": "1 li",
+          "unit": "Bịch",
+          "price": 48000
+        },
+        {
+          "size": "1.5 li",
+          "unit": "Bịch ",
+          "price": 48000
+        },
+        {
+          "size": "2 li",
+          "unit": "Bịch",
+          "price": 48000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765296191002_ys2gqc0d7",
+      "name": "Nêm Gạch",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/VNDhrKPd/ne.png",
+      "variants": [
+        {
+          "size": "NG",
+          "unit": "Bịch",
+          "price": 36000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765296234468_j2mtbi8lo",
+      "name": "Ke Chữ T Xoay",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/JhYLVrnX/FFA.png",
+      "variants": [
+        {
+          "size": "1.5 li",
+          "unit": "Bịch",
+          "price": 35000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765296278179_srr1c0p1p",
+      "name": "Kích Nâng Gạch",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/8C0qXZKd/kj.png",
+      "variants": [
+        {
+          "size": "KNG",
+          "unit": "Cái",
+          "price": 32000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765296319116_5bewvrjbl",
+      "name": "Kìm Rút Nêm Gạch",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/Y21sQ2H1/sda.png",
+      "variants": [
+        {
+          "size": "KRN",
+          "unit": "Cái",
+          "price": 25000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765296365561_wx1smg7fx",
+      "name": "Gạt Decal",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/XYXL14Tx/Asa.png",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "Cây",
+          "price": 15000
+        },
+        {
+          "size": "Lớn",
+          "unit": "Cây",
+          "price": 20000
+        }
+      ],
+      "isHot": true
+    },
+    {
+      "id": "p_1765296413154_nyu3pm9tp",
+      "name": "Dao Cạo Ron Gạch",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/Gt7Yvshz/adjkahdka.png",
+      "variants": [
+        {
+          "size": "CRG",
+          "unit": "Cây",
+          "price": 23000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765296467996_0ou65ri0x",
+      "name": "Bàn Chà Hồ",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/65F4wK7K/ADA.png",
+      "variants": [
+        {
+          "size": "Vàng",
+          "unit": "Cái",
+          "price": 14500
+        },
+        {
+          "size": "Đen",
+          "unit": "Cái",
+          "price": 12500
+        }
+      ],
+      "isHot": true
+    },
+    {
+      "id": "p_1765300033208_yl2ebhk06",
+      "name": "Bàn Chà PVC",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/xjtCRzL0/pp.png",
+      "variants": [
+        {
+          "size": "PVC ",
+          "unit": "Cây",
+          "price": 23000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300083623_ulgh9xs5m",
+      "name": "Bàn Chà Gỗ CĂM SE",
+      "category": "ACCESSORY",
+      "description": "BÓ 10 CÁI",
+      "image": "https://i.postimg.cc/TPJG3z9q/SS.png",
+      "variants": [
+        {
+          "size": "BCG",
+          "unit": "CÁI",
+          "price": 34000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300133520_3b3d4naqs",
+      "name": "Bàn Chà Mít",
+      "category": "ACCESSORY",
+      "description": "Bó 10 cái",
+      "image": "https://i.postimg.cc/mkc0CJQ7/BB.png",
+      "variants": [
+        {
+          "size": "BCM",
+          "unit": "Cái",
+          "price": 30000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300169264_d2ctnbmm1",
+      "name": "Bàn Chà Sắt",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/jjSKC8k1/asa.png",
+      "variants": [
+        {
+          "size": "BCS",
+          "unit": "Cái",
+          "price": 17000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300245719_egr9n3kbd",
+      "name": "Bay Trét Thép",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/52PTKfns/aa.png",
+      "variants": [
+        {
+          "size": "Không Răng",
+          "unit": "Cái",
+          "price": 17500
+        },
+        {
+          "size": "Có Răng",
+          "unit": "Cái",
+          "price": 21500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300285119_6u6euqka0",
+      "name": "Bàn Chà Nhám",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/5tY7PLXZ/ssss.png",
+      "variants": [
+        {
+          "size": "BCN",
+          "unit": "Cái",
+          "price": 7500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300317482_ghbehu6p2",
+      "name": "Bàn Kéo Hồ",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/qM114jyv/sssss.png",
+      "variants": [
+        {
+          "size": "BKH",
+          "unit": "Cái",
+          "price": 17800
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300362224_thhx4xx24",
+      "name": "Súng Silicon Nhựa ABS",
+      "category": "ACCESSORY",
+      "description": "Thùng 30 Cái",
+      "image": "https://i.postimg.cc/Y233zbXb/sssa.png",
+      "variants": [
+        {
+          "size": "ABS",
+          "unit": "Cái",
+          "price": 8000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300385898_pkcai3kda",
+      "name": "Súng Silicon Rẻ",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/sfwYh1X1/Picture1.png",
+      "variants": [
+        {
+          "size": "Súng",
+          "unit": "Cái",
+          "price": 12300
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300459516_yqofgtzzi",
+      "name": "Súng Inox",
+      "category": "ACCESSORY",
+      "description": "Có Dao Cắt Keo",
+      "image": "https://i.postimg.cc/KjH3skk5/Picture1.png",
+      "variants": [
+        {
+          "size": "Súng",
+          "unit": "Cái",
+          "price": 31000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300504849_p3cp1leci",
+      "name": "Súng Silicon Loại Tốt",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/MGqH5b30/sssa.png",
+      "variants": [
+        {
+          "size": "Súng",
+          "unit": "Cái",
+          "price": 38000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300548955_crgemh2f7",
+      "name": "Súng Bắn Keo 2 Thành Phần",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/W3t2Y9GP/sssa.png",
+      "variants": [
+        {
+          "size": "Súng",
+          "unit": "Cái",
+          "price": 97000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300617151_nsqlkjo0h",
+      "name": "Keo Ron 2 Thành Phần TMAX",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/j5GLHVp5/Picture1.png",
+      "variants": [
+        {
+          "size": "Tmax",
+          "unit": "Bộ",
+          "price": 98000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300657184_d77qdctjv",
+      "name": "Keo Ron 2 Thành Phần QMAX",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/8zPPrP7h/Picture1.png",
+      "variants": [
+        {
+          "size": "Qmax",
+          "unit": "Bộ",
+          "price": 90000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300735272_73u9ivw70",
+      "name": "Keo Chà Ron Cá Sấu USA",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/dQjYmcPZ/Picture1.png",
+      "variants": [
+        {
+          "size": "CÁ SẤU",
+          "unit": "Thùng",
+          "price": 299000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300826960_agt2vy5ij",
+      "name": "Tắc Ke Nhựa",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/gJp7nr04/tk.png",
+      "variants": [
+        {
+          "size": "3P",
+          "unit": "Bịch",
+          "price": 44000
+        },
+        {
+          "size": "4P",
+          "unit": "Bịch",
+          "price": 60000
+        },
+        {
+          "size": "5P",
+          "unit": "Bịch",
+          "price": 77000
+        },
+        {
+          "size": "6P",
+          "unit": "Bịch",
+          "price": 110000
+        },
+        {
+          "size": "7P",
+          "unit": "Bịch",
+          "price": 143000
+        },
+        {
+          "size": "8P",
+          "unit": "Bịch",
+          "price": 205000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300894904_hm2lwja3h",
+      "name": "Lược Rác Inox 201 - 4zem",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/kGzFRhcf/lr.png",
+      "variants": [
+        {
+          "size": "#60",
+          "unit": "Cái",
+          "price": 35000
+        },
+        {
+          "size": "#90",
+          "unit": "Cái",
+          "price": 38000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765300949216_hos92bswb",
+      "name": "Lược Rác Inox Tự Động - Chống Hôi",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/jjxN2bTK/td.png",
+      "variants": [
+        {
+          "size": "TĐ",
+          "unit": "Cái",
+          "price": 70000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765301011796_o7523t8ss",
+      "name": "Lược Rác Inox 304 - 1.6li",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/gjZgYZFb/gggg.png",
+      "variants": [
+        {
+          "size": "#60",
+          "unit": "Cái",
+          "price": 55000
+        },
+        {
+          "size": "#90",
+          "unit": "Cái",
+          "price": 60000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765301155989_tc9mdkmcg",
+      "name": "Đế Gù Nhựa",
+      "category": "ACCESSORY",
+      "description": "Dán Nhám ",
+      "image": "https://i.postimg.cc/Dw2PNDzR/deg.png",
+      "variants": [
+        {
+          "size": "1T Lỗ Nhỏ",
+          "unit": "Cái",
+          "price": 4100
+        },
+        {
+          "size": "1T Lỗ Lớn",
+          "unit": "Cấi",
+          "price": 4700
+        },
+        {
+          "size": "1T2 Lỗ Nhỏ",
+          "unit": "Cái",
+          "price": 7000
+        },
+        {
+          "size": "1T2 Lỗ Lớn",
+          "unit": "Cái",
+          "price": 7300
+        },
+        {
+          "size": "1T5 Lỗ Lớn ",
+          "unit": "Cái",
+          "price": 15300
+        },
+        {
+          "size": "1T8 Lỗ Nhỏ",
+          "unit": "Cái",
+          "price": 25300
+        },
+        {
+          "size": "1T8 Lỗ Lớn",
+          "unit": "Cái",
+          "price": 25500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765301236239_xystigd4k",
+      "name": "Đế Gù Nhôm",
+      "category": "ACCESSORY",
+      "description": "Dán Nhám",
+      "image": "https://i.postimg.cc/PqDJQfjp/gaa.png",
+      "variants": [
+        {
+          "size": "1T Lỗ Nhỏ",
+          "unit": "Cái",
+          "price": 14000
+        },
+        {
+          "size": "1T Lỗ Lớn",
+          "unit": "Cái",
+          "price": 14000
+        },
+        {
+          "size": "1T2 Lỗ Nhỏ",
+          "unit": "Cái",
+          "price": 27000
+        },
+        {
+          "size": "1T2 Lỗ Lớn",
+          "unit": "Cái",
+          "price": 27000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765328847899_bpjp9z0r8",
+      "name": "Thước Thuỷ Bosi",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/660Jj2zR/fhfgh.png",
+      "variants": [
+        {
+          "size": "2T",
+          "unit": "Cây",
+          "price": 18000
+        },
+        {
+          "size": "3T",
+          "unit": "Cây",
+          "price": 32000
+        },
+        {
+          "size": "4T",
+          "unit": "Cây",
+          "price": 37000
+        },
+        {
+          "size": "5T",
+          "unit": "Cây",
+          "price": 41000
+        },
+        {
+          "size": "6T",
+          "unit": "Cây",
+          "price": 45000
+        },
+        {
+          "size": "8T",
+          "unit": "Cây",
+          "price": 47000
+        },
+        {
+          "size": "10T",
+          "unit": "Cây",
+          "price": 62000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765328964285_u9y2p42t1",
+      "name": "Lưỡi Cưa Top",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/tTqDYT6m/JHHHH.png",
+      "variants": [
+        {
+          "size": "Loại Rẻ (10 Cái/H)",
+          "unit": "Cây",
+          "price": 21000
+        },
+        {
+          "size": "Loại Xịn (15 Cái/H)",
+          "unit": "Cây",
+          "price": 87000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765329060425_b6ttopka5",
+      "name": "Cưa TOP",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/ZY9s3W2Z/THFH.png",
+      "variants": [
+        {
+          "size": "CT",
+          "unit": "Cây",
+          "price": 35000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765329109325_4pifapk7u",
+      "name": "Cưa Thạch Cao GF",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/4yt109RV/GKH.png",
+      "variants": [
+        {
+          "size": "Pcs",
+          "unit": "Cây",
+          "price": 26400
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765329154454_89e0ro13n",
+      "name": "Cưa Cán Gỗ 270mm",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/k5pFXcnn/asda.png",
+      "variants": [
+        {
+          "size": "Pcs",
+          "unit": "Cây",
+          "price": 20400
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765329210823_ub79stjgx",
+      "name": "Lưỡi Cưa Tiệp 2M",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/Wpr6TgxL/yyyy.png",
+      "variants": [
+        {
+          "size": "LCT2M",
+          "unit": "HỘP",
+          "price": 150000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765329284495_poz8qmeth",
+      "name": "Lưỡi Cưa Xanh 1M",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/rySWvctR/GGGGG.png",
+      "variants": [
+        {
+          "size": "LCX",
+          "unit": "HỘP",
+          "price": 95000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765329328381_p3tnws5gf",
+      "name": "Sủi Nhựa",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/9MyR5tzj/SN.png",
+      "variants": [
+        {
+          "size": "SN",
+          "unit": "Cây",
+          "price": 7500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765329468319_wk8w7k44t",
+      "name": "Sủi Nano",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/FHfKXgnG/SNN.png",
+      "variants": [
+        {
+          "size": "Ngắn",
+          "unit": "Cây",
+          "price": 11000
+        },
+        {
+          "size": "Dài",
+          "unit": "Cây",
+          "price": 12000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765329524547_dwkwr8kod",
+      "name": "Sủi Trương Gia",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/LXmR5zvW/stg.png",
+      "variants": [
+        {
+          "size": "Ngắn",
+          "unit": "Cây",
+          "price": 10500
+        },
+        {
+          "size": "Dài",
+          "unit": "Cây",
+          "price": 11500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765329570808_mmkzq89u9",
+      "name": "Sủi MT",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/VvT3qMB6/suimt.png",
+      "variants": [
+        {
+          "size": "Ngắn",
+          "unit": "Cây",
+          "price": 12000
+        },
+        {
+          "size": "Dài",
+          "unit": "Cây",
+          "price": 13000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765329667208_iarxlno0l",
+      "name": "Sủi INOX GF",
+      "category": "ACCESSORY",
+      "description": "20 Cái/H",
+      "image": "https://i.postimg.cc/FHbBRwqS/sin.png",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "HỘP",
+          "price": 216000
+        },
+        {
+          "size": "Trung",
+          "unit": "HỘP",
+          "price": 228000
+        },
+        {
+          "size": "Lớn",
+          "unit": "HỘP",
+          "price": 240000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765332679078_q8nya5r0g",
+      "name": "Sủi Gỗ Thường",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cây",
+      "image": "https://i.postimg.cc/zvQTqwTm/gggga.png",
+      "variants": [
+        {
+          "size": "Nhỏ ",
+          "unit": "Cây",
+          "price": 4800
+        },
+        {
+          "size": "Trung ",
+          "unit": "Cây",
+          "price": 5100
+        },
+        {
+          "size": "Lớn",
+          "unit": "Cây",
+          "price": 5400
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765332725257_wantntsqh",
+      "name": "Sủi Gỗ Tốt",
+      "category": "ACCESSORY",
+      "description": "Bó 10 cây",
+      "image": "https://i.postimg.cc/zvQTqwTm/gggga.png",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "Cây",
+          "price": 7000
+        },
+        {
+          "size": "Trung",
+          "unit": "Cây",
+          "price": 8000
+        },
+        {
+          "size": "Lớn",
+          "unit": "Cây",
+          "price": 9000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765332887331_tzj3kmyvz",
+      "name": "Đục Ốm (Dẹp/Nhọn)",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cây",
+      "image": "https://i.postimg.cc/MG4cMZvY/dc.png",
+      "variants": [
+        {
+          "size": "Nhọn - 2T",
+          "unit": "Cây",
+          "price": 8500
+        },
+        {
+          "size": "Nhọn - 2T5",
+          "unit": "Cây",
+          "price": 9500
+        },
+        {
+          "size": "Nhọn - 3T",
+          "unit": "Cây",
+          "price": 10500
+        },
+        {
+          "size": "Dẹp - 2T",
+          "unit": "Cây",
+          "price": 8500
+        },
+        {
+          "size": "Dẹp - 2T5",
+          "unit": "Cây",
+          "price": 9500
+        },
+        {
+          "size": "Dẹp - 3T",
+          "unit": "Cây",
+          "price": 10500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765332985036_56zku7ome",
+      "name": "Đục Mập (Dẹp/Nhọn)",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/MG4cMZvY/dc.png",
+      "variants": [
+        {
+          "size": "Nhọn - 2T",
+          "unit": "Cây",
+          "price": 11000
+        },
+        {
+          "size": "Nhọn - 2T5",
+          "unit": "Cây",
+          "price": 12000
+        },
+        {
+          "size": "Nhọn - 3T",
+          "unit": "Cây",
+          "price": 13000
+        },
+        {
+          "size": "Dẹp - 2T",
+          "unit": "Cây",
+          "price": 11000
+        },
+        {
+          "size": "Dẹp - 2T5",
+          "unit": "Cây",
+          "price": 12000
+        },
+        {
+          "size": "Dẹp - 3T",
+          "unit": "Cây",
+          "price": 13000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333052757_ezdur74zg",
+      "name": "Càng Cua",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cây",
+      "image": "https://i.postimg.cc/T3gNHhXb/CCA.png",
+      "variants": [
+        {
+          "size": "6-8",
+          "unit": "Cây",
+          "price": 10000
+        },
+        {
+          "size": "8-10",
+          "unit": "Cây",
+          "price": 16000
+        },
+        {
+          "size": "10-12",
+          "unit": "Cây",
+          "price": 17000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333143733_ks2rnp9rj",
+      "name": "Miếng Trét Thép",
+      "category": "ACCESSORY",
+      "description": "Bịch 10 Cái",
+      "image": "https://i.postimg.cc/qq6xhZJv/mna.png",
+      "variants": [
+        {
+          "size": "Số 1",
+          "unit": "Cái",
+          "price": 7500
+        },
+        {
+          "size": "Số 2",
+          "unit": "Cái",
+          "price": 9500
+        },
+        {
+          "size": "Số 3",
+          "unit": "Cái",
+          "price": 130000
+        },
+        {
+          "size": "Số 4",
+          "unit": "Cái",
+          "price": 160000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333274689_8vgqq51bp",
+      "name": "Miếng Trét Nhựa",
+      "category": "ACCESSORY",
+      "description": "Hộp 100 Cái",
+      "image": "https://i.postimg.cc/XJdwnBQ8/mtn.png",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "Hộp",
+          "price": 120000
+        },
+        {
+          "size": "Lớn",
+          "unit": "Hộp",
+          "price": 250000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333335972_8g1ny290h",
+      "name": "Bàn Chải Gỗ",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/Nffrznq9/bcv.png",
+      "variants": [
+        {
+          "size": "5 Hàng",
+          "unit": "Cây",
+          "price": 6500
+        },
+        {
+          "size": "7 Hàng",
+          "unit": "Cây",
+          "price": 7500
+        },
+        {
+          "size": "Vuông",
+          "unit": "Cây",
+          "price": 6500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333409734_ct9nimpmr",
+      "name": "Bàn Chải Gỗ Thau",
+      "category": "ACCESSORY",
+      "description": "Hộp 12 Cái",
+      "image": "https://i.postimg.cc/Df5SLcJ7/bcta.png",
+      "variants": [
+        {
+          "size": "5 Hàng",
+          "unit": "Hộp",
+          "price": 210000
+        },
+        {
+          "size": "7 Hàng",
+          "unit": "Hộp",
+          "price": 280000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333462143_1nl8zmt1r",
+      "name": "Bàn Chải Nhựa Đen",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/jdLSNYYH/nnb.png",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "Cây",
+          "price": 10500
+        },
+        {
+          "size": "Bầu",
+          "unit": "Cây",
+          "price": 15000
+        },
+        {
+          "size": "Vuông",
+          "unit": "Cây",
+          "price": 18000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333500293_p2h3clpv2",
+      "name": "Bàn Chải Cán Đỏ",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/zBxqb0tz/fff.png",
+      "variants": [
+        {
+          "size": "BCĐ",
+          "unit": "Cây",
+          "price": 5500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333538831_rj8qtn7of",
+      "name": "Dao Rọc Giấy Thường",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/PrgTwL4Q/DAC.png",
+      "variants": [
+        {
+          "size": "DRG",
+          "unit": "Cây",
+          "price": 5500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333574499_e148yjq4b",
+      "name": "Dao Rọc Giấy CC",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/d0nb4D8B/DVC.png",
+      "variants": [
+        {
+          "size": "DRG",
+          "unit": "Cây",
+          "price": 8800
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333625760_6usknpbyx",
+      "name": "Lưỡi Dao Sư Tử",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/RVKVGQqK/FFFA.png",
+      "variants": [
+        {
+          "size": "ST",
+          "unit": "Hộp",
+          "price": 105000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333682644_u19k7zrou",
+      "name": "Đá Mài TQ",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/wTXgDqbf/dm.png",
+      "variants": [
+        {
+          "size": "ĐM",
+          "unit": "Viên",
+          "price": 10500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333779382_aqvwnktbw",
+      "name": "Đá Mài Mọi ",
+      "category": "ACCESSORY",
+      "description": "Hộp 10 Viên",
+      "image": "https://i.postimg.cc/v89sd8yJ/fffa.png",
+      "variants": [
+        {
+          "size": "Số 1",
+          "unit": "Viên",
+          "price": 19000
+        },
+        {
+          "size": "Số 2",
+          "unit": "Viên ",
+          "price": 24000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765333837241_mgsin0kvn",
+      "name": "Đá Mài KODO",
+      "category": "ACCESSORY",
+      "description": "Hộp 10 Viên",
+      "image": "https://i.postimg.cc/y8p5Z2BQ/bvva.png",
+      "variants": [
+        {
+          "size": "KODO",
+          "unit": "Viên",
+          "price": 33000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765334034136_8i78kiwx7",
+      "name": "Bay Tốt Có In Chữ",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cái",
+      "image": "https://i.postimg.cc/vBttW69S/bba.png",
+      "variants": [
+        {
+          "size": "Bầu Nhọn",
+          "unit": "Bó",
+          "price": 290000
+        },
+        {
+          "size": "Lá Đề",
+          "unit": "Bó",
+          "price": 290000
+        },
+        {
+          "size": "Vuông Răng",
+          "unit": "Bó",
+          "price": 290000
+        },
+        {
+          "size": "Vuông Không Răng",
+          "unit": "Bó",
+          "price": 290000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765334158372_bv91pvvek",
+      "name": "Bay Thường Không In Chữ",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cây",
+      "image": "https://i.postimg.cc/WbBq11qX/bta.png",
+      "variants": [
+        {
+          "size": "Bầu Nhọn",
+          "unit": "Bó",
+          "price": 260000
+        },
+        {
+          "size": "Lá Đề",
+          "unit": "Bó",
+          "price": 260000
+        },
+        {
+          "size": "Răng Cưa",
+          "unit": "Bó",
+          "price": 260000
+        },
+        {
+          "size": "Vuông",
+          "unit": "Bó",
+          "price": 260000
+        },
+        {
+          "size": "Bay Tô",
+          "unit": "Bó",
+          "price": 260000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765334424533_9e59b7ahp",
+      "name": "Vòng Miệng Yeti",
+      "category": "ACCESSORY",
+      "description": "Hộp 10 Cái",
+      "image": "https://i.postimg.cc/2jBZRWV5/vm.png",
+      "variants": [
+        {
+          "size": "#6",
+          "unit": "Cây",
+          "price": 6980
+        },
+        {
+          "size": "#7",
+          "unit": "Cây",
+          "price": 7420
+        },
+        {
+          "size": "#8",
+          "unit": "Cây",
+          "price": 7530
+        },
+        {
+          "size": "#9",
+          "unit": "Cây",
+          "price": 8500
+        },
+        {
+          "size": "#10",
+          "unit": "Cây",
+          "price": 9050
+        },
+        {
+          "size": "#11",
+          "unit": "Cây",
+          "price": 10100
+        },
+        {
+          "size": "#12",
+          "unit": "Cây",
+          "price": 10700
+        },
+        {
+          "size": "#13",
+          "unit": "Cây",
+          "price": 11000
+        },
+        {
+          "size": "#14",
+          "unit": "Cây",
+          "price": 11770
+        },
+        {
+          "size": "#15",
+          "unit": "Cây",
+          "price": 12960
+        },
+        {
+          "size": "#16",
+          "unit": "Cây",
+          "price": 14050
+        },
+        {
+          "size": "#17",
+          "unit": "Cây",
+          "price": 15800
+        },
+        {
+          "size": "#18",
+          "unit": "Cây",
+          "price": 17200
+        },
+        {
+          "size": "#19",
+          "unit": "Cây",
+          "price": 18070
+        },
+        {
+          "size": "#20",
+          "unit": "Cây",
+          "price": 23180
+        },
+        {
+          "size": "#21",
+          "unit": "Cây",
+          "price": 22700
+        },
+        {
+          "size": "#22",
+          "unit": "Cây",
+          "price": 25140
+        },
+        {
+          "size": "#23",
+          "unit": "Cây",
+          "price": 27500
+        },
+        {
+          "size": "#24",
+          "unit": "Cây",
+          "price": 28500
+        },
+        {
+          "size": "#26",
+          "unit": "Cây",
+          "price": 41500
+        },
+        {
+          "size": "#30",
+          "unit": "Cây",
+          "price": 46000
+        },
+        {
+          "size": "#32",
+          "unit": "Cây",
+          "price": 53420
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765334552619_xvwtetymx",
+      "name": "Bay CD",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cái",
+      "image": "https://i.postimg.cc/mrxnjCzw/bcd.png",
+      "variants": [
+        {
+          "size": "4P",
+          "unit": "Bó",
+          "price": 55000
+        },
+        {
+          "size": "6P",
+          "unit": "Bó",
+          "price": 60000
+        },
+        {
+          "size": "8P",
+          "unit": "Bó",
+          "price": 78000
+        },
+        {
+          "size": "10P",
+          "unit": "Bó",
+          "price": 86000
+        },
+        {
+          "size": "Vuông",
+          "unit": "Bó",
+          "price": 110000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765334610025_jn4evj2p3",
+      "name": "Búa Cao Su",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/ZqVrnhSN/bcs.png",
+      "variants": [
+        {
+          "size": "Trung",
+          "unit": "Cây",
+          "price": 9500
+        },
+        {
+          "size": "Lớn",
+          "unit": "Cây",
+          "price": 13500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765334695940_jz8jpyy7t",
+      "name": "Búa Cao Su Cán Sắt",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/J0JxGdx5/bcsa.png",
+      "variants": [
+        {
+          "size": "Nhỏ Ø25",
+          "unit": "Cây",
+          "price": 22500
+        },
+        {
+          "size": "Trung Ø30",
+          "unit": "Cây",
+          "price": 25000
+        },
+        {
+          "size": "Lớn Ø35",
+          "unit": "Cây",
+          "price": 31000
+        },
+        {
+          "size": "Đại Ø40",
+          "unit": "Cây",
+          "price": 39000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765334815510_aax78x2jv",
+      "name": "Thước GF 2Mặt",
+      "category": "ACCESSORY",
+      "description": "Hộp 12 Cái",
+      "image": "https://i.postimg.cc/GhKYqC4H/tgf.png",
+      "variants": [
+        {
+          "size": "5m",
+          "unit": "Cây",
+          "price": 19000
+        },
+        {
+          "size": "7m5",
+          "unit": "Cây",
+          "price": 26000
+        },
+        {
+          "size": "10m",
+          "unit": "Cây",
+          "price": 34000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765334914437_4bnzwun29",
+      "name": "Eke Thanh Khiết Thường",
+      "category": "ACCESSORY",
+      "description": "XÂU 10 CẶP",
+      "image": "https://i.postimg.cc/sDbyFBGQ/eke.png",
+      "variants": [
+        {
+          "size": "2T",
+          "unit": "CẶP",
+          "price": 10500
+        },
+        {
+          "size": "2T5",
+          "unit": "CẶP",
+          "price": 13100
+        },
+        {
+          "size": "3T",
+          "unit": "CẶP",
+          "price": 15500
+        },
+        {
+          "size": "3T5",
+          "unit": "CẶP",
+          "price": 18200
+        },
+        {
+          "size": "4T",
+          "unit": "CẶP",
+          "price": 20200
+        },
+        {
+          "size": "4T5",
+          "unit": "CẶP",
+          "price": 22500
+        },
+        {
+          "size": "5T",
+          "unit": "CẶP",
+          "price": 25100
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765335037755_qqs8wuesy",
+      "name": "Eke Thanh Khiết Dày",
+      "category": "ACCESSORY",
+      "description": "XÂU 10 CẶP",
+      "image": "https://i.postimg.cc/cHzkK3SK/EKI.png",
+      "variants": [
+        {
+          "size": "2T",
+          "unit": "CẶP",
+          "price": 21000
+        },
+        {
+          "size": "2T5",
+          "unit": "CẶP",
+          "price": 23000
+        },
+        {
+          "size": "3T",
+          "unit": "CẶP",
+          "price": 25000
+        },
+        {
+          "size": "3T5",
+          "unit": "CẶP",
+          "price": 27000
+        },
+        {
+          "size": "4T",
+          "unit": "CẶP",
+          "price": 29000
+        },
+        {
+          "size": "4T5",
+          "unit": "CẶP",
+          "price": 31000
+        },
+        {
+          "size": "5T ",
+          "unit": "CẶP",
+          "price": 33000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765335140930_qfw78emia",
+      "name": "Eke Máy Lạnh",
+      "category": "ACCESSORY",
+      "description": "Xâu 10 Cặp - CÓ ỐC\n",
+      "image": "https://i.postimg.cc/KYHCTw73/EEEA.png",
+      "variants": [
+        {
+          "size": "4T",
+          "unit": "CẶP",
+          "price": 55000
+        },
+        {
+          "size": "4T5",
+          "unit": "CẶP",
+          "price": 65000
+        },
+        {
+          "size": "5T",
+          "unit": "CẶP",
+          "price": 85000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765335255613_1pp8sup8z",
+      "name": "Móc Quần Áo",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cái",
+      "image": "https://i.postimg.cc/J7cPVSyn/MOC.png",
+      "variants": [
+        {
+          "size": "6 Móc",
+          "unit": "Cây",
+          "price": 16000
+        },
+        {
+          "size": "7 Móc",
+          "unit": "Cây",
+          "price": 20000
+        },
+        {
+          "size": "8 Móc",
+          "unit": "Cây",
+          "price": 22000
+        },
+        {
+          "size": "9 Móc",
+          "unit": "Cây",
+          "price": 25000
+        },
+        {
+          "size": "10 Móc",
+          "unit": "Cây",
+          "price": 28000
+        }
+      ],
+      "isHot": true
+    },
+    {
+      "id": "p_1765335612135_85p6ujwxy",
+      "name": "Chén Cước Tốt",
+      "category": "ACCESSORY",
+      "description": "Hộp 2 Cái",
+      "image": "https://i.postimg.cc/2SPK8hCj/ccy.png",
+      "variants": [
+        {
+          "size": "CCT",
+          "unit": "HỘP",
+          "price": 11000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765335698444_ailwz0ehs",
+      "name": "Cá 100g",
+      "category": "DAY_DU",
+      "description": "Vỉ 5 Cuộn",
+      "image": "https://i.postimg.cc/PJ9mzb3q/100.png",
+      "variants": [
+        {
+          "size": "100g",
+          "unit": "Vỉ",
+          "price": 18000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765335741846_ff3irktpu",
+      "name": "Cá 200g",
+      "category": "DAY_DU",
+      "description": "Vỉ 5 Cuộn",
+      "image": "https://i.postimg.cc/dQpdfB6V/200.png",
+      "variants": [
+        {
+          "size": "200g",
+          "unit": "Vỉ",
+          "price": 29000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765335780377_15ilitt9d",
+      "name": "Cá 500g",
+      "category": "DAY_DU",
+      "description": "Vỉ 5 Cuộn",
+      "image": "https://i.postimg.cc/sxhBzkmF/500.png",
+      "variants": [
+        {
+          "size": "500g",
+          "unit": "Vỉ",
+          "price": 90000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765335817651_lyhkh2442",
+      "name": "Chỉ May Bao",
+      "category": "DAY_DU",
+      "description": "",
+      "image": "https://i.postimg.cc/8CpZZSBJ/cmb.png",
+      "variants": [
+        {
+          "size": "CMB",
+          "unit": "Cuộn",
+          "price": 10000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765335916200_ic9jqutl9",
+      "name": "Dù Võng",
+      "category": "DAY_DU",
+      "description": "",
+      "image": "https://i.postimg.cc/fTY5ZL8j/dva.png",
+      "variants": [
+        {
+          "size": "1Kg - Bảng 1.5cm",
+          "unit": "Cuộn",
+          "price": 43250
+        },
+        {
+          "size": "1.5Kg - Bảng 2cm",
+          "unit": "Cuộn",
+          "price": 68800
+        },
+        {
+          "size": "2Kg -Bảng 2.5cm",
+          "unit": "Cuộn",
+          "price": 94800
+        }
+      ],
+      "isHot": true
+    },
+    {
+      "id": "p_1765335965814_2q4o1rrxw",
+      "name": "Thừng 8Li",
+      "category": "DAY_DU",
+      "description": "",
+      "image": "https://i.postimg.cc/htymqRR2/8li.png",
+      "variants": [
+        {
+          "size": "Xanh 8li",
+          "unit": "Cuộn",
+          "price": 34500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765336027619_pscrtz29v",
+      "name": "Tròn Mè",
+      "category": "DAY_DU",
+      "description": "",
+      "image": "https://i.postimg.cc/vmx4F1zF/mnv-A.png",
+      "variants": [
+        {
+          "size": "Mè Nhỏ - 24m",
+          "unit": "Cuộn",
+          "price": 15000
+        },
+        {
+          "size": "Mè Lớn - 21m",
+          "unit": "Cuộn",
+          "price": 25000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765336096207_icx749ze7",
+      "name": "Tròn Xanh",
+      "category": "DAY_DU",
+      "description": "",
+      "image": "https://i.postimg.cc/d1Ktb53R/rffff.png",
+      "variants": [
+        {
+          "size": "Nhỏ - 21m",
+          "unit": "Cuộn ",
+          "price": 17000
+        },
+        {
+          "size": "Lớn - 18m",
+          "unit": "Cuộn",
+          "price": 27000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765336179743_wo9f5c7w5",
+      "name": "Dây Rít",
+      "category": "DAY_DU",
+      "description": "Dây rít từ 4li->30li",
+      "image": "https://i.postimg.cc/43pXQpPz/drta.png",
+      "variants": [
+        {
+          "size": "Dưới 6li",
+          "unit": "Cuộn",
+          "price": 110000
+        },
+        {
+          "size": "Trên 6li",
+          "unit": "Cuộn",
+          "price": 90000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765336242024_0xj0hrsh3",
+      "name": "Nilong - 7Màu",
+      "category": "DAY_DU",
+      "description": "10 Cuộn 1 Cây",
+      "image": "https://i.postimg.cc/G2qwXKyD/nl.png",
+      "variants": [
+        {
+          "size": "NL 25g",
+          "unit": "Cây",
+          "price": 21000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765336320226_dmy7y3zhy",
+      "name": "Nilong - Cây",
+      "category": "DAY_DU",
+      "description": "10 Cuộn 1 Cây",
+      "image": "https://i.postimg.cc/26HMQ5sk/gggd.png",
+      "variants": [
+        {
+          "size": "NL",
+          "unit": "Cây",
+          "price": 179000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765336574031_3nys71zar",
+      "name": "Bành Cam",
+      "category": "DAY_DU",
+      "description": "Số kí nhân số tiền ra giá cuộn",
+      "image": "https://i.postimg.cc/VsV25d9x/BCM.png",
+      "variants": [
+        {
+          "size": "3P - 7.5KG (100m)",
+          "unit": "KG",
+          "price": 46000
+        },
+        {
+          "size": "4P - 10KG (100m)",
+          "unit": "KG",
+          "price": 46000
+        },
+        {
+          "size": "5P - 12.5KG (100m)",
+          "unit": "KG",
+          "price": 46000
+        },
+        {
+          "size": "6P - 15KG (100m)",
+          "unit": "KG",
+          "price": 46000
+        },
+        {
+          "size": "3P - 15KG (200m)",
+          "unit": "KG",
+          "price": 46000
+        },
+        {
+          "size": "4P - 20KG (200m)",
+          "unit": "KG",
+          "price": 46000
+        },
+        {
+          "size": "5P - 25KG 200m)",
+          "unit": "KG",
+          "price": 46000
+        },
+        {
+          "size": "6P -30KG (200m)",
+          "unit": "KG",
+          "price": 46000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765336894681_al9ocluvv",
+      "name": "Dây Bô Hải Âu",
+      "category": "DAY_DU",
+      "description": "Số kí tương đối, cân trọng lượng thực tế tính tiền",
+      "image": "https://i.postimg.cc/fyNC0QLf/DBHD.png",
+      "variants": [
+        {
+          "size": "3li - 1KG",
+          "unit": "KG",
+          "price": 66000
+        },
+        {
+          "size": "4li - 2KG",
+          "unit": "KG",
+          "price": 66000
+        },
+        {
+          "size": "5li - 3KG",
+          "unit": "KG",
+          "price": 66000
+        },
+        {
+          "size": "6li - 4KG",
+          "unit": "KG",
+          "price": 63000
+        },
+        {
+          "size": "7li - 6.3KG",
+          "unit": "KG",
+          "price": 63000
+        },
+        {
+          "size": "8li - 8KG",
+          "unit": "KG",
+          "price": 63000
+        },
+        {
+          "size": "10li - 12.3KG",
+          "unit": "KG",
+          "price": 63000
+        },
+        {
+          "size": "12li - 18KG",
+          "unit": "KG",
+          "price": 63000
+        },
+        {
+          "size": "18li - 40KG",
+          "unit": "KG",
+          "price": 63000
+        },
+        {
+          "size": "20li - 42KG",
+          "unit": "KG",
+          "price": 63000
+        },
+        {
+          "size": "22li - 52KG",
+          "unit": "KG",
+          "price": 63000
+        },
+        {
+          "size": "24li -62KG",
+          "unit": "KG",
+          "price": 63000
+        },
+        {
+          "size": "26li - 72KG",
+          "unit": "KG",
+          "price": 63000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765336973137_knzq9n2ug",
+      "name": "Dây Ruột Gà Trắng",
+      "category": "DAY_DU",
+      "description": "100M",
+      "image": "https://i.postimg.cc/XJz3VxYb/rgv.png",
+      "variants": [
+        {
+          "size": "RGT",
+          "unit": "Cuộn",
+          "price": 260000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765337017988_af5mahz8y",
+      "name": "Dây Ruột Gà Vàng",
+      "category": "DAY_DU",
+      "description": "100M",
+      "image": "https://i.postimg.cc/tgRYJSp7/ffaa.png",
+      "variants": [
+        {
+          "size": "RGV",
+          "unit": "Cuộn",
+          "price": 298000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765337096909_dbe4uhfut",
+      "name": "Dây Ràng Dẹp",
+      "category": "DAY_DU",
+      "description": "50 SỢI / BÓ",
+      "image": "https://i.postimg.cc/QMnxtjfW/DRD.png",
+      "variants": [
+        {
+          "size": "DRD",
+          "unit": "Bó",
+          "price": 490000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765337145589_xrs4iqmww",
+      "name": "Dây Ràng Sọc Rẻ",
+      "category": "DAY_DU",
+      "description": "50 SỢI/BÓ",
+      "image": "https://i.postimg.cc/90PhG2Bf/drda.png",
+      "variants": [
+        {
+          "size": "DRDR",
+          "unit": "Bó",
+          "price": 215000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765337206653_1aj9jwc0z",
+      "name": "Dây Ràng Sọc Tốt - 1.6m",
+      "category": "DAY_DU",
+      "description": "50 Sợi/Bó",
+      "image": "https://i.postimg.cc/vBfFsykH/kkk.png",
+      "variants": [
+        {
+          "size": "DRST",
+          "unit": "Bó",
+          "price": 290000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765337268880_ahgqoweyc",
+      "name": "Dây Ràng Dẹp Thái Thường 1.6m",
+      "category": "DAY_DU",
+      "description": "50 Sợi/Bó",
+      "image": "https://i.postimg.cc/G3xVJXCC/dgadf.png",
+      "variants": [
+        {
+          "size": "DRDT",
+          "unit": "Bó",
+          "price": 390000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765337322590_4d7ra1a0k",
+      "name": "Dây Ràng Dẹp Thái Xịn 1.8m",
+      "category": "DAY_DU",
+      "description": "50 Sợi/Bó",
+      "image": "https://i.postimg.cc/L60yN704/adasda.png",
+      "variants": [
+        {
+          "size": "DRDT",
+          "unit": "Bó",
+          "price": 590000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765337440075_8jz9m5wzc",
+      "name": "Nhám JB",
+      "category": "NHAM",
+      "description": "Nhám cuộn JB5\n(A60, 80, 100,\n120, 150, 180, 240, 320,\n400, 600, 800, ...)",
+      "image": "https://i.postimg.cc/0j4p0g5L/adasd.png",
+      "variants": [
+        {
+          "size": "10CM - 40m",
+          "unit": "Cuộn",
+          "price": 140000
+        },
+        {
+          "size": "15CM - 45m",
+          "unit": "Cuộn",
+          "price": 260000
+        },
+        {
+          "size": "20CM - 45m",
+          "unit": "Cuộn",
+          "price": 335000
+        },
+        {
+          "size": "#40 - 10CM (ĐB) - 40m",
+          "unit": "Cuộn",
+          "price": 280000
+        }
+      ],
+      "isHot": true
+    },
+    {
+      "id": "p_1765337633734_xmr3l2quu",
+      "name": "Nhám Con Ó",
+      "category": "NHAM",
+      "description": "Nhám cuộn Ó Số                 (AA36, 40, 60, 80, 100,\n120, 150, 180, 240, 320,\n400)",
+      "image": "https://i.postimg.cc/Yq16mPKq/NMSA.png",
+      "variants": [
+        {
+          "size": "10CM - 45m",
+          "unit": "Cuộn",
+          "price": 295000
+        },
+        {
+          "size": "15CM - 45m",
+          "unit": "Cuộn",
+          "price": 400000
+        },
+        {
+          "size": "20CM - 45m",
+          "unit": "Cuộn",
+          "price": 540000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765337835260_whdu1a5ze",
+      "name": "Nhám K51",
+      "category": "NHAM",
+      "description": "Nhám cuộn K51                 (AA36, 40, 60, 80, 100,\n120, 150, 180, 240, 320)",
+      "image": "https://i.postimg.cc/43nHwLML/k66.png",
+      "variants": [
+        {
+          "size": "10CM (AA36)",
+          "unit": "Cuộn",
+          "price": 335000
+        },
+        {
+          "size": "10CM (AA40)",
+          "unit": "Cuộn",
+          "price": 305000
+        },
+        {
+          "size": "10CM (AA60)",
+          "unit": "Cuộn",
+          "price": 295000
+        },
+        {
+          "size": "10CM (AA80 TRỞ LÊN)",
+          "unit": "Cuộn",
+          "price": 280000
+        },
+        {
+          "size": "15CM (AA36)",
+          "unit": "Cuộn",
+          "price": 485000
+        },
+        {
+          "size": "15CM (AA40)",
+          "unit": "Cuộn",
+          "price": 445000
+        },
+        {
+          "size": "15CM (AA60)",
+          "unit": "Cuộn",
+          "price": 425000
+        },
+        {
+          "size": "15CM (AA80 TRỞ LÊN)",
+          "unit": "Cuộn",
+          "price": 400000
+        },
+        {
+          "size": "20CM(AA36)",
+          "unit": "Cuộn",
+          "price": 655000
+        },
+        {
+          "size": "20CM(AA40)",
+          "unit": "Cuộn",
+          "price": 585000
+        },
+        {
+          "size": "20CM(AA60)",
+          "unit": "Cuộn",
+          "price": 565000
+        },
+        {
+          "size": "20CM(AA80 TRỞ LÊN)",
+          "unit": "Cuộn",
+          "price": 525000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765337980715_c6tc3p7bp",
+      "name": "Nhám Tròn",
+      "category": "NHAM",
+      "description": "(AA40, 60, 80,\n100, 120,\n150, 180, 240, 320, , ...)",
+      "image": "https://i.postimg.cc/5tmKqth6/bbbbb.png",
+      "variants": [
+        {
+          "size": "1T",
+          "unit": "Hộp",
+          "price": 55000
+        },
+        {
+          "size": "1T2",
+          "unit": "Hộp",
+          "price": 90000
+        },
+        {
+          "size": "1T8",
+          "unit": "Hộp",
+          "price": 155000
+        },
+        {
+          "size": "2T3",
+          "unit": "Hộp",
+          "price": 345000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765338101143_dh7lu177w",
+      "name": "Nhám Nhật Kovax Đen",
+      "category": "NHAM",
+      "description": "",
+      "image": "https://i.postimg.cc/8kvKttgF/nvca.png",
+      "variants": [
+        {
+          "size": "100",
+          "unit": "Xấp",
+          "price": 680000
+        },
+        {
+          "size": "120",
+          "unit": "Xấp",
+          "price": 650000
+        },
+        {
+          "size": "150",
+          "unit": "Xấp",
+          "price": 630000
+        },
+        {
+          "size": "180-800",
+          "unit": "Xấp",
+          "price": 600000
+        },
+        {
+          "size": "1000",
+          "unit": "Xấp",
+          "price": 650000
+        },
+        {
+          "size": "1200",
+          "unit": "Xấp",
+          "price": 690000
+        },
+        {
+          "size": "1500",
+          "unit": "Xấp",
+          "price": 710000
+        },
+        {
+          "size": "2000",
+          "unit": "Xấp",
+          "price": 750000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765344330102_t13bzw42y",
+      "name": "NHÁM ĐEN EAGLE MAX",
+      "category": "NHAM",
+      "description": "",
+      "image": "https://i.postimg.cc/QtG5tg4f/dasdasd.png",
+      "variants": [
+        {
+          "size": "80",
+          "unit": "Xấp",
+          "price": 700000
+        },
+        {
+          "size": "100",
+          "unit": "Xấp",
+          "price": 580000
+        },
+        {
+          "size": "120",
+          "unit": "Xấp",
+          "price": 580000
+        },
+        {
+          "size": "150",
+          "unit": "Xấp",
+          "price": 580000
+        },
+        {
+          "size": "180-800",
+          "unit": "Xấp",
+          "price": 570000
+        },
+        {
+          "size": "1000",
+          "unit": "Xấp",
+          "price": 590000
+        },
+        {
+          "size": "1200",
+          "unit": "Xấp",
+          "price": 610000
+        },
+        {
+          "size": "2000",
+          "unit": "Xấp",
+          "price": 690000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765344510434_8ffx2zrjw",
+      "name": "Nhám TQ",
+      "category": "NHAM",
+      "description": "NHÁM TRUNG QUỐC      (AA80, 100, 120.150,180,240,320)",
+      "image": "https://i.postimg.cc/LsYFH9S2/xxxx.png",
+      "variants": [
+        {
+          "size": "NHÁM TQ",
+          "unit": "XẤP",
+          "price": 92000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765344719449_be2wyedjf",
+      "name": "NHÁM KOVAX TRẮNG",
+      "category": "NHAM",
+      "description": "",
+      "image": "https://i.postimg.cc/PJzP2bVb/FAA.png",
+      "variants": [
+        {
+          "size": "#180->#240",
+          "unit": "XẤP",
+          "price": 600000
+        },
+        {
+          "size": "#320.#400.#600",
+          "unit": "XẤP",
+          "price": 570000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765344845234_ar8b98gts",
+      "name": "NHÁM TRẮNG CAPTAIN",
+      "category": "NHAM",
+      "description": "",
+      "image": "https://i.postimg.cc/qqz1KLJp/NNNNN.png",
+      "variants": [
+        {
+          "size": "NCP",
+          "unit": "XẤP",
+          "price": 480000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765344904401_ilppgjwip",
+      "name": "NHÁM NHẬT SANKYO L1 ",
+      "category": "NHAM",
+      "description": "(AA120,150,180,220,240,280,320,400,600,800)",
+      "image": "https://i.postimg.cc/26Bw852W/NSASS.png",
+      "variants": [
+        {
+          "size": "SANKYO",
+          "unit": "XẤP",
+          "price": 625000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765344950750_l9p6x3hpr",
+      "name": "NHÁM FM",
+      "category": "NHAM",
+      "description": "(AA120, 150,180,220,240,...)",
+      "image": "https://i.postimg.cc/HkZ4wMNh/FFFNN.png",
+      "variants": [
+        {
+          "size": "FM",
+          "unit": "XẤP",
+          "price": 320000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765345262462_jh597d4c3",
+      "name": "NHÁM SMS  ",
+      "category": "NHAM",
+      "description": "(AA120,150,180,220,240,280,320,400,600,800)",
+      "image": "https://i.postimg.cc/GpT79zpG/sms.png",
+      "variants": [
+        {
+          "size": "SMS",
+          "unit": "Xấp",
+          "price": 360000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765345321736_m3pf08bo4",
+      "name": "CAPTION ĐỎ ",
+      "category": "NHAM",
+      "description": "(AA100, 120, 150, 180,\n240, …) Xấp 50 TỜ",
+      "image": "https://i.postimg.cc/Wpy7qgQ4/ssssa.png",
+      "variants": [
+        {
+          "size": "CPD",
+          "unit": "Xấp",
+          "price": 125000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765345390848_8fqfm1184",
+      "name": "ĐÁ CẮT 1T COROLLA HÀNG CTY",
+      "category": "NHAM",
+      "description": "100 LƯỠI / HỘP - HÀNG CHUẨN CTY",
+      "image": "https://i.postimg.cc/zB78PJ13/CRL.png",
+      "variants": [
+        {
+          "size": "COROLLA ",
+          "unit": "HỘP",
+          "price": 370000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765345500928_refcrkhn8",
+      "name": "NHÁM XẾP",
+      "category": "NHAM",
+      "description": "(AA40, 60, 80, 100, 120,\n150, 180, 240, 320, …)",
+      "image": "https://i.postimg.cc/jqGnHXvf/Screenshot-2025-12-10-124405.png",
+      "variants": [
+        {
+          "size": "RẺ",
+          "unit": "CÂY",
+          "price": 48000
+        },
+        {
+          "size": "TỐT",
+          "unit": "Cây",
+          "price": 60000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765345611437_go8si85sj",
+      "name": "NHÁM VẢI",
+      "category": "NHAM",
+      "description": "",
+      "image": "https://i.postimg.cc/MTJKcPz1/VVVV.png",
+      "variants": [
+        {
+          "size": "No.0",
+          "unit": "Xấp",
+          "price": 265000
+        },
+        {
+          "size": "No.1",
+          "unit": "Xấp",
+          "price": 265000
+        },
+        {
+          "size": "No.2",
+          "unit": "Xấp",
+          "price": 275000
+        },
+        {
+          "size": "No.3",
+          "unit": "Xấp",
+          "price": 295000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765345736799_15ey32387",
+      "name": "NHÁM TĂNG",
+      "category": "NHAM",
+      "description": "HỘP 10 DÂY",
+      "image": "https://i.postimg.cc/VvcxBphf/Screenshot-2025-12-10-124738.png",
+      "variants": [
+        {
+          "size": "NHÁM TĂNG TQ",
+          "unit": "HỘP",
+          "price": 65000
+        },
+        {
+          "size": "NHÁM TĂNG NAI CAM",
+          "unit": "HỘP",
+          "price": 143000
+        },
+        {
+          "size": "NHÁM TĂNG NAI XANH ",
+          "unit": "HỘP",
+          "price": 176000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765345811895_1fhmye65i",
+      "name": "BĂNG KEO ĐIỆN",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/dtC6rnPx/BKA.png",
+      "variants": [
+        {
+          "size": "10yard",
+          "unit": "Cây",
+          "price": 17500
+        },
+        {
+          "size": "20yard",
+          "unit": "Cây",
+          "price": 34500
+        },
+        {
+          "size": "30yard",
+          "unit": "Cây",
+          "price": 47000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765345872364_2wc7bzgvh",
+      "name": "BĂNG KEO LƯỚI",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/d05ppn0K/bkl.png",
+      "variants": [
+        {
+          "size": "NHỎ",
+          "unit": "CUỘN",
+          "price": 13800
+        },
+        {
+          "size": "TRUNG",
+          "unit": "CUỘN",
+          "price": 20400
+        },
+        {
+          "size": "LỚN",
+          "unit": "CUỘN",
+          "price": 28500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765345950845_h0v9q84mh",
+      "name": "BĂNG KEO ĐỤC",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/fyyw1JsG/BKD.png",
+      "variants": [
+        {
+          "size": "100yard - 1kg",
+          "unit": "Cây",
+          "price": 40500
+        },
+        {
+          "size": "200yard - 1.7kg",
+          "unit": "Cây",
+          "price": 65500
+        },
+        {
+          "size": "300yard - 2kg",
+          "unit": "Cây",
+          "price": 76500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346014503_lgj1f2ss4",
+      "name": "BĂNG KEO TRONG",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/fyyw1JsG/BKD.png",
+      "variants": [
+        {
+          "size": "100yard - 1kg",
+          "unit": "Cây",
+          "price": 40500
+        },
+        {
+          "size": "200yard - 1.7kg",
+          "unit": "Cây",
+          "price": 65500
+        },
+        {
+          "size": "300yard - 2kg",
+          "unit": "Cây",
+          "price": 76500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346135694_995x91y6p",
+      "name": "BĂNG KEO TRONG 2MẶT",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/9M7MfDKw/dddda.png",
+      "variants": [
+        {
+          "size": "1F2 - 10YARD",
+          "unit": "Cây",
+          "price": 35000
+        },
+        {
+          "size": "2F4 - 10YARD",
+          "unit": "Cây",
+          "price": 35000
+        },
+        {
+          "size": "5F - 10YARD",
+          "unit": "Cây",
+          "price": 35000
+        },
+        {
+          "size": "1F2 - 20YARD",
+          "unit": "Cây",
+          "price": 45000
+        },
+        {
+          "size": "2F4 - 20YARD",
+          "unit": "Cây",
+          "price": 45000
+        },
+        {
+          "size": "5F - 20YARD",
+          "unit": "Cây",
+          "price": 45000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346254748_jtd1fx8s1",
+      "name": "BĂNG KEO GIẤY",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/6q41gX7W/BKGSG.png",
+      "variants": [
+        {
+          "size": "2F4 - 10YARD",
+          "unit": "Cây",
+          "price": 30000
+        },
+        {
+          "size": "5F - 10YARD",
+          "unit": "Cây",
+          "price": 30000
+        },
+        {
+          "size": "2F4 - 20YARD",
+          "unit": "Cây",
+          "price": 45000
+        },
+        {
+          "size": "5F - 20YARD",
+          "unit": "Cây",
+          "price": 45000
+        },
+        {
+          "size": "2F4 - 30YARD",
+          "unit": "Cây",
+          "price": 62300
+        },
+        {
+          "size": "5F - 30YARD",
+          "unit": "Cây",
+          "price": 62300
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346371741_enn9lrjdy",
+      "name": "BĂNG KEO XỐP",
+      "category": "BANG_KEO",
+      "description": "CÓ 2 MÀU XANH VÀ ĐỎ",
+      "image": "https://i.postimg.cc/cCVYkq3b/BKX.png",
+      "variants": [
+        {
+          "size": "1F2",
+          "unit": "Cây",
+          "price": 59000
+        },
+        {
+          "size": "1F5",
+          "unit": "Cây",
+          "price": 59000
+        },
+        {
+          "size": "2F",
+          "unit": "Cây",
+          "price": 59000
+        },
+        {
+          "size": "2F4",
+          "unit": "Cây",
+          "price": 59000
+        },
+        {
+          "size": "5F",
+          "unit": "Cây",
+          "price": 59000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346435631_zu4xumbm9",
+      "name": "BĂNG KEO XỐP TRẮNG",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/05HL5tPs/BKXT.png",
+      "variants": [
+        {
+          "size": "1F2",
+          "unit": "Cây",
+          "price": 57000
+        },
+        {
+          "size": "2F4",
+          "unit": "Cây",
+          "price": 57000
+        },
+        {
+          "size": "5F",
+          "unit": "Cây",
+          "price": 57000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346538312_vmprzhjez",
+      "name": "BĂNG KEO CHÔNG DỘT - NHỰA ĐƯỜNG",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/sDswr7Z1/NBD.png",
+      "variants": [
+        {
+          "size": "5P - 36 CUỘN",
+          "unit": "THÙNG",
+          "price": 1020000
+        },
+        {
+          "size": "10P - 18 CUỘN",
+          "unit": "THÙNG ",
+          "price": 1020000
+        },
+        {
+          "size": "20P - 9 CUỘN ",
+          "unit": "THÙNG",
+          "price": 1020000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346659483_qgr3lbpy1",
+      "name": "BĂNG KEO CHỐNG DỘT - X2000",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/XYFfBv5G/X2000.png",
+      "variants": [
+        {
+          "size": "5P - 36 CUỘN",
+          "unit": "THÙNG",
+          "price": 570000
+        },
+        {
+          "size": "10P - 18 CUỘN",
+          "unit": "THÙNG ",
+          "price": 570000
+        },
+        {
+          "size": "15P - 12CUỘN",
+          "unit": "THÙNG",
+          "price": 570000
+        },
+        {
+          "size": "20P - 9 CUỘN",
+          "unit": "THÙNG",
+          "price": 570000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346734545_vjc9i9557",
+      "name": "BĂNG KEO CHỐNG DỘT - NANO",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/x1zr4BJ3/NNO.png",
+      "variants": [
+        {
+          "size": "5P - 36 CUỘN",
+          "unit": "THÙNG",
+          "price": 780000
+        },
+        {
+          "size": "10P - 18 CUỘN",
+          "unit": "THÙNG",
+          "price": 780000
+        },
+        {
+          "size": "15P - 12 CUỘN",
+          "unit": "THÙNG",
+          "price": 780000
+        },
+        {
+          "size": "20P - 9 CUỘN",
+          "unit": "THÙNG",
+          "price": 780000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346780081_bqaxpdzcc",
+      "name": "BĂNG KEO SIÊU DÍNH",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/1XXRnMWF/BKSS.png",
+      "variants": [
+        {
+          "size": "2F",
+          "unit": "CUỘN",
+          "price": 15000
+        },
+        {
+          "size": "2F4",
+          "unit": "CUỘN",
+          "price": 20000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346813787_64ox40e1r",
+      "name": "DÂY CẢNH BÁO",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/Qt5w67H2/DACY.png",
+      "variants": [
+        {
+          "size": "DCB",
+          "unit": "CUỘN",
+          "price": 18500
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346851880_9ta7up9pa",
+      "name": "BĂNG KEO CHỐNG TRƯỢT",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/rFzCMk9p/BKCT.png",
+      "variants": [
+        {
+          "size": "BKCT",
+          "unit": "CUỘN",
+          "price": 130000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346895589_gghos5sut",
+      "name": "BĂNG KEO PHẢN QUANG",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/xjpMsZVw/BKFL.png",
+      "variants": [
+        {
+          "size": "BKPQ",
+          "unit": "CUỘN",
+          "price": 135000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346943829_t4mhtkqs7",
+      "name": "BĂNG KEO DÁN BẠT",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/hjyz5X65/BKVQ.png",
+      "variants": [
+        {
+          "size": "5F",
+          "unit": "Cây",
+          "price": 69000
+        },
+        {
+          "size": "7F",
+          "unit": "Cây",
+          "price": 69000
+        },
+        {
+          "size": "10F",
+          "unit": "Cây",
+          "price": 69000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765346994880_k6kyia1bk",
+      "name": "DỤNG CỤ CẮT KEO",
+      "category": "BANG_KEO",
+      "description": "",
+      "image": "https://i.postimg.cc/nzPr169D/Screenshot-2025-12-10-130916.png",
+      "variants": [
+        {
+          "size": "SẮT",
+          "unit": "CÁI",
+          "price": 18000
+        },
+        {
+          "size": "NHỰA",
+          "unit": "CÁI",
+          "price": 17000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765347171842_5hww3u6jm",
+      "name": "ỐNG TIO",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/kGSSRnYS/TIO.png",
+      "variants": [
+        {
+          "size": "4li",
+          "unit": "Cuộn",
+          "price": 28560
+        },
+        {
+          "size": "5li",
+          "unit": "Cuộn",
+          "price": 32640
+        },
+        {
+          "size": "6li",
+          "unit": "Cuộn",
+          "price": 36720
+        },
+        {
+          "size": "7li",
+          "unit": "Cuộn",
+          "price": 48960
+        },
+        {
+          "size": "8li",
+          "unit": "Cuộn",
+          "price": 53500
+        },
+        {
+          "size": "10li",
+          "unit": "Cuộn",
+          "price": 77520
+        },
+        {
+          "size": "12li",
+          "unit": "Cuộn",
+          "price": 102000
+        },
+        {
+          "size": "14li",
+          "unit": "Cuộn",
+          "price": 110160
+        },
+        {
+          "size": "16li",
+          "unit": "Cuộn",
+          "price": 155000
+        },
+        {
+          "size": "18li",
+          "unit": "Cuộn",
+          "price": 193200
+        },
+        {
+          "size": "20li",
+          "unit": "Cuộn",
+          "price": 236640
+        },
+        {
+          "size": "25li",
+          "unit": "Cuộn",
+          "price": 277440
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765347241705_ooidv8na4",
+      "name": "ỐNG TIO ĐEN",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/Y2Nq0Gbs/tid.png",
+      "variants": [
+        {
+          "size": "5li",
+          "unit": "Cuộn",
+          "price": 140000
+        },
+        {
+          "size": "6li",
+          "unit": "Cuộn",
+          "price": 140000
+        },
+        {
+          "size": "8li",
+          "unit": "Cuộn",
+          "price": 140000
+        },
+        {
+          "size": "10li",
+          "unit": "Cuộn",
+          "price": 140000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765347312202_btp1tnxfd",
+      "name": "ỐNG LDPE",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/SNT4YW8Y/ldpe.png",
+      "variants": [
+        {
+          "size": "5m*7m",
+          "unit": "Cuộn",
+          "price": 185000
+        },
+        {
+          "size": "6m*8m",
+          "unit": "Cuộn",
+          "price": 115000
+        },
+        {
+          "size": "8m*10m",
+          "unit": "Cuộn",
+          "price": 160000
+        },
+        {
+          "size": "10m*12m",
+          "unit": "Cuộn",
+          "price": 185000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765347567321_jex8xb0bc",
+      "name": "BẠT ỐNG BƠM NƯỚC(GIA LỢI TỐT)",
+      "category": "ACCESSORY",
+      "description": "100M/CUỘN",
+      "image": "https://i.postimg.cc/13qdR6K8/ongbombat.png",
+      "variants": [
+        {
+          "size": "1T",
+          "unit": "CUỘN",
+          "price": 480000
+        },
+        {
+          "size": "1T2",
+          "unit": "CUỘN",
+          "price": 500000
+        },
+        {
+          "size": "1T3",
+          "unit": "CUỘN",
+          "price": 520000
+        },
+        {
+          "size": "1T4",
+          "unit": "CUỘN",
+          "price": 530000
+        },
+        {
+          "size": "1T5",
+          "unit": "CUỘN",
+          "price": 540000
+        },
+        {
+          "size": "1T6",
+          "unit": "CUỘN",
+          "price": 610000
+        },
+        {
+          "size": "2T",
+          "unit": "CUỘN",
+          "price": 660000
+        },
+        {
+          "size": "2T2",
+          "unit": "CUỘN",
+          "price": 680000
+        },
+        {
+          "size": "2T5",
+          "unit": "CUỘN",
+          "price": 720000
+        },
+        {
+          "size": "2T6",
+          "unit": "CUỘN",
+          "price": 740000
+        },
+        {
+          "size": "2T7",
+          "unit": "CUỘN",
+          "price": 780000
+        },
+        {
+          "size": "3T",
+          "unit": "CUỘN",
+          "price": 835000
+        },
+        {
+          "size": "3T2",
+          "unit": "CUỘN",
+          "price": 890000
+        },
+        {
+          "size": "3T5",
+          "unit": "CUỘN",
+          "price": 980000
+        },
+        {
+          "size": "4T",
+          "unit": "CUỘN ",
+          "price": 1030000
+        },
+        {
+          "size": "4T2",
+          "unit": "CUỘN",
+          "price": 1070000
+        },
+        {
+          "size": "4T5",
+          "unit": "CUỘN",
+          "price": 1130000
+        },
+        {
+          "size": "4T8",
+          "unit": "CUỘN",
+          "price": 1200000
+        },
+        {
+          "size": "5T",
+          "unit": "CUỘN",
+          "price": 1280000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765347655060_hg534qd5k",
+      "name": "XANH CAM THƯỜNG",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/MTCDF3hF/BXC.png",
+      "variants": [
+        {
+          "size": "4M-28KG",
+          "unit": "Cây",
+          "price": 975000
+        },
+        {
+          "size": "4M-30KG",
+          "unit": "Cây",
+          "price": 1090000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765347710986_gmpspznwj",
+      "name": "XANH CAM XỊNH HÀN QUỐC",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/HsH08MHc/BVA.png",
+      "variants": [
+        {
+          "size": "4M -34KG",
+          "unit": "Cây",
+          "price": 1610000
+        },
+        {
+          "size": "6M-51KG",
+          "unit": "Cây",
+          "price": 2420000
+        },
+        {
+          "size": "8M-68KG",
+          "unit": "Cây",
+          "price": 2998000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765347771204_1y8poi67o",
+      "name": "BẠT SỌC",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/m2bMgGNP/KKGG.png",
+      "variants": [
+        {
+          "size": "3M8",
+          "unit": "Cây",
+          "price": 345000
+        },
+        {
+          "size": "4M",
+          "unit": "Cây",
+          "price": 355000
+        },
+        {
+          "size": "6M",
+          "unit": "Cây",
+          "price": 545000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765348024582_34sds7r71",
+      "name": "KÉO CÁ",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "image": "https://i.postimg.cc/brdhmrfw/KCA.png",
+      "variants": [
+        {
+          "size": "KÉO CÁ NHỎ (ĐEN)",
+          "unit": "12 CÂY",
+          "price": 134000
+        },
+        {
+          "size": "KÉO CÁ TRUNG (ĐEN)",
+          "unit": "12 CÂY",
+          "price": 146000
+        },
+        {
+          "size": "KÉO CÁ LỚN (ĐEN)",
+          "unit": "12 CÂY",
+          "price": 158000
+        },
+        {
+          "size": "KÉO CÁ LỚN (XANH)",
+          "unit": "12 CÂY",
+          "price": 194000
+        },
+        {
+          "size": "KÉO CÁ ĐẠI (XANH)",
+          "unit": "12 CÂY",
+          "price": 206000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765348100969_p6aoosn4v",
+      "name": "KÉO VĂN PHÒNG PHẨM",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "image": "https://i.postimg.cc/0QhsHxkY/KVP.png",
+      "variants": [
+        {
+          "size": "KVPP",
+          "unit": "25 CÂY",
+          "price": 830000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765348140523_vz7i0barr",
+      "name": "KÉO NHÀ BẾP",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "image": "https://i.postimg.cc/W43cNthP/KNPG.png",
+      "variants": [
+        {
+          "size": "KNB",
+          "unit": "25 CÁI",
+          "price": 610000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765348198963_gm6t0pq0x",
+      "name": "KÉO CẮT VẢI",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "image": "https://i.postimg.cc/Nf73RRH7/KCV.png",
+      "variants": [
+        {
+          "size": "KÉO CẮT VẢI 036",
+          "unit": "6 Cây",
+          "price": 348000
+        },
+        {
+          "size": "KÉO CẮT VẢI 037",
+          "unit": "6 Cây",
+          "price": 378000
+        },
+        {
+          "size": "KÉO CẮT VẢI 038",
+          "unit": "6 Cây",
+          "price": 408000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765348261693_mpo89999b",
+      "name": "KÉO VÀNG",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "image": "https://i.postimg.cc/RZpbTdZx/KBV.png",
+      "variants": [
+        {
+          "size": "KÉO VÀNG p1( 1T4)",
+          "unit": "12 Cây",
+          "price": 326000
+        },
+        {
+          "size": "KÉO VÀNG p2( 1T2)",
+          "unit": "12 Cây",
+          "price": 302000
+        },
+        {
+          "size": "KÉO VÀNG p*( 1T8)",
+          "unit": "12 Cây ",
+          "price": 398000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765348304274_obimgqjg5",
+      "name": "KÉO INOX",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "image": "https://i.postimg.cc/pTfZ3JRW/KIN.png",
+      "variants": [
+        {
+          "size": "KIN",
+          "unit": "12 CÂY",
+          "price": 482000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765348363632_etu9lwdvu",
+      "name": "KÉO RỒNG",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "image": "https://i.postimg.cc/RCG1fF0R/KRB.png",
+      "variants": [
+        {
+          "size": "NHỎ",
+          "unit": "12 Cây",
+          "price": 398000
+        },
+        {
+          "size": "TRUNG",
+          "unit": "12 Cây",
+          "price": 518000
+        },
+        {
+          "size": "LỚN",
+          "unit": "12 Cây",
+          "price": 578000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765348425319_ps96jo96m",
+      "name": "KÉO TỈA CÀNH LOẠI 1",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "image": "https://i.postimg.cc/G2XBB4jc/KTA.png",
+      "variants": [
+        {
+          "size": "KTC",
+          "unit": "Cây",
+          "price": 83000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765348469426_8v95n0a2f",
+      "name": "CÀNH BÓP",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "image": "https://i.postimg.cc/mDpDL0b3/CB.png",
+      "variants": [
+        {
+          "size": "3M",
+          "unit": "Cây",
+          "price": 250000
+        },
+        {
+          "size": "4M",
+          "unit": "Cây",
+          "price": 310000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765348533966_ijalt8ys2",
+      "name": "LƯỠI CẮT GẠCH ĐA NĂNG GF",
+      "category": "ACCESSORY",
+      "description": "HỘP 25 LƯỠI\n",
+      "image": "https://i.postimg.cc/WpDrD7xC/KKS.png",
+      "variants": [
+        {
+          "size": "GF",
+          "unit": "CÁI",
+          "price": 45000
+        }
+      ],
+      "isHot": false
+    },
+    {
+      "id": "p_1765348575530_ujkfqynz4",
+      "name": "LƯỠI CẮT CỎ",
+      "category": "ACCESSORY",
+      "description": "",
+      "image": "https://i.postimg.cc/cCYrFFSt/LLD.png",
+      "variants": [
+        {
+          "size": " 255mm",
+          "unit": "Cái",
+          "price": 55000
+        }
+      ],
+      "isHot": false
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "label": "Tất cả",
+      "value": "ALL"
+    },
+    {
+      "id": "2",
+      "label": "CỌ SƠN",
+      "value": "PAINT_BRUSH"
+    },
+    {
+      "id": "3",
+      "label": "RULO - LĂN SƠN",
+      "value": "ROLLER"
+    },
+    {
+      "id": "4",
+      "label": "PHỤ KIỆN XÂY DỰNG",
+      "value": "ACCESSORY"
+    },
+    {
+      "id": "cat_1765335282356",
+      "label": "DÂY DÙ - NHỢ CÁ",
+      "value": "DAY_DU"
+    },
+    {
+      "id": "cat_1765337355159",
+      "label": "NHÁM",
+      "value": "NHAM"
+    },
+    {
+      "id": "cat_1765337361099",
+      "label": "BĂNG KEO",
+      "value": "BANG_KEO"
+    },
+    {
+      "id": "cat_1765347801885",
+      "label": "KÉO, LƯỠI CẮT & KHOÁ",
+      "value": "KEO,_LUOI_CAT_&_KHOA"
+    }
+  ],
+  "settings": {
+    "phoneNumber": "0964727949"
+  }
+}
