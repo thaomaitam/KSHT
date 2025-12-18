@@ -24,7 +24,7 @@ const MainApp: React.FC = () => {
   if (currentPage === 'business') return <BusinessPage />;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100">
       <Header
         activeCategory={activeCategory}
         setActiveCategory={setActiveCategory}

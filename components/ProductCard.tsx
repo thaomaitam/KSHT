@@ -19,10 +19,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) =>
 
   return (
     <div
-      className="group bg-white rounded-2xl shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden border border-slate-100 cursor-pointer flex flex-col h-full"
+      className="group bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden border border-slate-100 dark:border-slate-700 cursor-pointer flex flex-col h-full"
       onClick={() => onClick(product)}
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-slate-100">
+      <div className="relative aspect-[4/5] overflow-hidden bg-slate-100 dark:bg-slate-700">
         <img
           src={product.image}
           alt={product.name}
@@ -40,24 +40,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) =>
       <div className="p-4 md:p-5 flex flex-col flex-grow">
         <div className="flex items-center gap-1.5 mb-2">
           <Tag size={12} className="text-primary-500" />
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+          <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
             {product.category}
           </span>
         </div>
 
-        <h3 className="text-slate-800 font-bold text-base md:text-lg leading-snug mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
+        <h3 className="text-slate-800 dark:text-slate-100 font-bold text-base md:text-lg leading-snug mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-2">
           {product.name}
         </h3>
 
-        <div className="mt-auto pt-4 flex items-end justify-between border-t border-slate-50">
+        <div className="mt-auto pt-4 flex items-end justify-between border-t border-slate-50 dark:border-slate-700">
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Giá từ</span>
-            <span className="text-primary-600 font-black text-xl md:text-2xl tracking-tight">
+            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-0.5">Giá từ</span>
+            <span className="text-primary-600 dark:text-primary-400 font-black text-xl md:text-2xl tracking-tight">
               {formatter.format(minPrice).replace('₫', '').trim()}
               <span className="text-sm ml-1">₫</span>
             </span>
           </div>
-          <div className="bg-slate-50 text-slate-400 p-2.5 rounded-xl group-hover:bg-primary-600 group-hover:text-white group-hover:rotate-45 transition-all duration-500 shadow-inner">
+          <div className="bg-slate-50 dark:bg-slate-700 text-slate-400 dark:text-slate-300 p-2.5 rounded-xl group-hover:bg-primary-600 group-hover:text-white group-hover:rotate-45 transition-all duration-500 shadow-inner">
             <ArrowRight size={20} />
           </div>
         </div>

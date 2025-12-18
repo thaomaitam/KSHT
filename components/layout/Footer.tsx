@@ -3,23 +3,23 @@ import { ShoppingBag } from 'lucide-react';
 
 export const Footer: React.FC = () => {
     return (
-        <footer className="bg-white border-t border-slate-200 mt-auto">
+        <footer className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 mt-auto">
             <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col lg:flex-row gap-6 items-start">
                     {/* Company Info */}
                     <div className="flex-1">
                         <div className="flex items-center gap-2 mb-3">
                             <ShoppingBag size={24} className="text-primary-600" />
-                            <span className="text-xl font-bold text-slate-800">Kho Sỉ Huy Thảo</span>
+                            <span className="text-xl font-bold text-slate-800 dark:text-slate-100">Kho Sỉ Huy Thảo</span>
                         </div>
-                        <p className="text-slate-600 text-sm mb-2">
+                        <p className="text-slate-600 dark:text-slate-400 text-sm mb-2">
                             📍 119/16A Mễ Cốc, Phường 15, Quận 8, TP. Hồ Chí Minh 71800
                         </p>
-                        <div className="text-slate-600 text-sm mb-3 space-y-1">
-                            <p>📞 <a href="tel:0968844385" className="hover:text-primary-600 transition-colors">096.88.44.385</a> - Ms.Thảo</p>
-                            <p>📞 <a href="tel:0964727949" className="hover:text-primary-600 transition-colors">0964.727.949</a> - Mr.Huy</p>
+                        <div className="text-slate-600 dark:text-slate-400 text-sm mb-3 space-y-1">
+                            <p>📞 <a href="tel:0968844385" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">096.88.44.385</a> - Ms.Thảo</p>
+                            <p>📞 <a href="tel:0964727949" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">0964.727.949</a> - Mr.Huy</p>
                         </div>
-                        <p className="text-slate-500 text-xs">
+                        <p className="text-slate-500 dark:text-slate-500 text-xs">
                             © 2024 Giaban App. Chuyên cung cấp dụng cụ sơn chất lượng cao.
                         </p>
                     </div>

@@ -52,13 +52,13 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
     >
       {/* Mobile: Full-screen bottom sheet, scrollable | Desktop: Centered modal with 2-column layout */}
       <div
-        className="bg-white w-full h-[95vh] md:h-auto md:max-h-[90vh] md:max-w-5xl md:rounded-3xl rounded-t-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative animate-in slide-in-from-bottom duration-300 md:zoom-in-95"
+        className="bg-white dark:bg-slate-800 w-full h-[95vh] md:h-auto md:max-h-[90vh] md:max-w-5xl md:rounded-3xl rounded-t-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative animate-in slide-in-from-bottom duration-300 md:zoom-in-95"
         onClick={e => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 md:top-5 md:right-5 z-20 p-2 md:p-2.5 bg-white/90 hover:bg-white text-slate-400 hover:text-red-500 rounded-xl md:rounded-2xl transition-all shadow-lg hover:rotate-90"
+          className="absolute top-4 right-4 md:top-5 md:right-5 z-20 p-2 md:p-2.5 bg-white/90 dark:bg-slate-700/90 hover:bg-white dark:hover:bg-slate-600 text-slate-400 dark:text-slate-300 hover:text-red-500 rounded-xl md:rounded-2xl transition-all shadow-lg hover:rotate-90"
         >
           <X size={20} className="md:w-6 md:h-6" />
         </button>
@@ -66,7 +66,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
         {/* Mobile: Scrollable container for entire content | Desktop: Side-by-side layout */}
         <div className="flex-1 overflow-y-auto md:overflow-hidden md:flex md:flex-row">
           {/* Image Section - Scrolls with content on mobile, fixed on desktop */}
-          <div className="w-full md:w-1/2 aspect-square md:aspect-auto md:h-auto bg-slate-100 relative shrink-0 group">
+          <div className="w-full md:w-1/2 aspect-square md:aspect-auto md:h-auto bg-slate-100 dark:bg-slate-700 relative shrink-0 group">
             <img
               src={product.image}
               alt={product.name}
@@ -85,21 +85,21 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
             {/* Product Info */}
             <div className="mb-4 md:mb-8">
               <div className="flex items-center gap-2 mb-2 md:mb-4">
-                <span className="px-2 md:px-3 py-1 rounded-lg bg-primary-50 text-primary-600 text-[9px] md:text-[10px] font-black uppercase tracking-widest border border-primary-100">
+                <span className="px-2 md:px-3 py-1 rounded-lg bg-primary-50 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 text-[9px] md:text-[10px] font-black uppercase tracking-widest border border-primary-100 dark:border-primary-800">
                   {product.category}
                 </span>
               </div>
-              <h2 className="text-xl md:text-4xl font-black text-slate-900 mb-2 md:mb-4 tracking-tight leading-tight">
+              <h2 className="text-xl md:text-4xl font-black text-slate-900 dark:text-slate-100 mb-2 md:mb-4 tracking-tight leading-tight">
                 {product.name}
               </h2>
-              <p className="text-slate-500 leading-relaxed text-sm md:text-base">
+              <p className="text-slate-500 dark:text-slate-400 leading-relaxed text-sm md:text-base">
                 {product.description}
               </p>
             </div>
 
             {/* Variants Table */}
-            <div className="bg-slate-50/50 rounded-2xl border border-slate-100 overflow-hidden mb-4 md:mb-8">
-              <div className="grid grid-cols-4 bg-slate-100/50 p-2 md:p-4 text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-wider text-center border-b border-slate-100">
+            <div className="bg-slate-50/50 dark:bg-slate-700/50 rounded-2xl border border-slate-100 dark:border-slate-600 overflow-hidden mb-4 md:mb-8">
+              <div className="grid grid-cols-4 bg-slate-100/50 dark:bg-slate-600/50 p-2 md:p-4 text-[9px] md:text-[10px] font-black text-slate-400 dark:text-slate-300 uppercase tracking-wider text-center border-b border-slate-100 dark:border-slate-600">
                 <div>Kích thước</div>
                 <div>ĐVT</div>
                 <div>Đơn giá</div>
@@ -113,11 +113,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                   return (
                     <div
                       key={index}
-                      className="grid grid-cols-4 p-2 md:p-4 border-b border-slate-50 last:border-0 hover:bg-white transition-all items-center text-center group/item"
+                      className="grid grid-cols-4 p-2 md:p-4 border-b border-slate-50 dark:border-slate-600 last:border-0 hover:bg-white dark:hover:bg-slate-600 transition-all items-center text-center group/item"
                     >
-                      <div className="font-bold text-slate-700 text-xs md:text-sm truncate px-1">{variant.size}</div>
-                      <div className="text-slate-400 text-[10px] md:text-xs font-medium">{variant.unit}</div>
-                      <div className="font-black text-primary-600 text-sm md:text-base">
+                      <div className="font-bold text-slate-700 dark:text-slate-200 text-xs md:text-sm truncate px-1">{variant.size}</div>
+                      <div className="text-slate-400 dark:text-slate-400 text-[10px] md:text-xs font-medium">{variant.unit}</div>
+                      <div className="font-black text-primary-600 dark:text-primary-400 text-sm md:text-base">
                         {formatter.format(variant.price).replace('₫', '').trim()}
                         <span className="text-[10px] ml-0.5">₫</span>
                       </div>
@@ -126,7 +126,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                           onClick={() => handleAddToCart(variant)}
                           className={`relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-xl transition-all duration-300 shadow-sm ${justAdded
                             ? 'bg-green-500 text-white scale-110'
-                            : 'bg-white text-primary-600 hover:bg-primary-600 hover:text-white border border-slate-100 hover:border-primary-600'
+                            : 'bg-white dark:bg-slate-600 text-primary-600 dark:text-primary-400 hover:bg-primary-600 hover:text-white border border-slate-100 dark:border-slate-500 hover:border-primary-600'
                             }`}
                         >
                           {justAdded ? <Check size={16} strokeWidth={3} /> : <Plus size={16} strokeWidth={3} />}
@@ -144,12 +144,12 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
             </div>
 
             {/* Action Buttons - Icon only on mobile, full text on sm+ */}
-            <div className="mt-auto pt-4 md:pt-6 border-t border-slate-100 flex gap-3 md:gap-4">
+            <div className="mt-auto pt-4 md:pt-6 border-t border-slate-100 dark:border-slate-600 flex gap-3 md:gap-4">
               <a
                 href={settingsService.getZaloLink()}
                 target="_blank"
                 rel="noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 bg-[#0068ff] hover:bg-[#0056d6] text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-100"
+                className="flex-1 flex items-center justify-center gap-2 bg-[#0068ff] hover:bg-[#0056d6] text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-100 dark:shadow-blue-900/30"
                 title="Nhắn Zalo tư vấn"
               >
                 <MessageCircle size={20} fill="currentColor" />
@@ -160,14 +160,14 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                   onClose();
                   window.dispatchEvent(new CustomEvent('open-cart'));
                 }}
-                className="flex-1 flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-slate-200"
+                className="flex-1 flex items-center justify-center gap-2 bg-slate-900 dark:bg-slate-700 hover:bg-black dark:hover:bg-slate-600 text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-slate-200 dark:shadow-slate-900/30"
                 title="Xem giỏ hàng"
               >
                 <ShoppingCart size={20} />
                 <span className="hidden sm:inline">XEM GIỎ HÀNG</span>
               </button>
             </div>
-            <p className="mt-3 md:mt-4 text-center text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <p className="mt-3 md:mt-4 text-center text-[9px] md:text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
               * Giá sỉ tốt nhất thị trường - Giao hàng toàn quốc
             </p>
           </div>
