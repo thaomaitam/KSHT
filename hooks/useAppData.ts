@@ -65,6 +65,13 @@ export const useAppData = () => {
         return () => window.removeEventListener('hashchange', handleHashChange);
     }, []);
 
+    // Listen for open-cart event from ProductModal
+    useEffect(() => {
+        const handleOpenCart = () => setShowCart(true);
+        window.addEventListener('open-cart', handleOpenCart);
+        return () => window.removeEventListener('open-cart', handleOpenCart);
+    }, []);
+
     // Reload products when switching back to main
     useEffect(() => {
         const loadProducts = async () => {

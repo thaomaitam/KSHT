@@ -9,6 +9,10 @@
   - Results sorted by relevance score
 - Created `utils/searchUtils.ts` with `normalizeVietnamese()`, `tokenize()`, and `fuzzyScoreProduct()` functions.
 
+### Fixed
+- **Cart Button**: Fixed "XEM GIỎ HÀNG" button in product modal not opening the cart drawer.
+
+
 ---
 
 ## [1.1.0] - 2025-12-18
