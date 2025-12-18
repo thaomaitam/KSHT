@@ -18,52 +18,86 @@ export const apiService = {
 
     async get<T>(key: string): Promise<T | null> {
         const apiUrl = this.getApiUrl();
-        if (!apiUrl) return null;
+        const adminSecret = this.getAdminSecret();
 
+        // Helper to get from localStorage
+        const getFromLocal = (): T | null => {
+            try {
+                const stored = localStorage.getItem(`giaban_${key}`);
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+            } catch {
+                // Parse error, return null
+            }
+            return null;
+        };
+
+        // If no Cloud configured, use localStorage only
+        if (!apiUrl || !adminSecret) {
+            return getFromLocal();
+        }
+
+        // Try Cloud first
         try {
             const response = await fetch(`${apiUrl}/api/data/${key}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Admin-Secret': this.getAdminSecret()
+                    'X-Admin-Secret': adminSecret
                 }
             });
 
-            if (!response.ok) {
-                console.error(`API Get Error ${key}:`, response.statusText);
-                return null;
+            if (response.ok) {
+                const data = await response.json();
+                // Cache to localStorage for offline access
+                try {
+                    localStorage.setItem(`giaban_${key}`, JSON.stringify(data));
+                } catch {
+                    // Storage quota exceeded, ignore
+                }
+                return data;
             }
-
-            return await response.json();
         } catch (error) {
-            console.error(`API Get Error ${key}:`, error);
-            return null;
+            console.warn(`API Get Warning ${key}, falling back to local:`, error);
         }
+
+        // Fallback to localStorage
+        return getFromLocal();
     },
 
     async save<T>(key: string, data: T): Promise<boolean> {
+        // Always save to localStorage first as backup
+        try {
+            localStorage.setItem(`giaban_${key}`, JSON.stringify(data));
+        } catch (e) {
+            console.warn(`LocalStorage save failed for ${key}:`, e);
+        }
+
+        // Then try to save to Cloud if configured
         const apiUrl = this.getApiUrl();
-        if (!apiUrl) return false;
+        const adminSecret = this.getAdminSecret();
+        if (!apiUrl || !adminSecret) return true; // Local save succeeded
 
         try {
             const response = await fetch(`${apiUrl}/api/data/${key}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Admin-Secret': this.getAdminSecret()
+                    'X-Admin-Secret': adminSecret
                 },
                 body: JSON.stringify(data)
             });
 
             if (!response.ok) {
-                console.error(`API Save Error ${key}:`, response.statusText);
-                return false;
+                console.warn(`API Save Warning ${key}:`, response.statusText);
+                return true; // Local save succeeded, Cloud failed but that's ok
             }
 
             return true;
         } catch (error) {
-            console.error(`API Save Error ${key}:`, error);
-            return false;
+            console.warn(`API Save Warning ${key}:`, error);
+            return true; // Local save succeeded
         }
     },
 

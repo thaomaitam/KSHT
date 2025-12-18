@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { settingsService, CategoryItem, AppSettings } from '../settingsService';
 import { storageService } from '../storageService';
 import { businessService, BankInfo } from '../businessService';
@@ -110,8 +110,9 @@ export const useAdminSettings = () => {
             transactions: await businessService.getTransactions(),
             bankInfo: await businessService.getBankInfo(),
             taxRate: await businessService.getTaxRate(),
+            shopTemplates: await businessService.getShopTemplates(),
             backupDate: new Date().toISOString(),
-            version: '1.1'
+            version: '1.2'
         };
 
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -146,6 +147,7 @@ export const useAdminSettings = () => {
                     if (data.transactions) await businessService.saveTransactions(data.transactions);
                     if (data.bankInfo) await businessService.saveBankInfo(data.bankInfo);
                     if (data.taxRate !== undefined) await businessService.saveTaxRate(data.taxRate);
+                    if (data.shopTemplates) await businessService.saveShopTemplates(data.shopTemplates);
 
                     alert('Khôi phục dữ liệu thành công! Trang sẽ được tải lại để áp dụng thay đổi.');
                     window.location.reload();
@@ -170,7 +172,7 @@ export const useAdminSettings = () => {
 
         setIsSyncing(true);
         try {
-            const [products, categories, settings, orders, customers, costPrices, transactions, bankInfo, taxRate] = await Promise.all([
+            const [products, categories, settings, orders, customers, costPrices, transactions, bankInfo, taxRate, shopTemplates] = await Promise.all([
                 storageService.getProducts(),
                 settingsService.getCategories(),
                 settingsService.getSettings(),
@@ -179,7 +181,8 @@ export const useAdminSettings = () => {
                 businessService.getCostPrices(),
                 businessService.getTransactions(),
                 businessService.getBankInfo(),
-                businessService.getTaxRate()
+                businessService.getTaxRate(),
+                businessService.getShopTemplates()
             ]);
 
             await Promise.all([
@@ -191,7 +194,8 @@ export const useAdminSettings = () => {
                 businessService.saveCostPrices(costPrices),
                 businessService.saveTransactions(transactions),
                 bankInfo ? businessService.saveBankInfo(bankInfo) : Promise.resolve(),
-                businessService.saveTaxRate(taxRate)
+                businessService.saveTaxRate(taxRate),
+                businessService.saveShopTemplates(shopTemplates)
             ]);
 
             alert('Đồng bộ dữ liệu lên Cloud thành công!');
@@ -212,23 +216,63 @@ export const useAdminSettings = () => {
 
         setIsPulling(true);
         try {
-            await Promise.all([
-                storageService.getProducts(),
-                settingsService.getCategories(),
-                settingsService.getSettings(),
-                businessService.getOrders(),
-                businessService.getCustomers(),
-                businessService.getCostPrices(),
-                businessService.getTransactions(),
-                businessService.getBankInfo(),
-                businessService.getTaxRate()
+            // Fetch all data from Cloud API directly
+            const apiUrl = apiService.getApiUrl();
+            const adminSecret = apiService.getAdminSecret();
+
+            const fetchFromCloud = async <T>(key: string): Promise<T | null> => {
+                try {
+                    const response = await fetch(`${apiUrl}/api/data/${key}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Admin-Secret': adminSecret
+                        }
+                    });
+                    if (response.ok) {
+                        return await response.json();
+                    }
+                    return null;
+                } catch {
+                    return null;
+                }
+            };
+
+            // Pull all data from Cloud
+            const [
+                products, categories, settings, orders, customers,
+                costPrices, transactions, bankInfo, taxRate, shopTemplates
+            ] = await Promise.all([
+                fetchFromCloud<any[]>('products'),
+                fetchFromCloud<any[]>('categories'),
+                fetchFromCloud<any>('settings'),
+                fetchFromCloud<any[]>('orders'),
+                fetchFromCloud<any[]>('customers'),
+                fetchFromCloud<any[]>('costPrices'),
+                fetchFromCloud<any[]>('transactions'),
+                fetchFromCloud<any>('bankInfo'),
+                fetchFromCloud<{ rate: number }>('taxRate'),
+                fetchFromCloud<any[]>('shopTemplates')
             ]);
+
+            // Save to localStorage directly (bypass cloud save to avoid circular sync)
+            // Keys must match apiService format: giaban_{apiKey}
+            if (products) localStorage.setItem('giaban_products', JSON.stringify(products));
+            if (categories) localStorage.setItem('giaban_categories', JSON.stringify(categories));
+            if (settings) localStorage.setItem('giaban_settings', JSON.stringify(settings));
+            if (orders) localStorage.setItem('giaban_orders', JSON.stringify(orders));
+            if (customers) localStorage.setItem('giaban_customers', JSON.stringify(customers));
+            if (costPrices) localStorage.setItem('giaban_costPrices', JSON.stringify(costPrices));
+            if (transactions) localStorage.setItem('giaban_transactions', JSON.stringify(transactions));
+            if (bankInfo) localStorage.setItem('giaban_bankInfo', JSON.stringify(bankInfo));
+            if (taxRate) localStorage.setItem('giaban_taxRate', JSON.stringify(taxRate));
+            if (shopTemplates) localStorage.setItem('giaban_shopTemplates', JSON.stringify(shopTemplates));
 
             alert('Đã tải dữ liệu từ Cloud về máy thành công! Trang sẽ tải lại.');
             window.location.reload();
         } catch (error) {
             console.error('Pull error:', error);
-            alert('Lỗi khi tải dữ liệu từ Cloud.');
+            alert('Lỗi khi tải dữ liệu từ Cloud. Vui lòng kiểm tra kết nối.');
         } finally {
             setIsPulling(false);
         }
