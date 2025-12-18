@@ -105,7 +105,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                 <div>Đơn giá</div>
                 <div>Chọn</div>
               </div>
-              <div>
+              <div className="md:max-h-[30vh] md:overflow-y-auto">
                 {product.variants.map((variant, index) => {
                   const qtyInCart = getQuantityInCart(variant.size);
                   const justAdded = addedVariant === variant.size;
