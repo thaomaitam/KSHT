@@ -47,120 +47,130 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-300"
+      className="fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-300"
       onClick={onClose}
     >
+      {/* Mobile: Full-screen bottom sheet, scrollable | Desktop: Centered modal with 2-column layout */}
       <div
-        className="bg-white rounded-3xl w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col md:flex-row relative animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
+        className="bg-white w-full h-[95vh] md:h-auto md:max-h-[90vh] md:max-w-5xl md:rounded-3xl rounded-t-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative animate-in slide-in-from-bottom duration-300 md:zoom-in-95"
         onClick={e => e.stopPropagation()}
       >
+        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 z-20 p-2.5 bg-white/90 hover:bg-white text-slate-400 hover:text-red-500 rounded-2xl transition-all shadow-lg hover:rotate-90"
+          className="absolute top-4 right-4 md:top-5 md:right-5 z-20 p-2 md:p-2.5 bg-white/90 hover:bg-white text-slate-400 hover:text-red-500 rounded-xl md:rounded-2xl transition-all shadow-lg hover:rotate-90"
         >
-          <X size={24} />
+          <X size={20} className="md:w-6 md:h-6" />
         </button>
 
-        {/* Image Section */}
-        <div className="w-full md:w-1/2 h-72 md:h-auto bg-slate-100 relative shrink-0 group">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-          {product.isHot && (
-            <div className="absolute top-6 left-6 bg-gradient-to-r from-red-600 to-orange-500 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-xl tracking-widest uppercase z-10">
-              Hot Item
-            </div>
-          )}
-        </div>
+        {/* Mobile: Scrollable container for entire content | Desktop: Side-by-side layout */}
+        <div className="flex-1 overflow-y-auto md:overflow-hidden md:flex md:flex-row">
+          {/* Image Section - Scrolls with content on mobile, fixed on desktop */}
+          <div className="w-full md:w-1/2 aspect-square md:aspect-auto md:h-auto bg-slate-100 relative shrink-0 group">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+            {product.isHot && (
+              <div className="absolute top-4 left-4 md:top-6 md:left-6 bg-gradient-to-r from-red-600 to-orange-500 text-white text-[10px] font-black px-3 md:px-4 py-1 md:py-1.5 rounded-full shadow-xl tracking-widest uppercase z-10">
+                Hot Item
+              </div>
+            )}
+          </div>
 
-        {/* Content Section */}
-        <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col overflow-y-auto">
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="px-3 py-1 rounded-lg bg-primary-50 text-primary-600 text-[10px] font-black uppercase tracking-widest border border-primary-100">
-                {product.category}
-              </span>
+          {/* Content Section */}
+          <div className="w-full md:w-1/2 p-4 md:p-10 flex flex-col md:overflow-y-auto">
+            {/* Product Info */}
+            <div className="mb-4 md:mb-8">
+              <div className="flex items-center gap-2 mb-2 md:mb-4">
+                <span className="px-2 md:px-3 py-1 rounded-lg bg-primary-50 text-primary-600 text-[9px] md:text-[10px] font-black uppercase tracking-widest border border-primary-100">
+                  {product.category}
+                </span>
+              </div>
+              <h2 className="text-xl md:text-4xl font-black text-slate-900 mb-2 md:mb-4 tracking-tight leading-tight">
+                {product.name}
+              </h2>
+              <p className="text-slate-500 leading-relaxed text-sm md:text-base">
+                {product.description}
+              </p>
             </div>
-            <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
-              {product.name}
-            </h2>
-            <p className="text-slate-500 leading-relaxed text-base">
-              {product.description}
+
+            {/* Variants Table */}
+            <div className="bg-slate-50/50 rounded-2xl border border-slate-100 overflow-hidden mb-4 md:mb-8">
+              <div className="grid grid-cols-4 bg-slate-100/50 p-2 md:p-4 text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-wider text-center border-b border-slate-100">
+                <div>Kích thước</div>
+                <div>ĐVT</div>
+                <div>Đơn giá</div>
+                <div>Chọn</div>
+              </div>
+              <div>
+                {product.variants.map((variant, index) => {
+                  const qtyInCart = getQuantityInCart(variant.size);
+                  const justAdded = addedVariant === variant.size;
+
+                  return (
+                    <div
+                      key={index}
+                      className="grid grid-cols-4 p-2 md:p-4 border-b border-slate-50 last:border-0 hover:bg-white transition-all items-center text-center group/item"
+                    >
+                      <div className="font-bold text-slate-700 text-xs md:text-sm truncate px-1">{variant.size}</div>
+                      <div className="text-slate-400 text-[10px] md:text-xs font-medium">{variant.unit}</div>
+                      <div className="font-black text-primary-600 text-sm md:text-base">
+                        {formatter.format(variant.price).replace('₫', '').trim()}
+                        <span className="text-[10px] ml-0.5">₫</span>
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <button
+                          onClick={() => handleAddToCart(variant)}
+                          className={`relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-xl transition-all duration-300 shadow-sm ${justAdded
+                            ? 'bg-green-500 text-white scale-110'
+                            : 'bg-white text-primary-600 hover:bg-primary-600 hover:text-white border border-slate-100 hover:border-primary-600'
+                            }`}
+                        >
+                          {justAdded ? <Check size={16} strokeWidth={3} /> : <Plus size={16} strokeWidth={3} />}
+                          {qtyInCart > 0 && !justAdded && (
+                            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 md:w-5 md:h-5 bg-red-500 text-white text-[9px] md:text-[10px] font-black rounded-lg flex items-center justify-center shadow-lg animate-in zoom-in">
+                              {qtyInCart}
+                            </span>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Action Buttons - Icon only on mobile, full text on sm+ */}
+            <div className="mt-auto pt-4 md:pt-6 border-t border-slate-100 flex gap-3 md:gap-4">
+              <a
+                href={settingsService.getZaloLink()}
+                target="_blank"
+                rel="noreferrer"
+                className="flex-1 flex items-center justify-center gap-2 bg-[#0068ff] hover:bg-[#0056d6] text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-100"
+                title="Nhắn Zalo tư vấn"
+              >
+                <MessageCircle size={20} fill="currentColor" />
+                <span className="hidden sm:inline">NHẮN ZALO TƯ VẤN</span>
+              </a>
+              <button
+                onClick={() => {
+                  onClose();
+                  window.dispatchEvent(new CustomEvent('open-cart'));
+                }}
+                className="flex-1 flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-slate-200"
+                title="Xem giỏ hàng"
+              >
+                <ShoppingCart size={20} />
+                <span className="hidden sm:inline">XEM GIỎ HÀNG</span>
+              </button>
+            </div>
+            <p className="mt-3 md:mt-4 text-center text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              * Giá sỉ tốt nhất thị trường - Giao hàng toàn quốc
             </p>
           </div>
-
-          <div className="bg-slate-50/50 rounded-2xl border border-slate-100 overflow-hidden mb-8">
-            <div className="grid grid-cols-4 bg-slate-100/50 p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center border-b border-slate-100">
-              <div>Kích thước</div>
-              <div>Đơn vị</div>
-              <div>Đơn giá</div>
-              <div>Chọn</div>
-            </div>
-            <div className="max-h-64 overflow-y-auto scrollbar-hide">
-              {product.variants.map((variant, index) => {
-                const qtyInCart = getQuantityInCart(variant.size);
-                const justAdded = addedVariant === variant.size;
-
-                return (
-                  <div
-                    key={index}
-                    className="grid grid-cols-4 p-4 border-b border-slate-50 last:border-0 hover:bg-white transition-all items-center text-center group/item"
-                  >
-                    <div className="font-bold text-slate-700 text-sm">{variant.size}</div>
-                    <div className="text-slate-400 text-xs font-medium">{variant.unit}</div>
-                    <div className="font-black text-primary-600 text-base">
-                      {formatter.format(variant.price).replace('₫', '').trim()}
-                      <span className="text-[10px] ml-0.5">₫</span>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <button
-                        onClick={() => handleAddToCart(variant)}
-                        className={`relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 shadow-sm ${justAdded
-                          ? 'bg-green-500 text-white scale-110'
-                          : 'bg-white text-primary-600 hover:bg-primary-600 hover:text-white border border-slate-100 hover:border-primary-600'
-                          }`}
-                      >
-                        {justAdded ? <Check size={20} strokeWidth={3} /> : <Plus size={20} strokeWidth={3} />}
-                        {qtyInCart > 0 && !justAdded && (
-                          <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-[10px] font-black rounded-lg flex items-center justify-center shadow-lg animate-in zoom-in">
-                            {qtyInCart}
-                          </span>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="mt-auto pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-4">
-            <a
-              href={settingsService.getZaloLink()}
-              target="_blank"
-              rel="noreferrer"
-              className="flex-1 flex items-center justify-center gap-3 bg-[#0068ff] hover:bg-[#0056d6] text-white py-4 rounded-2xl font-black text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-100"
-            >
-              <MessageCircle size={20} fill="currentColor" />
-              <span>NHẮN ZALO TƯ VẤN</span>
-            </a>
-            <button
-              onClick={() => {
-                onClose();
-                window.dispatchEvent(new CustomEvent('open-cart'));
-              }}
-              className="flex-1 flex items-center justify-center gap-3 bg-slate-900 hover:bg-black text-white py-4 rounded-2xl font-black text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-slate-200"
-            >
-              <ShoppingCart size={20} />
-              <span>XEM GIỎ HÀNG</span>
-            </button>
-          </div>
-          <p className="mt-4 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-            * Giá sỉ tốt nhất thị trường - Giao hàng toàn quốc
-          </p>
         </div>
       </div>
     </div>

@@ -104,8 +104,8 @@ export const ShopInfoSettings: React.FC = () => {
                             key={t.id}
                             onClick={() => setEditingId(t.id)}
                             className={`group relative p-3 rounded-xl cursor-pointer transition-all border-2 ${editingId === t.id
-                                    ? 'border-pink-500 bg-pink-50'
-                                    : 'border-transparent bg-slate-50 hover:bg-slate-100'
+                                ? 'border-pink-500 bg-pink-50'
+                                : 'border-transparent bg-slate-50 hover:bg-slate-100'
                                 }`}
                         >
                             <div className="flex items-center justify-between">
@@ -120,7 +120,7 @@ export const ShopInfoSettings: React.FC = () => {
                                         e.stopPropagation();
                                         handleDeleteTemplate(t.id);
                                     }}
-                                    className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-red-500 transition-all"
+                                    className="p-1.5 text-slate-400 hover:text-red-500 transition-all"
                                 >
                                     <Trash2 size={16} />
                                 </button>
@@ -186,8 +186,8 @@ export const ShopInfoSettings: React.FC = () => {
                                         onClick={() => handleSetDefault(currentTemplate.id)}
                                         disabled={currentTemplate.isDefault}
                                         className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${currentTemplate.isDefault
-                                                ? 'bg-amber-50 text-amber-600 border border-amber-200'
-                                                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                                            ? 'bg-amber-50 text-amber-600 border border-amber-200'
+                                            : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                                             }`}
                                     >
                                         <Star size={18} className={currentTemplate.isDefault ? 'fill-amber-500' : ''} />
@@ -200,8 +200,8 @@ export const ShopInfoSettings: React.FC = () => {
                                 onClick={handleSave}
                                 disabled={isSaving}
                                 className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-black text-lg transition-all shadow-lg ${saveSuccess
-                                        ? 'bg-green-500 text-white'
-                                        : 'bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:scale-[1.02] active:scale-[0.98]'
+                                    ? 'bg-green-500 text-white'
+                                    : 'bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:scale-[1.02] active:scale-[0.98]'
                                     } disabled:opacity-50`}
                             >
                                 {saveSuccess ? (
