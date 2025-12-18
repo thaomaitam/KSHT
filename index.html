@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giaban - Báo Giá Sản Phẩm</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['HarmonyOS Sans', 'Inter', 'sans-serif'],
                     },
                     colors: {
                         primary: {
@@ -29,9 +29,41 @@
         }
     </script>
     <style>
+        /* HarmonyOS Sans Font */
+        @font-face {
+            font-family: 'HarmonyOS Sans';
+            src: url('fonts/HarmonyOS_Sans_Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'HarmonyOS Sans', 'Inter', sans-serif;
             background-color: #f8fafc;
+            color: #000;
+        }
+
+        /* Admin form inputs - Black text color */
+        input,
+        textarea,
+        select {
+            font-family: 'HarmonyOS Sans', 'Inter', sans-serif;
+            color: #000 !important;
+            -webkit-text-fill-color: #000;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #94a3b8 !important;
+            -webkit-text-fill-color: #94a3b8;
+            opacity: 1;
+        }
+
+        /* Ensure select dropdown text is black */
+        select option {
+            color: #000;
+            font-family: 'HarmonyOS Sans', 'Inter', sans-serif;
         }
 
         /* Dark mode body */
@@ -63,7 +95,7 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="./assets/index-B05hpDDN.js"></script>
+  <script type="module" crossorigin src="./assets/index-CPdgDzy5.js"></script>
 </head>
 
 <body>
