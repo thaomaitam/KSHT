@@ -14,6 +14,7 @@ interface OrderFormTabProps {
     setShowProductDropdown: (show: boolean) => void;
     filteredProducts: Product[];
     addProductFromList: (product: Product) => void;
+    addVariantToOrder: (product: Product, variant: import('../../types').ProductVariant) => void;
     addQuantity: number;
     setAddQuantity: (qty: number) => void;
     updateItemField: (itemId: string, field: keyof OrderItem, value: string | number) => void;
@@ -162,11 +163,12 @@ const ManualEntryRow: React.FC<{
 export const OrderFormTab: React.FC<OrderFormTabProps> = ({
     newOrder, setNewOrder, productSearch, setProductSearch,
     showProductDropdown, setShowProductDropdown, filteredProducts,
-    addProductFromList, addQuantity, setAddQuantity,
+    addProductFromList, addVariantToOrder, addQuantity, setAddQuantity,
     updateItemField, removeItem, getSubtotal, getTotal,
     handleSaveOrder, bankInfo, shopTemplates, orderCount, resetOrderForm,
     updateCustomer, setOrders, productDropdownRef
 }) => {
+    const [expandedProductId, setExpandedProductId] = React.useState<string | null>(null);
     const hasSoCuonInTable = newOrder.items.some(item => item.soCuon !== undefined && item.soCuon > 0);
     const hasSoKiInTable = newOrder.items.some(item => item.soKi !== undefined && item.soKi > 0);
 
@@ -311,24 +313,58 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                                         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-10 max-h-80 overflow-auto">
                                             {filteredProducts.length > 0 ? (
                                                 filteredProducts.map(product => (
-                                                    <button
-                                                        key={product.id}
-                                                        onClick={() => addProductFromList(product)}
-                                                        className="w-full px-4 py-3 text-left hover:bg-slate-50 flex items-center gap-3 border-b border-slate-100 last:border-0"
-                                                    >
-                                                        <img
-                                                            src={product.image}
-                                                            alt={product.name}
-                                                            className="w-10 h-10 rounded-lg object-cover bg-slate-100"
-                                                        />
-                                                        <div className="flex-1">
-                                                            <div className="font-medium text-slate-800">{product.name}</div>
-                                                            <div className="text-xs text-slate-500">
-                                                                {product.variants.length} loại • từ {formatPrice(Math.min(...product.variants.map(v => v.price)))}
+                                                    <div key={product.id} className="border-b border-slate-100 last:border-0">
+                                                        <button
+                                                            onClick={() => {
+                                                                if (product.variants.length > 1) {
+                                                                    setExpandedProductId(expandedProductId === product.id ? null : product.id);
+                                                                } else {
+                                                                    addProductFromList(product);
+                                                                }
+                                                            }}
+                                                            className="w-full px-4 py-3 text-left hover:bg-slate-50 flex items-center gap-3"
+                                                        >
+                                                            <img
+                                                                src={product.image}
+                                                                alt={product.name}
+                                                                className="w-10 h-10 rounded-lg object-cover bg-slate-100"
+                                                            />
+                                                            <div className="flex-1">
+                                                                <div className="font-medium text-slate-800">{product.name}</div>
+                                                                <div className="text-xs text-slate-500">
+                                                                    {product.variants.length} loại • từ {formatPrice(Math.min(...product.variants.map(v => v.price)))}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <ChevronDown size={16} className="text-slate-400" />
-                                                    </button>
+                                                            {product.variants.length > 1 && (
+                                                                <ChevronDown
+                                                                    size={16}
+                                                                    className={`text-slate-400 transition-transform duration-300 ${expandedProductId === product.id ? 'rotate-180' : ''}`}
+                                                                />
+                                                            )}
+                                                        </button>
+
+                                                        {expandedProductId === product.id && product.variants.length > 1 && (
+                                                            <div className="bg-slate-50 py-2 animate-in slide-in-from-top-2 duration-200">
+                                                                {product.variants.map((variant, vIndex) => (
+                                                                    <button
+                                                                        key={vIndex}
+                                                                        onClick={() => addVariantToOrder(product, variant)}
+                                                                        className="w-full pl-16 pr-4 py-2 text-left hover:bg-white flex items-center justify-between group"
+                                                                    >
+                                                                        <div className="text-sm">
+                                                                            <span className="font-bold text-slate-700">{variant.size}</span>
+                                                                            <span className="text-slate-400 mx-2">|</span>
+                                                                            <span className="text-slate-500">{variant.unit}</span>
+                                                                        </div>
+                                                                        <div className="flex items-center gap-3">
+                                                                            <span className="font-black text-emerald-600">{formatPrice(variant.price)}</span>
+                                                                            <Plus size={14} className="text-slate-300 group-hover:text-emerald-500 transition-colors" />
+                                                                        </div>
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 ))
                                             ) : (
                                                 <div className="px-4 py-3 text-slate-500">Không tìm thấy sản phẩm</div>

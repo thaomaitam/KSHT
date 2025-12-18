@@ -11,6 +11,7 @@
 
 ### Fixed
 - **Cart Button**: Fixed "XEM GIỎ HÀNG" button in product modal not opening the cart drawer.
+- **Product Variant Selection**: Fixed issue where clicking a product with multiple variants in the order form would only add the first variant. Now it expands to show all variants for selection.
 
 
 ---

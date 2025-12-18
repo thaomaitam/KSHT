@@ -30,6 +30,7 @@ export const BusinessPage: React.FC = () => {
         newTransaction, setNewTransaction,
         filteredProducts,
         addProductFromList,
+        addVariantToOrder,
         updateItemField,
         removeItem,
         getSubtotal,
@@ -132,6 +133,7 @@ export const BusinessPage: React.FC = () => {
                         setShowProductDropdown={setShowProductDropdown}
                         filteredProducts={filteredProducts}
                         addProductFromList={addProductFromList}
+                        addVariantToOrder={addVariantToOrder}
                         addQuantity={addQuantity}
                         setAddQuantity={setAddQuantity}
                         updateItemField={updateItemField}

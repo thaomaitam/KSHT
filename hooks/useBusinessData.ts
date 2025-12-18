@@ -124,8 +124,7 @@ export const useBusinessData = () => {
         return getSubtotal() + (newOrder.shippingFee || 0) + (newOrder.debt || 0) - (newOrder.discount || 0);
     };
 
-    const addProductFromList = (product: Product) => {
-        const variant = product.variants[0];
+    const addVariantToOrder = (product: Product, variant: import('../types').ProductVariant) => {
         const item: OrderItem = {
             id: 'item_' + Date.now(),
             name: product.name + (variant.size ? ` - ${variant.size}` : ''),
@@ -142,6 +141,13 @@ export const useBusinessData = () => {
         setProductSearch('');
         setShowProductDropdown(false);
         setAddQuantity(1);
+    };
+
+    const addProductFromList = (product: Product) => {
+        if (product.variants.length === 1) {
+            addVariantToOrder(product, product.variants[0]);
+        }
+        // If multiple variants, the UI should handle showing them
     };
 
     // Calculate total based on automatic logic
@@ -321,7 +327,7 @@ export const useBusinessData = () => {
         productDropdownRef,
         filteredProducts,
         getSubtotal, getTotal,
-        addProductFromList, updateItemField, removeItem,
+        addProductFromList, addVariantToOrder, updateItemField, removeItem,
         handleSaveOrder,
         resetOrderForm, updateCustomer,
         handleAddTransaction
