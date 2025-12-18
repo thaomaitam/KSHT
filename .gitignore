@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Data file (stored in CF Worker, not local)
+public/data.json
