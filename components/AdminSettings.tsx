@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { isAdminAuthenticated } from './LoginModal';
 import { useAdminSettings } from '../hooks/useAdminSettings';
 import { PhoneSettings } from './admin/PhoneSettings';
+import { ShopInfoSettings } from './admin/ShopInfoSettings';
 import { BankSettings } from './admin/BankSettings';
 import { CloudSettings } from './admin/CloudSettings';
 import { BackupSettings } from './admin/BackupSettings';
@@ -73,6 +74,8 @@ export const AdminSettings: React.FC = () => {
                     handleSavePhone={handleSavePhone}
                     saveSuccess={saveSuccess}
                 />
+
+                <ShopInfoSettings />
 
                 <BankSettings
                     bankInfo={bankInfo}

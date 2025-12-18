@@ -1,12 +1,13 @@
 import React from 'react';
-import { ArrowLeft, FileText, History, Users, CreditCard, BarChart3, Tag } from 'lucide-react';
-import { useBusinessData, TabType } from '../hooks/useBusinessData';
+import { ArrowLeft, FileText, History, Users, TrendingUp, BarChart3 } from 'lucide-react';
+import { useBusinessData, TabType, OrderItem } from '../hooks/useBusinessData';
+import { Order } from '../businessService';
 import { OrderFormTab } from './business/OrderFormTab';
 import { OrderHistoryTab } from './business/OrderHistoryTab';
 import { CustomersTab } from './business/CustomersTab';
-import { TransactionsTab } from './business/TransactionsTab';
+import { ProfitTab } from './business/ProfitTab';
 import { ReportsTab } from './business/ReportsTab';
-import { CostPricesTab } from './business/CostPricesTab';
+
 
 export const BusinessPage: React.FC = () => {
     const {
@@ -16,6 +17,7 @@ export const BusinessPage: React.FC = () => {
         transactions, setTransactions,
         products,
         bankInfo,
+        shopTemplates,
         newOrder, setNewOrder,
         productSearch, setProductSearch,
         showProductDropdown, setShowProductDropdown,
@@ -26,7 +28,6 @@ export const BusinessPage: React.FC = () => {
         transactionSearch, setTransactionSearch,
         showTransactionModal, setShowTransactionModal,
         newTransaction, setNewTransaction,
-        costPrices, setCostPrices,
         filteredProducts,
         addProductFromList,
         updateItemField,
@@ -36,18 +37,53 @@ export const BusinessPage: React.FC = () => {
         handleSaveOrder,
         resetOrderForm,
         updateCustomer,
-        handleAddTransaction,
-        handleSaveCostPrices
+        handleAddTransaction
     } = useBusinessData();
 
     const tabs = [
         { id: 'orders', label: 'Tạo đơn', icon: FileText, color: 'text-green-600', bg: 'bg-green-50' },
         { id: 'history', label: 'Lịch sử', icon: History, color: 'text-blue-600', bg: 'bg-blue-50' },
         { id: 'customers', label: 'Khách hàng', icon: Users, color: 'text-purple-600', bg: 'bg-purple-50' },
-        { id: 'transactions', label: 'Sổ thu chi', icon: CreditCard, color: 'text-orange-600', bg: 'bg-orange-50' },
+        { id: 'profit', label: 'Lợi nhuận', icon: TrendingUp, color: 'text-green-600', bg: 'bg-green-50' },
         { id: 'reports', label: 'Báo cáo', icon: BarChart3, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-        { id: 'costPrices', label: 'Giá vốn', icon: Tag, color: 'text-emerald-600', bg: 'bg-emerald-50' },
     ];
+
+    // Handle recreate order - copy order data to form and switch to orders tab
+    const handleRecreateOrder = (order: Order) => {
+        const items: OrderItem[] = order.items.map((item: any) => ({
+            id: 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            name: item.name,
+            unit: item.unit,
+            quantity: item.quantity,
+            soCuon: item.soCuon,
+            soKi: item.soKi,
+            unitPrice: item.unitPrice,
+            costPrice: item.costPrice,
+            total: item.total,
+            isManual: item.isManual
+        }));
+
+        // Check if any item has soCuon or soKi values
+        const hasSoCuon = items.some(item => item.soCuon !== undefined && item.soCuon > 0);
+        const hasSoKi = items.some(item => item.soKi !== undefined && item.soKi > 0);
+
+        setNewOrder({
+            customerName: order.customerName,
+            phone: order.phone,
+            address: order.address,
+            items: items,
+            shippingFee: order.shippingFee || 0,
+            discount: order.discount || 0,
+            debt: order.debt || 0,
+            note: order.note || '',
+            isManualEntry: true,
+            showSoCuon: hasSoCuon,
+            showSoKi: hasSoKi,
+            selectedTemplateId: newOrder.selectedTemplateId
+        });
+
+        setActiveTab('orders');
+    };
 
     return (
         <div className="min-h-screen bg-slate-50 pb-20">
@@ -104,6 +140,7 @@ export const BusinessPage: React.FC = () => {
                         getTotal={getTotal}
                         handleSaveOrder={handleSaveOrder}
                         bankInfo={bankInfo}
+                        shopTemplates={shopTemplates}
                         orderCount={orders.length}
                         resetOrderForm={resetOrderForm}
                         updateCustomer={updateCustomer}
@@ -118,8 +155,8 @@ export const BusinessPage: React.FC = () => {
                         setOrders={setOrders}
                         orderSearch={orderSearch}
                         setOrderSearch={setOrderSearch}
+                        onRecreateOrder={handleRecreateOrder}
                         bankInfo={bankInfo}
-                        updateCustomer={updateCustomer}
                     />
                 )}
 
@@ -132,8 +169,9 @@ export const BusinessPage: React.FC = () => {
                     />
                 )}
 
-                {activeTab === 'transactions' && (
-                    <TransactionsTab
+                {activeTab === 'profit' && (
+                    <ProfitTab
+                        orders={orders}
                         transactions={transactions}
                         setTransactions={setTransactions}
                         transactionSearch={transactionSearch}
@@ -151,15 +189,6 @@ export const BusinessPage: React.FC = () => {
                         orders={orders}
                         transactions={transactions}
                         customers={customers}
-                    />
-                )}
-
-                {activeTab === 'costPrices' && (
-                    <CostPricesTab
-                        products={products}
-                        costPrices={costPrices}
-                        setCostPrices={setCostPrices}
-                        handleSaveCostPrices={handleSaveCostPrices}
                     />
                 )}
             </main>

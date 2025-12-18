@@ -12,11 +12,57 @@ const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
 };
 
-export const ReportsTab: React.FC<ReportsTabProps> = ({ orders, transactions, customers }) => {
-    const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
-    const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-    const totalExpense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-    const totalDebt = customers.reduce((sum, c) => sum + c.debt, 0);
+export const ReportsTab: React.FC<ReportsTabProps> = ({ orders = [], transactions = [], customers = [] }) => {
+    const totalRevenue = (orders || []).reduce((sum, order) => sum + (order.total || 0), 0);
+    const totalIncome = (transactions || []).filter(t => t?.type === 'income').reduce((sum, t) => sum + (t.amount || 0), 0);
+    const totalExpense = (transactions || []).filter(t => t?.type === 'expense').reduce((sum, t) => sum + (t.amount || 0), 0);
+    const totalDebt = (customers || []).reduce((sum, c) => sum + (c.debt || 0), 0);
+
+    // Calculate real profit from orders
+    const totalCost = (orders || []).reduce((sum, order) => {
+        const orderCost = (order.items || []).reduce((iSum, item) => {
+            const q = Number(item.quantity) || 0;
+            const c = Number(item.soCuon) || 0;
+            const k = Number(item.soKi) || 0;
+            const cp = Number(item.costPrice) || 0;
+
+            if (c > 0 && k > 0) return iSum + (q * c * k * cp);
+            if (c > 0) return iSum + (q * c * cp);
+            if (k > 0) return iSum + (q * k * cp);
+            return iSum + (q * cp);
+        }, 0);
+        return sum + orderCost;
+    }, 0);
+
+    const estimatedProfit = totalRevenue - totalCost;
+
+    // Calculate last 7 days revenue for chart
+    const last7Days = [...Array(7)].map((_, i) => {
+        const d = new Date();
+        d.setDate(d.getDate() - (6 - i));
+        d.setHours(0, 0, 0, 0);
+        return d;
+    });
+
+    const chartData = last7Days.map(date => {
+        const dayRevenue = (orders || [])
+            .filter(o => {
+                if (!o.createdAt) return false;
+                const oDate = new Date(o.createdAt);
+                oDate.setHours(0, 0, 0, 0);
+                return oDate.getTime() === date.getTime();
+            })
+            .reduce((sum, o) => sum + (o.total || 0), 0);
+        return dayRevenue;
+    });
+
+    const maxRevenue = Math.max(...chartData, 1);
+    const incomeRatio = totalIncome + totalExpense > 0
+        ? Math.round((totalIncome / (totalIncome + totalExpense)) * 100)
+        : 0;
+    const expenseRatio = 100 - incomeRatio;
+
+    const daysOfWeek = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 
     return (
         <div className="space-y-6">
@@ -44,7 +90,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({ orders, transactions, cu
                         <div className="text-2xl font-black text-slate-800 mt-1">{formatPrice(totalIncome)}</div>
                         <div className="flex items-center gap-1 text-xs text-green-600 font-bold mt-2">
                             <TrendingUp size={14} />
-                            <span>Tăng trưởng ổn định</span>
+                            <span>Dòng tiền vào</span>
                         </div>
                     </div>
                 </div>
@@ -58,7 +104,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({ orders, transactions, cu
                         <div className="text-2xl font-black text-slate-800 mt-1">{formatPrice(totalExpense)}</div>
                         <div className="flex items-center gap-1 text-xs text-red-500 font-bold mt-2">
                             <TrendingDown size={14} />
-                            <span>Cần tối ưu chi phí</span>
+                            <span>Dòng tiền ra</span>
                         </div>
                     </div>
                 </div>
@@ -83,25 +129,26 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({ orders, transactions, cu
                     <div className="flex items-center justify-between mb-8">
                         <h3 className="font-bold text-slate-800 flex items-center gap-2">
                             <BarChart3 size={20} className="text-blue-600" />
-                            Biểu đồ tăng trưởng
+                            Doanh thu 7 ngày qua
                         </h3>
                         <div className="flex gap-2">
-                            <button className="px-3 py-1 text-xs font-bold bg-blue-50 text-blue-600 rounded-lg">Tuần</button>
-                            <button className="px-3 py-1 text-xs font-bold text-slate-400 hover:bg-slate-50 rounded-lg">Tháng</button>
+                            <span className="px-3 py-1 text-xs font-bold bg-blue-50 text-blue-600 rounded-lg">Theo ngày</span>
                         </div>
                     </div>
                     <div className="h-64 flex items-end justify-between gap-4 px-4">
-                        {[40, 70, 45, 90, 65, 85, 55].map((height, i) => (
+                        {chartData.map((val, i) => (
                             <div key={i} className="flex-1 flex flex-col items-center gap-3">
                                 <div
                                     className="w-full bg-blue-500 rounded-t-xl hover:bg-blue-600 transition-all cursor-pointer relative group"
-                                    style={{ height: `${height}%` }}
+                                    style={{ height: `${(val / maxRevenue) * 100}%`, minHeight: val > 0 ? '4px' : '0' }}
                                 >
-                                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        {formatPrice(height * 100000)}
+                                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
+                                        {formatPrice(val)}
                                     </div>
                                 </div>
-                                <span className="text-[10px] font-bold text-slate-400 uppercase">Thứ {i + 2}</span>
+                                <span className="text-[10px] font-bold text-slate-400 uppercase">
+                                    {daysOfWeek[last7Days[i].getDay()]}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -110,9 +157,9 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({ orders, transactions, cu
                 <div className="bg-slate-900 p-8 rounded-3xl shadow-xl text-white relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 blur-3xl rounded-full -mr-16 -mt-16"></div>
                     <div className="relative z-10">
-                        <h3 className="font-bold text-blue-400 mb-6">Số dư hiện tại</h3>
-                        <div className="text-4xl font-black mb-2">{formatPrice(totalIncome - totalExpense)}</div>
-                        <p className="text-slate-400 text-sm">Lợi nhuận ròng ước tính</p>
+                        <h3 className="font-bold text-blue-400 mb-6">Lợi nhuận gộp</h3>
+                        <div className="text-4xl font-black mb-2">{formatPrice(estimatedProfit)}</div>
+                        <p className="text-slate-400 text-sm">Ước tính từ đơn hàng</p>
 
                         <div className="mt-12 space-y-4">
                             <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10">
@@ -122,7 +169,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({ orders, transactions, cu
                                     </div>
                                     <span className="text-sm font-medium">Tỷ lệ thu</span>
                                 </div>
-                                <span className="font-bold">65%</span>
+                                <span className="font-bold">{incomeRatio}%</span>
                             </div>
                             <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10">
                                 <div className="flex items-center gap-3">
@@ -131,7 +178,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({ orders, transactions, cu
                                     </div>
                                     <span className="text-sm font-medium">Tỷ lệ chi</span>
                                 </div>
-                                <span className="font-bold">35%</span>
+                                <span className="font-bold">{expenseRatio}%</span>
                             </div>
                         </div>
                     </div>

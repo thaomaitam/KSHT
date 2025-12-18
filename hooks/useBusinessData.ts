@@ -1,19 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
-import { businessService, Order, Customer, Transaction, CostPrice, BankInfo } from '../businessService';
+import { businessService, Order, Customer, Transaction, BankInfo, ShopTemplate } from '../businessService';
 import { storageService } from '../storageService';
 import { settingsService, CategoryItem } from '../settingsService';
 import { Product } from '../types';
 
-export type TabType = 'orders' | 'history' | 'customers' | 'transactions' | 'reports' | 'costPrices';
+export type TabType = 'orders' | 'history' | 'customers' | 'profit' | 'reports';
 
 export interface OrderItem {
     id: string;
     name: string;
     unit: string;
     quantity: number;
+    soCuon?: number;  // Number of rolls
+    soKi?: number;    // Weight in kg
     unitPrice: number;
     costPrice?: number;
     total: number;
+    isManual?: boolean; // Flag for manually entered items
 }
 
 export interface NewOrder {
@@ -26,6 +29,9 @@ export interface NewOrder {
     debt: number;
     note: string;
     isManualEntry: boolean;
+    showSoCuon: boolean;     // Toggle column visibility
+    showSoKi: boolean;       // Toggle column visibility
+    selectedTemplateId: string; // New field
 }
 
 export const useBusinessData = () => {
@@ -33,10 +39,10 @@ export const useBusinessData = () => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [costPrices, setCostPrices] = useState<CostPrice[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<CategoryItem[]>([]);
     const [bankInfo, setBankInfo] = useState<BankInfo | null>(null);
+    const [shopTemplates, setShopTemplates] = useState<ShopTemplate[]>([]);
 
     // Order form state
     const [newOrder, setNewOrder] = useState<NewOrder>({
@@ -48,7 +54,10 @@ export const useBusinessData = () => {
         discount: 0,
         debt: 0,
         note: '',
-        isManualEntry: false
+        isManualEntry: false,
+        showSoCuon: false,
+        showSoKi: false,
+        selectedTemplateId: 'default'
     });
 
     // Search and filter states
@@ -72,9 +81,6 @@ export const useBusinessData = () => {
         category: 'Bán hàng'
     });
 
-    // Cost prices state as a record for easier access
-    const [costPricesRecord, setCostPricesRecord] = useState<Record<string, number>>({});
-
     const productDropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -82,14 +88,14 @@ export const useBusinessData = () => {
     }, []);
 
     const loadData = async () => {
-        const [ordersData, customersData, transactionsData, costPricesData, productsData, bankInfoData, categoriesData] = await Promise.all([
+        const [ordersData, customersData, transactionsData, productsData, bankInfoData, categoriesData, shopTemplatesData] = await Promise.all([
             businessService.getOrders(),
             businessService.getCustomers(),
             businessService.getTransactions(),
-            businessService.getCostPrices(),
             storageService.getProducts(),
             businessService.getBankInfo(),
-            settingsService.getCategories()
+            settingsService.getCategories(),
+            businessService.getShopTemplates()
         ]);
         setOrders(ordersData);
         setCustomers(customersData);
@@ -97,13 +103,13 @@ export const useBusinessData = () => {
         setProducts(productsData);
         setBankInfo(bankInfoData);
         setCategories(categoriesData);
+        setShopTemplates(shopTemplatesData);
 
-        // Convert cost prices array to record
-        const record: Record<string, number> = {};
-        costPricesData.forEach(cp => {
-            record[cp.productId] = cp.price;
-        });
-        setCostPricesRecord(record);
+        // Set initial selected template to default
+        const defaultTemplate = shopTemplatesData.find(t => t.isDefault) || shopTemplatesData[0];
+        if (defaultTemplate) {
+            setNewOrder(prev => ({ ...prev, selectedTemplateId: defaultTemplate.id }));
+        }
     };
 
     const filteredProducts = products.filter(p =>
@@ -138,14 +144,39 @@ export const useBusinessData = () => {
         setAddQuantity(1);
     };
 
+    // Calculate total based on automatic logic
+    const calculateItemTotal = (item: OrderItem): number => {
+        const quantity = Number(item.quantity) || 0;
+        const soCuon = Number(item.soCuon) || 0;
+        const soKi = Number(item.soKi) || 0;
+        const unitPrice = Number(item.unitPrice) || 0;
+
+        // Automatic formula detection:
+        // 1. If both Cuon and Ki > 0: SL * Cuon * Ki * Price
+        // 2. If only Cuon > 0: SL * Cuon * Price
+        // 3. If only Ki > 0: SL * Ki * Price
+        // 4. Default: SL * Price
+
+        if (soCuon > 0 && soKi > 0) {
+            return quantity * soCuon * soKi * unitPrice;
+        } else if (soCuon > 0) {
+            return quantity * soCuon * unitPrice;
+        } else if (soKi > 0) {
+            return quantity * soKi * unitPrice;
+        } else {
+            return quantity * unitPrice;
+        }
+    };
+
     const updateItemField = (itemId: string, field: keyof OrderItem, value: string | number) => {
         setNewOrder({
             ...newOrder,
             items: newOrder.items.map(item => {
                 if (item.id === itemId) {
                     const updated = { ...item, [field]: value };
-                    if (field === 'quantity' || field === 'unitPrice') {
-                        updated.total = (Number(updated.quantity) || 0) * (Number(updated.unitPrice) || 0);
+                    // Recalculate total when any calculation-related field changes
+                    if (field === 'quantity' || field === 'unitPrice' || field === 'soCuon' || field === 'soKi') {
+                        updated.total = calculateItemTotal(updated);
                     }
                     return updated;
                 }
@@ -171,7 +202,10 @@ export const useBusinessData = () => {
             discount: 0,
             debt: 0,
             note: '',
-            isManualEntry: false
+            isManualEntry: false,
+            showSoCuon: false,
+            showSoKi: false,
+            selectedTemplateId: 'default'
         });
     };
 
@@ -228,7 +262,8 @@ export const useBusinessData = () => {
             note: newOrder.note,
             shippingFee: newOrder.shippingFee,
             discount: newOrder.discount,
-            debt: newOrder.debt
+            debt: newOrder.debt,
+            paymentStatus: (newOrder.debt || 0) > 0 ? 'unpaid' : 'paid'
         };
 
         const updatedOrders = await businessService.addOrder(order);
@@ -261,24 +296,15 @@ export const useBusinessData = () => {
         });
     };
 
-    const handleSaveCostPrices = async () => {
-        const costPricesArray: CostPrice[] = Object.entries(costPricesRecord).map(([productId, price]) => ({
-            productId,
-            price: Number(price)
-        }));
-        await businessService.saveCostPrices(costPricesArray);
-        alert('Đã lưu giá vốn thành công');
-    };
-
     return {
         activeTab, setActiveTab,
         orders, setOrders,
         customers, setCustomers,
         transactions, setTransactions,
-        costPrices: costPricesRecord, setCostPrices: setCostPricesRecord,
         products, setProducts,
         categories, setCategories,
         bankInfo, setBankInfo,
+        shopTemplates, setShopTemplates,
         newOrder, setNewOrder,
         searchTerm, setSearchTerm,
         orderSearch, setOrderSearch,
@@ -298,7 +324,6 @@ export const useBusinessData = () => {
         addProductFromList, updateItemField, removeItem,
         handleSaveOrder,
         resetOrderForm, updateCustomer,
-        handleAddTransaction,
-        handleSaveCostPrices
+        handleAddTransaction
     };
 };

@@ -1,6 +1,6 @@
 import React from 'react';
-import { History, Search, Filter, Printer, Trash2, ExternalLink, ChevronRight } from 'lucide-react';
-import { Order, BankInfo, businessService } from '../../businessService';
+import { History, Search, Filter, Printer, Trash2, Copy, ChevronRight } from 'lucide-react';
+import { Order, BankInfo, businessService, Customer } from '../../businessService';
 import { generatePDFContent } from '../../utils/pdfGenerator';
 
 interface OrderHistoryTabProps {
@@ -10,6 +10,9 @@ interface OrderHistoryTabProps {
     setOrderSearch: (search: string) => void;
     bankInfo: BankInfo | null;
     updateCustomer: (order: Order) => Promise<void>;
+    customers: Customer[];
+    setCustomers: React.Dispatch<React.SetStateAction<Customer[]>>;
+    onRecreateOrder: (order: Order) => void;
 }
 
 const formatPrice = (price: number): string => {
@@ -27,7 +30,7 @@ const formatDate = (dateString: string): string => {
 };
 
 export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
-    orders, setOrders, orderSearch, setOrderSearch, bankInfo, updateCustomer
+    orders, setOrders, orderSearch, setOrderSearch, bankInfo, updateCustomer, customers, setCustomers, onRecreateOrder
 }) => {
 
     const filteredOrders = orders.filter(order =>
@@ -40,6 +43,41 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
         if (window.confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
             const updatedOrders = await businessService.deleteOrder(orderId);
             setOrders(updatedOrders);
+        }
+    };
+
+    const togglePaymentStatus = async (order: Order) => {
+        const newStatus = order.paymentStatus === 'paid' ? 'unpaid' : 'paid';
+        const oldDebt = order.debt || 0;
+        let newDebt = oldDebt;
+
+        if (newStatus === 'paid') {
+            newDebt = 0;
+        } else {
+            // Revert to full debt if marking as unpaid
+            newDebt = order.total;
+        }
+
+        const updatedOrder: Order = {
+            ...order,
+            paymentStatus: newStatus,
+            debt: newDebt
+        };
+
+        // Update Order
+        const updatedOrders = await businessService.updateOrder(updatedOrder);
+        setOrders(updatedOrders);
+
+        // Update Customer
+        const customer = customers.find(c => c.phone === order.phone || c.name === order.customerName);
+        if (customer) {
+            const debtDifference = newDebt - oldDebt;
+            const updatedCustomer = {
+                ...customer,
+                debt: (customer.debt || 0) + debtDifference
+            };
+            await businessService.updateCustomer(updatedCustomer);
+            setCustomers(prev => prev.map(c => c.id === updatedCustomer.id ? updatedCustomer : c));
         }
     };
 
@@ -116,9 +154,27 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
                                                 }`}>
                                                 {order.status === 'completed' ? 'Hoàn thành' : 'Chờ xử lý'}
                                             </span>
+                                            <div className="mt-2">
+                                                <button
+                                                    onClick={() => togglePaymentStatus(order)}
+                                                    className={`text-xs px-2 py-1 rounded border ${order.paymentStatus === 'paid'
+                                                        ? 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100'
+                                                        : 'bg-orange-50 text-orange-600 border-orange-200 hover:bg-orange-100'
+                                                        }`}
+                                                >
+                                                    {order.paymentStatus === 'paid' ? 'Đã thu tiền' : 'Chưa thu tiền'}
+                                                </button>
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button
+                                                    onClick={() => onRecreateOrder(order)}
+                                                    className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                                                    title="Tạo lại đơn"
+                                                >
+                                                    <Copy size={16} />
+                                                </button>
                                                 <button
                                                     onClick={() => handleExportPDF(order, index)}
                                                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"

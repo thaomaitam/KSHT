@@ -14,6 +14,7 @@ export interface Order {
     shippingFee?: number;
     discount?: number;
     debt?: number;
+    paymentStatus?: 'paid' | 'unpaid';
 }
 
 export interface Customer {
@@ -46,6 +47,14 @@ export interface BankInfo {
     accountNumber: string;
     accountName: string;
     qrCodeUrl?: string;
+}
+
+export interface ShopTemplate {
+    id: string;
+    name: string;
+    address: string;
+    phone: string;
+    isDefault?: boolean;
 }
 
 export const businessService = {
@@ -155,6 +164,26 @@ export const businessService = {
 
     async saveTaxRate(rate: number): Promise<boolean> {
         return await apiService.save('taxRate', { rate });
+    },
+
+    // Shop Templates (for PDF header)
+    async getShopTemplates(): Promise<ShopTemplate[]> {
+        const data = await apiService.get<ShopTemplate[]>('shopTemplates');
+        if (!data || data.length === 0) {
+            // Return default template
+            return [{
+                id: 'default',
+                name: 'KHO SỈ HUY THẢO',
+                address: '119/16A Mễ Cốc, Phường 15, Quận 8, TP.HCM',
+                phone: '0964727949',
+                isDefault: true
+            }];
+        }
+        return data;
+    },
+
+    async saveShopTemplates(templates: ShopTemplate[]): Promise<boolean> {
+        return await apiService.save('shopTemplates', templates);
     }
 };
 

@@ -1,12 +1,22 @@
-import { Order, BankInfo } from '../businessService';
+import { Order, BankInfo, ShopTemplate } from '../businessService';
 import { OrderItem } from '../hooks/useBusinessData';
 
 const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
 };
 
-export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orderCount: number): string => {
+export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orderCount: number, shopTemplate?: ShopTemplate | null): string => {
     const today = new Date().toLocaleDateString('vi-VN');
+
+    // Default shop info if not provided
+    const shop = shopTemplate || {
+        name: 'KHO SỈ HUY THẢO',
+        address: '119/16A Mễ Cốc, Phường 15, Quận 8, TP.HCM',
+        phone: '0964727949'
+    };
+
+    const hasSoCuon = order.items.some((item: OrderItem) => item.soCuon !== undefined && item.soCuon > 0);
+    const hasSoKi = order.items.some((item: OrderItem) => item.soKi !== undefined && item.soKi > 0);
 
     let itemsHtml = '';
     order.items.forEach((item: OrderItem, index: number) => {
@@ -16,7 +26,8 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
                 <td style="border: 1px solid #ddd; padding: 8px; font-size: 13px; font-weight: 600;">${item.name}</td>
                 <td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px;">${item.unit}</td>
                 <td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px;">${item.quantity}</td>
-                <td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px;">${item.quantity}</td>
+                ${hasSoCuon ? `<td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px;">${item.soCuon || ''}</td>` : ''}
+                ${hasSoKi ? `<td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px;">${item.soKi || ''}</td>` : ''}
                 <td style="border: 1px solid #ddd; padding: 8px; text-align: right; font-size: 13px;">${formatPrice(item.unitPrice)}</td>
                 <td style="border: 1px solid #ddd; padding: 8px; text-align: right; font-size: 13px; color: #1565C0;">${formatPrice(item.total)}</td>
             </tr>
@@ -24,6 +35,7 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
     });
 
     const subtotal = order.items.reduce((sum: number, item: any) => sum + item.total, 0);
+    const colSpan = 5 + (hasSoCuon ? 1 : 0) + (hasSoKi ? 1 : 0);
 
     return `
         <!DOCTYPE html>
@@ -59,13 +71,13 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
         <body>
             <div class="container">
                 <div style="text-align: center; margin-bottom: 15px;">
-                    <h1 style="color: #E91E63; margin: 0 0 8px 0; font-size: 28px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">KHO SỈ HUY THẢO</h1>
+                    <h1 style="color: #E91E63; margin: 0 0 8px 0; font-size: 28px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">${shop.name}</h1>
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
                         <p style="color: #64748b; font-size: 14px; margin: 0; display: flex; align-items: center; gap: 6px;">
-                            <span style="color: #E91E63; font-size: 16px;">📍</span> 119/16A Mễ Cốc, Phường 15, Quận 8, TP.HCM
+                            <span style="color: #E91E63; font-size: 16px;">📍</span> ${shop.address}
                         </p>
                         <p style="color: #64748b; font-size: 14px; margin: 0; display: flex; align-items: center; gap: 6px;">
-                            <span style="color: #E91E63; font-size: 16px;">📞</span> 0964727949
+                            <span style="color: #E91E63; font-size: 16px;">📞</span> ${shop.phone}
                         </p>
                     </div>
                     <div style="border-bottom: 1px solid #1e293b; margin-top: 15px; width: 100%;"></div>
@@ -74,7 +86,7 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
                 <div style="display: flex; gap: 10px; margin-bottom: 20px; margin-top: 15px;">
                     <div style="flex: 1; background: #F5F5F5; padding: 15px; border: 1px solid #ddd; border-radius: 10px;">
                         <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; color: #000;">
-                            KHÁCH HÀNG: ${order.customerName.toUpperCase()}${order.note ? ` (${order.note})` : ''}
+                            KHÁCH HÀNG: ${order.customerName.toUpperCase()}
                         </p>
                         <p style="margin: 5px 0; font-size: 12px; color: #333;">
                             <span style="color: #E84393;">📍</span> Địa chỉ: ${order.address || 'Chưa cập nhật'}
@@ -111,42 +123,51 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
                             <th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 40px; font-weight: 700;">STT</th>
                             <th style="color: #fff; padding: 10px 6px; text-align: left; border-right: 1px solid #fff; font-size: 12px; font-weight: 700;">Tên hàng</th>
                             <th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 60px; font-weight: 700;">ĐVT</th>
-                            <th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 40px; font-weight: 700;">SL</th>
-                            <th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 50px; font-weight: 700;">Số kí</th>
-                            <th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 80px; font-weight: 700;">Đơn giá</th>
+                            <th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 50px; font-weight: 700;">SL</th>
+                            ${hasSoCuon ? `<th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 60px; font-weight: 700;">Số cuộn</th>` : ''}
+                            ${hasSoKi ? `<th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 60px; font-weight: 700;">Số kí</th>` : ''}
+                            <th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 90px; font-weight: 700;">Đơn giá</th>
                             <th style="color: #fff; padding: 10px 6px; text-align: center; font-size: 12px; width: 100px; font-weight: 700;">Thành tiền</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${itemsHtml}
                         <tr>
-                            <td colspan="6" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #000; border-right: none;">Tạm tính:</td>
+                            <td colspan="${colSpan}" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #000; border-right: none;">Tạm tính:</td>
                             <td style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; color: #000; font-weight: 700; border-left: 1px solid #ddd;">${formatPrice(subtotal)}</td>
                         </tr>
                         ${order.shippingFee ? `
                         <tr>
-                            <td colspan="6" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #666; border-right: none; border-top: none;">Phí vận chuyển:</td>
+                            <td colspan="${colSpan}" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #666; border-right: none; border-top: none;">Phí vận chuyển:</td>
                             <td style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; color: #666; border-left: 1px solid #ddd; border-top: none;">+${formatPrice(order.shippingFee)}</td>
                         </tr>
                         ` : ''}
                         ${order.discount ? `
                         <tr>
-                            <td colspan="6" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #e91e63; border-right: none; border-top: none;">Chiết khấu:</td>
+                            <td colspan="${colSpan}" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #e91e63; border-right: none; border-top: none;">Chiết khấu:</td>
                             <td style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; color: #e91e63; border-left: 1px solid #ddd; border-top: none;">-${formatPrice(order.discount)}</td>
                         </tr>
                         ` : ''}
                         ${order.debt ? `
                         <tr>
-                            <td colspan="6" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #f57c00; border-right: none; border-top: none;">Công nợ cũ:</td>
+                            <td colspan="${colSpan}" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #f57c00; border-right: none; border-top: none;">Công nợ cũ:</td>
                             <td style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; color: #f57c00; border-left: 1px solid #ddd; border-top: none;">+${formatPrice(order.debt)}</td>
                         </tr>
                         ` : ''}
                         <tr style="background: #4CAF50;">
-                            <td colspan="6" style="padding: 10px 15px; text-align: right; font-size: 15px; font-weight: 700; color: #fff; text-transform: uppercase; border-right: 1px solid #fff;">TỔNG CỘNG:</td>
+                            <td colspan="${colSpan}" style="padding: 10px 15px; text-align: right; font-size: 15px; font-weight: 700; color: #fff; text-transform: uppercase; border-right: 1px solid #fff;">TỔNG CỘNG:</td>
                             <td style="padding: 10px 15px; text-align: right; font-size: 15px; color: #fff; font-weight: 700;">${formatPrice(order.total)}</td>
                         </tr>
                     </tbody>
                 </table>
+
+                ${order.note ? `
+                <div style="margin-top: 15px; padding: 12px 15px; background: #E8F5E9; border-left: 4px solid #4CAF50; border-radius: 5px;">
+                    <p style="margin: 0; font-size: 13px; color: #2E7D32; font-weight: 700;">
+                        Ghi chú: <span style="font-weight: 400;">${order.note}</span>
+                    </p>
+                </div>
+                ` : ''}
 
                 <div style="text-align: center; color: #666; font-size: 12px; margin-top: 40px; padding-top: 10px; border-top: 1px solid #eee;">
                     Cảm ơn quý khách! • Đơn hàng #${orderCount} • ${today}
