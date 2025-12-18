@@ -3,6 +3,7 @@ import { Product } from '../types';
 import { storageService, initializeData } from '../storageService';
 import { settingsService, CategoryItem } from '../settingsService';
 import { isAdminAuthenticated } from '../components/LoginModal';
+import { searchProducts } from '../utils/searchUtils';
 
 export type PageType = 'main' | 'admin' | 'settings' | 'business';
 
@@ -76,12 +77,7 @@ export const useAppData = () => {
     }, [currentPage]);
 
     const filteredProducts = useMemo(() => {
-        return products.filter(product => {
-            const matchesCategory = activeCategory === 'ALL' || product.category === activeCategory;
-            const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                product.description.toLowerCase().includes(searchTerm.toLowerCase());
-            return matchesCategory && matchesSearch;
-        });
+        return searchProducts(products, searchTerm, activeCategory);
     }, [activeCategory, searchTerm, products]);
 
     const handleLoginSuccess = () => {

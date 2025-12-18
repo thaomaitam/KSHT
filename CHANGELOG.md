@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.0] - 2025-12-18
+
+### Added
+- **Fuzzy Search Algorithm**: Upgraded the customer-facing product search with intelligent matching.
+  - Supports Vietnamese without diacritics (e.g., "co son" finds "Cọ sơn")
+  - Matches product names, descriptions, and variant sizes (e.g., "3 inch")
+  - Results sorted by relevance score
+- Created `utils/searchUtils.ts` with `normalizeVietnamese()`, `tokenize()`, and `fuzzyScoreProduct()` functions.
+
+---
+
 ## [1.1.0] - 2025-12-18
 
 ### Added
