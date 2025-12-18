@@ -23,6 +23,8 @@ export interface Customer {
     address: string;
     totalSpent: number;
     lastOrderDate: string;
+    orderCount?: number;
+    debt?: number;
 }
 
 export interface CostPrice {
@@ -71,6 +73,13 @@ export const businessService = {
         return newOrders;
     },
 
+    async deleteOrder(orderId: string): Promise<Order[]> {
+        const orders = await this.getOrders();
+        const newOrders = orders.filter(o => o.id !== orderId);
+        await this.saveOrders(newOrders);
+        return newOrders;
+    },
+
     // Customers
     async getCustomers(): Promise<Customer[]> {
         const data = await apiService.get<Customer[]>('customers');
@@ -79,6 +88,20 @@ export const businessService = {
 
     async saveCustomers(customers: Customer[]): Promise<boolean> {
         return await apiService.save('customers', customers);
+    },
+
+    async deleteCustomer(customerId: string): Promise<Customer[]> {
+        const customers = await this.getCustomers();
+        const newCustomers = customers.filter(c => c.id !== customerId);
+        await this.saveCustomers(newCustomers);
+        return newCustomers;
+    },
+
+    async updateCustomer(updatedCustomer: Customer): Promise<Customer[]> {
+        const customers = await this.getCustomers();
+        const newCustomers = customers.map(c => c.id === updatedCustomer.id ? updatedCustomer : c);
+        await this.saveCustomers(newCustomers);
+        return newCustomers;
     },
 
     // Cost Prices
@@ -101,6 +124,20 @@ export const businessService = {
         return await apiService.save('transactions', transactions);
     },
 
+    async addTransaction(transaction: Transaction): Promise<Transaction[]> {
+        const transactions = await this.getTransactions();
+        const newTransactions = [transaction, ...transactions];
+        await this.saveTransactions(newTransactions);
+        return newTransactions;
+    },
+
+    async deleteTransaction(transactionId: string): Promise<Transaction[]> {
+        const transactions = await this.getTransactions();
+        const newTransactions = transactions.filter(t => t.id !== transactionId);
+        await this.saveTransactions(newTransactions);
+        return newTransactions;
+    },
+
     // Bank Info
     async getBankInfo(): Promise<BankInfo | null> {
         return await apiService.get<BankInfo>('bankInfo');
@@ -120,3 +157,4 @@ export const businessService = {
         return await apiService.save('taxRate', { rate });
     }
 };
+
