@@ -1,6 +1,33 @@
 import { Order, BankInfo, ShopTemplate } from '../businessService';
 import { OrderItem } from '../hooks/useBusinessData';
 
+// ============================================
+// PDF Color Theme: "Trust & Professional"
+// Navy - White - Gray Color Palette
+// ============================================
+const PDF_COLORS = {
+    // Primary Brand Colors
+    navyDark: '#0D47A1',      // Main title, headers
+    navyMedium: '#1565C0',    // Table header background
+    navyLight: '#1976D2',     // Accent text
+
+    // Accent Colors
+    accent: '#E53E3E',        // Important numbers (total)
+    emerald: '#059669',       // Alternative footer color
+
+    // Neutral Colors
+    white: '#FFFFFF',
+    grayLight: '#F7FAFC',     // Zebra stripe odd rows
+    grayBorder: '#E0E0E0',    // Box borders
+    grayBoxBg: '#F5F5F5',     // Box backgrounds
+    zebraBlue: '#E3F2FD',     // Zebra stripe even rows
+
+    // Text Colors
+    textDark: '#1A202C',
+    textMedium: '#4A5568',
+    textLight: '#718096'
+};
+
 const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
 };
@@ -20,16 +47,18 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
 
     let itemsHtml = '';
     order.items.forEach((item: OrderItem, index: number) => {
+        // Zebra striping: odd rows white, even rows light blue
+        const rowBg = index % 2 === 0 ? PDF_COLORS.white : PDF_COLORS.zebraBlue;
         itemsHtml += `
-            <tr>
-                <td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px;">${index + 1}</td>
-                <td style="border: 1px solid #ddd; padding: 8px; font-size: 13px; font-weight: 600;">${item.name}</td>
-                <td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px;">${item.unit}</td>
-                <td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px;">${item.quantity}</td>
-                ${hasSoCuon ? `<td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px;">${item.soCuon || ''}</td>` : ''}
-                ${hasSoKi ? `<td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px;">${item.soKi || ''}</td>` : ''}
-                <td style="border: 1px solid #ddd; padding: 8px; text-align: right; font-size: 13px;">${formatPrice(item.unitPrice)}</td>
-                <td style="border: 1px solid #ddd; padding: 8px; text-align: right; font-size: 13px; color: #1565C0;">${formatPrice(item.total)}</td>
+            <tr style="background: ${rowBg};">
+                <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 10px 8px; text-align: center; font-size: 13px; color: ${PDF_COLORS.textDark};">${index + 1}</td>
+                <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 10px 8px; font-size: 13px; font-weight: 600; color: ${PDF_COLORS.textDark};">${item.name}</td>
+                <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 10px 8px; text-align: center; font-size: 13px; color: ${PDF_COLORS.textDark};">${item.unit}</td>
+                <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 10px 8px; text-align: center; font-size: 13px; color: ${PDF_COLORS.textDark};">${item.quantity}</td>
+                ${hasSoCuon ? `<td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 10px 8px; text-align: center; font-size: 13px; color: ${PDF_COLORS.textDark};">${item.soCuon || ''}</td>` : ''}
+                ${hasSoKi ? `<td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 10px 8px; text-align: center; font-size: 13px; color: ${PDF_COLORS.textDark};">${item.soKi || ''}</td>` : ''}
+                <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 10px 8px; text-align: right; font-size: 13px; color: ${PDF_COLORS.textDark};">${formatPrice(item.unitPrice)}</td>
+                <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 10px 8px; text-align: right; font-size: 13px; color: ${PDF_COLORS.navyMedium}; font-weight: 600;">${formatPrice(item.total)}</td>
             </tr>
         `;
     });
@@ -51,7 +80,7 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
                     margin: 0; 
                     padding: 20px; 
                     background: #fff; 
-                    color: #333;
+                    color: ${PDF_COLORS.textDark};
                     font-size: 14px;
                 }
                 .container { 
@@ -70,109 +99,119 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
         </head>
         <body>
             <div class="container">
+                <!-- Header with Shop Name -->
                 <div style="text-align: center; margin-bottom: 15px;">
-                    <h1 style="color: #E91E63; margin: 0 0 8px 0; font-size: 28px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">${shop.name}</h1>
+                    <h1 style="color: ${PDF_COLORS.navyDark}; margin: 0 0 8px 0; font-size: 28px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">${shop.name}</h1>
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                        <p style="color: #64748b; font-size: 14px; margin: 0; display: flex; align-items: center; gap: 6px;">
-                            <span style="color: #E91E63; font-size: 16px;">📍</span> ${shop.address}
+                        <p style="color: ${PDF_COLORS.textMedium}; font-size: 14px; margin: 0; display: flex; align-items: center; gap: 6px;">
+                            <span style="color: ${PDF_COLORS.navyMedium}; font-size: 16px;">📍</span> ${shop.address}
                         </p>
-                        <p style="color: #64748b; font-size: 14px; margin: 0; display: flex; align-items: center; gap: 6px;">
-                            <span style="color: #E91E63; font-size: 16px;">📞</span> ${shop.phone}
+                        <p style="color: ${PDF_COLORS.textMedium}; font-size: 14px; margin: 0; display: flex; align-items: center; gap: 6px;">
+                            <span style="color: ${PDF_COLORS.navyMedium}; font-size: 16px;">📞</span> ${shop.phone}
                         </p>
                     </div>
-                    <div style="border-bottom: 1px solid #1e293b; margin-top: 15px; width: 100%;"></div>
+                    <div style="border-bottom: 2px solid ${PDF_COLORS.navyDark}; margin-top: 15px; width: 100%;"></div>
                 </div>
 
+                <!-- Customer & Bank Info Boxes -->
                 <div style="display: flex; gap: 10px; margin-bottom: 20px; margin-top: 15px;">
-                    <div style="flex: 1; background: #F5F5F5; padding: 15px; border: 1px solid #ddd; border-radius: 10px;">
-                        <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; color: #000;">
+                    <!-- Customer Info Box -->
+                    <div style="flex: 1; background: ${PDF_COLORS.white}; padding: 15px; border: 1px solid ${PDF_COLORS.grayBorder}; border-radius: 10px;">
+                        <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; color: ${PDF_COLORS.navyDark};">
                             KHÁCH HÀNG: ${order.customerName.toUpperCase()}
                         </p>
-                        <p style="margin: 5px 0; font-size: 12px; color: #333;">
-                            <span style="color: #E84393;">📍</span> Địa chỉ: ${order.address || 'Chưa cập nhật'}
+                        <p style="margin: 5px 0; font-size: 12px; color: ${PDF_COLORS.textDark};">
+                            <span style="color: ${PDF_COLORS.navyMedium};">📍</span> Địa chỉ: ${order.address || 'Chưa cập nhật'}
                         </p>
-                        <p style="margin: 5px 0; font-size: 12px; color: #333;">
-                            <span style="color: #4CAF50;">📞</span> SĐT: ${order.phone || 'Chưa cập nhật'}
+                        <p style="margin: 5px 0; font-size: 12px; color: ${PDF_COLORS.textDark};">
+                            <span style="color: ${PDF_COLORS.navyMedium};">📞</span> SĐT: ${order.phone || 'Chưa cập nhật'}
                         </p>
-                        <p style="margin: 5px 0; font-size: 12px; color: #333;">
-                            <span style="color: #1976D2;">📅</span> Ngày: ${today}
+                        <p style="margin: 5px 0; font-size: 12px; color: ${PDF_COLORS.textDark};">
+                            <span style="color: ${PDF_COLORS.navyMedium};">📅</span> Ngày: ${today}
                         </p>
                     </div>
                     
-                    <div style="flex: 1; background: #E3F2FD; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
-                        <p style="margin: 0; padding: 10px 15px; font-size: 13px; font-weight: 700; color: #1976D2; background: #E3F2FD; border-bottom: 1px solid #ddd;">
+                    <!-- Bank Info Box -->
+                    <div style="flex: 1; background: ${PDF_COLORS.white}; border: 1px solid ${PDF_COLORS.grayBorder}; border-radius: 10px; overflow: hidden;">
+                        <p style="margin: 0; padding: 10px 15px; font-size: 13px; font-weight: 700; color: ${PDF_COLORS.navyDark}; background: ${PDF_COLORS.grayBoxBg}; border-bottom: 1px solid ${PDF_COLORS.grayBorder};">
                             ≡ THÔNG TIN CHUYỂN KHOẢN
                         </p>
                         <div style="padding: 12px 15px;">
-                            <p style="margin: 5px 0; font-size: 12px; color: #333; font-weight: 700;">
+                            <p style="margin: 5px 0; font-size: 12px; color: ${PDF_COLORS.textDark}; font-weight: 700;">
                                 Ngân hàng: <span style="font-weight: 400;">${bankInfo?.bankName || 'SACOMBANK'}</span>
                             </p>
-                            <p style="margin: 5px 0; font-size: 12px; color: #333; font-weight: 700;">
+                            <p style="margin: 5px 0; font-size: 12px; color: ${PDF_COLORS.textDark}; font-weight: 700;">
                                 Số TK: <span style="font-weight: 400;">${bankInfo?.accountNumber || '050122554391'}</span>
                             </p>
-                            <p style="margin: 5px 0; font-size: 12px; color: #333; font-weight: 700;">
+                            <p style="margin: 5px 0; font-size: 12px; color: ${PDF_COLORS.textDark}; font-weight: 700;">
                                 Chủ TK: <span style="font-weight: 400;">${bankInfo?.accountName || 'NGUYỄN THANH HUY'}</span>
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 0; border: 1px solid #ddd;">
+                <!-- Products Table -->
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 0; border: 1px solid ${PDF_COLORS.grayBorder};">
                     <thead>
-                        <tr style="background: #333333;">
-                            <th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 40px; font-weight: 700;">STT</th>
-                            <th style="color: #fff; padding: 10px 6px; text-align: left; border-right: 1px solid #fff; font-size: 12px; font-weight: 700;">Tên hàng</th>
-                            <th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 60px; font-weight: 700;">ĐVT</th>
-                            <th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 50px; font-weight: 700;">SL</th>
-                            ${hasSoCuon ? `<th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 60px; font-weight: 700;">Số cuộn</th>` : ''}
-                            ${hasSoKi ? `<th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 60px; font-weight: 700;">Số kí</th>` : ''}
-                            <th style="color: #fff; padding: 10px 6px; text-align: center; border-right: 1px solid #fff; font-size: 12px; width: 90px; font-weight: 700;">Đơn giá</th>
-                            <th style="color: #fff; padding: 10px 6px; text-align: center; font-size: 12px; width: 100px; font-weight: 700;">Thành tiền</th>
+                        <tr style="background: ${PDF_COLORS.navyMedium};">
+                            <th style="color: ${PDF_COLORS.white}; padding: 12px 8px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2); font-size: 12px; width: 40px; font-weight: 700;">STT</th>
+                            <th style="color: ${PDF_COLORS.white}; padding: 12px 8px; text-align: left; border-right: 1px solid rgba(255,255,255,0.2); font-size: 12px; font-weight: 700;">Tên hàng</th>
+                            <th style="color: ${PDF_COLORS.white}; padding: 12px 8px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2); font-size: 12px; width: 60px; font-weight: 700;">ĐVT</th>
+                            <th style="color: ${PDF_COLORS.white}; padding: 12px 8px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2); font-size: 12px; width: 50px; font-weight: 700;">SL</th>
+                            ${hasSoCuon ? `<th style="color: ${PDF_COLORS.white}; padding: 12px 8px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2); font-size: 12px; width: 60px; font-weight: 700;">Số cuộn</th>` : ''}
+                            ${hasSoKi ? `<th style="color: ${PDF_COLORS.white}; padding: 12px 8px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2); font-size: 12px; width: 60px; font-weight: 700;">Số kí</th>` : ''}
+                            <th style="color: ${PDF_COLORS.white}; padding: 12px 8px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2); font-size: 12px; width: 90px; font-weight: 700;">Đơn giá</th>
+                            <th style="color: ${PDF_COLORS.white}; padding: 12px 8px; text-align: center; font-size: 12px; width: 100px; font-weight: 700;">Thành tiền</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${itemsHtml}
-                        <tr>
-                            <td colspan="${colSpan}" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #000; border-right: none;">Tạm tính:</td>
-                            <td style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; color: #000; font-weight: 700; border-left: 1px solid #ddd;">${formatPrice(subtotal)}</td>
+                        <!-- Subtotal Row -->
+                        <tr style="background: ${PDF_COLORS.grayLight};">
+                            <td colspan="${colSpan}" style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 10px 15px; text-align: right; font-size: 13px; font-weight: 700; color: ${PDF_COLORS.textDark}; border-right: none;">Tạm tính:</td>
+                            <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 10px 15px; text-align: right; font-size: 13px; color: ${PDF_COLORS.textDark}; font-weight: 700; border-left: 1px solid ${PDF_COLORS.grayBorder};">${formatPrice(subtotal)}</td>
                         </tr>
                         ${order.shippingFee ? `
-                        <tr>
-                            <td colspan="${colSpan}" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #666; border-right: none; border-top: none;">Phí vận chuyển:</td>
-                            <td style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; color: #666; border-left: 1px solid #ddd; border-top: none;">+${formatPrice(order.shippingFee)}</td>
+                        <tr style="background: ${PDF_COLORS.white};">
+                            <td colspan="${colSpan}" style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 600; color: ${PDF_COLORS.textMedium}; border-right: none; border-top: none;">Phí vận chuyển:</td>
+                            <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; color: ${PDF_COLORS.textMedium}; border-left: 1px solid ${PDF_COLORS.grayBorder}; border-top: none;">+${formatPrice(order.shippingFee)}</td>
                         </tr>
                         ` : ''}
                         ${order.discount ? `
-                        <tr>
-                            <td colspan="${colSpan}" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #e91e63; border-right: none; border-top: none;">Chiết khấu:</td>
-                            <td style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; color: #e91e63; border-left: 1px solid #ddd; border-top: none;">-${formatPrice(order.discount)}</td>
+                        <tr style="background: ${PDF_COLORS.grayLight};">
+                            <td colspan="${colSpan}" style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 600; color: ${PDF_COLORS.accent}; border-right: none; border-top: none;">Chiết khấu:</td>
+                            <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; color: ${PDF_COLORS.accent}; border-left: 1px solid ${PDF_COLORS.grayBorder}; border-top: none;">-${formatPrice(order.discount)}</td>
                         </tr>
                         ` : ''}
                         ${order.debt ? `
-                        <tr>
-                            <td colspan="${colSpan}" style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 700; color: #f57c00; border-right: none; border-top: none;">Công nợ cũ:</td>
-                            <td style="border: 1px solid #ddd; padding: 8px 15px; text-align: right; font-size: 13px; color: #f57c00; border-left: 1px solid #ddd; border-top: none;">+${formatPrice(order.debt)}</td>
+                        <tr style="background: ${PDF_COLORS.white};">
+                            <td colspan="${colSpan}" style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 600; color: #F57C00; border-right: none; border-top: none;">Công nợ cũ:</td>
+                            <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; color: #F57C00; border-left: 1px solid ${PDF_COLORS.grayBorder}; border-top: none;">+${formatPrice(order.debt)}</td>
                         </tr>
                         ` : ''}
-                        <tr style="background: #4CAF50;">
-                            <td colspan="${colSpan}" style="padding: 10px 15px; text-align: right; font-size: 15px; font-weight: 700; color: #fff; text-transform: uppercase; border-right: 1px solid #fff;">TỔNG CỘNG:</td>
-                            <td style="padding: 10px 15px; text-align: right; font-size: 15px; color: #fff; font-weight: 700;">${formatPrice(order.total)}</td>
+                        <!-- Total Row - Using Accent Color (Cam đỏ) for payment attention -->
+                        <tr style="background: ${PDF_COLORS.accent};">
+                            <td colspan="${colSpan}" style="padding: 12px 15px; text-align: right; font-size: 16px; font-weight: 700; color: ${PDF_COLORS.white}; text-transform: uppercase; border-right: 1px solid rgba(255,255,255,0.3);">TỔNG CỘNG:</td>
+                            <td style="padding: 12px 15px; text-align: right; font-size: 16px; color: ${PDF_COLORS.white}; font-weight: 700;">${formatPrice(order.total)}</td>
                         </tr>
                     </tbody>
                 </table>
 
                 ${order.note ? `
-                <div style="margin-top: 15px; padding: 12px 15px; background: #E8F5E9; border-left: 4px solid #4CAF50; border-radius: 5px;">
-                    <p style="margin: 0; font-size: 13px; color: #2E7D32; font-weight: 700;">
-                        Ghi chú: <span style="font-weight: 400;">${order.note}</span>
+                <!-- Note Section -->
+                <div style="margin-top: 15px; padding: 12px 15px; background: ${PDF_COLORS.zebraBlue}; border-left: 4px solid ${PDF_COLORS.navyMedium}; border-radius: 5px;">
+                    <p style="margin: 0; font-size: 13px; color: ${PDF_COLORS.navyDark}; font-weight: 700;">
+                        Ghi chú: <span style="font-weight: 400; color: ${PDF_COLORS.textDark};">${order.note}</span>
                     </p>
                 </div>
                 ` : ''}
 
-                <div style="text-align: center; color: #666; font-size: 12px; margin-top: 40px; padding-top: 10px; border-top: 1px solid #eee;">
+                <!-- Footer -->
+                <div style="text-align: center; color: ${PDF_COLORS.textLight}; font-size: 12px; margin-top: 40px; padding-top: 10px; border-top: 1px solid ${PDF_COLORS.grayBorder};">
                     Cảm ơn quý khách! • Đơn hàng #${orderCount} • ${today}
-        </div>
-    </body>
-    </html>
+                </div>
+            </div>
+        </body>
+        </html>
     `;
 };
