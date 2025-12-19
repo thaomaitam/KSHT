@@ -19,15 +19,13 @@ const defaultSettings: AppSettings = {
 };
 
 export const settingsService = {
-    // Get settings
+    // Get settings - always try Cloud API first (default data source)
     async getSettings(): Promise<AppSettings> {
-        // Try API first if logged in
-        if (apiService.getAdminSecret()) {
-            const remote = await apiService.get<AppSettings>('settings');
-            if (remote) {
-                localStorage.setItem(SETTINGS_KEY, JSON.stringify(remote));
-                return remote;
-            }
+        // Try Cloud API first
+        const remote = await apiService.get<AppSettings>('settings');
+        if (remote) {
+            localStorage.setItem(SETTINGS_KEY, JSON.stringify(remote));
+            return remote;
         }
 
         // Fallback to local
@@ -66,17 +64,16 @@ export const settingsService = {
         return `https://zalo.me/${this.getPhoneNumber()}`;
     },
 
-    // Get categories
+    // Get categories - always try Cloud API first (default data source)
     async getCategories(): Promise<CategoryItem[]> {
-        // Try API first
-        if (apiService.getAdminSecret()) {
-            const remote = await apiService.get<CategoryItem[]>('categories');
-            if (remote) {
-                localStorage.setItem(CATEGORIES_KEY, JSON.stringify(remote));
-                return remote;
-            }
+        // Try Cloud API first
+        const remote = await apiService.get<CategoryItem[]>('categories');
+        if (remote && remote.length > 0) {
+            localStorage.setItem(CATEGORIES_KEY, JSON.stringify(remote));
+            return remote;
         }
 
+        // Fallback to localStorage
         const stored = localStorage.getItem(CATEGORIES_KEY);
         if (stored) {
             try {

@@ -47,8 +47,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onSuccess, onClose }) =>
             const result = await apiService.login(username, password);
 
             if (result.success && result.secret) {
-                // Store auth in sessionStorage (clears when browser closes)
-                sessionStorage.setItem('giaban_admin_auth', 'true');
+                // Store auth in localStorage (persists until logout)
+                localStorage.setItem('giaban_admin_auth', 'true');
                 // Save credentials permanently
                 apiService.setApiCredentials(urlToUse, result.secret);
                 onSuccess();
@@ -155,9 +155,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onSuccess, onClose }) =>
 
 // Auth check helper
 export const isAdminAuthenticated = (): boolean => {
-    return sessionStorage.getItem('giaban_admin_auth') === 'true';
+    return localStorage.getItem('giaban_admin_auth') === 'true';
 };
 
 export const logoutAdmin = (): void => {
-    sessionStorage.removeItem('giaban_admin_auth');
+    localStorage.removeItem('giaban_admin_auth');
 };

@@ -57,17 +57,16 @@ export async function initializeData(): Promise<void> {
 }
 
 export const storageService = {
-  // Get products from localStorage, or initialize with default data
+  // Get products from Cloud API first, fallback to localStorage
   async getProducts(): Promise<Product[]> {
-    // Try API first if logged in
-    if (apiService.getAdminSecret()) {
-      const remote = await apiService.get<Product[]>('products');
-      if (remote) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
-        return remote;
-      }
+    // Always try Cloud API first (default data source)
+    const remote = await apiService.get<Product[]>('products');
+    if (remote && remote.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
+      return remote;
     }
 
+    // Fallback to localStorage
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {

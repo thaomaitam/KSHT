@@ -33,19 +33,24 @@ export const apiService = {
             return null;
         };
 
-        // If no Cloud configured, use localStorage only
-        if (!apiUrl || !adminSecret) {
+        // If no Cloud URL configured, use localStorage only
+        if (!apiUrl) {
             return getFromLocal();
         }
 
-        // Try Cloud first
+        // Try Cloud first (no auth required for reading)
         try {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json'
+            };
+            // Only include secret if available (for admin access)
+            if (adminSecret) {
+                headers['X-Admin-Secret'] = adminSecret;
+            }
+
             const response = await fetch(`${apiUrl}/api/data/${key}`, {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Admin-Secret': adminSecret
-                }
+                headers
             });
 
             if (response.ok) {

@@ -3,7 +3,7 @@ import { Lock } from 'lucide-react';
 
 export const SecuritySettings: React.FC = () => {
     const handleLogout = () => {
-        sessionStorage.removeItem('giaban_admin_auth');
+        localStorage.removeItem('giaban_admin_auth');
         window.location.hash = '#/';
         window.location.reload();
     };
@@ -11,7 +11,6 @@ export const SecuritySettings: React.FC = () => {
     const handleResetApp = () => {
         if (confirm('BẠN CÓ CHẮC CHẮN? Hành động này sẽ xóa sạch dữ liệu lưu trên trình duyệt này và đăng xuất.')) {
             localStorage.clear();
-            sessionStorage.clear();
             window.location.hash = '#/';
             window.location.reload();
         }

@@ -114,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
                                 </button>
                                 <button
                                     onClick={() => {
-                                        sessionStorage.removeItem('giaban_admin_auth');
+                                        localStorage.removeItem('giaban_admin_auth');
                                         window.location.hash = '#/';
                                         window.location.reload();
                                     }}

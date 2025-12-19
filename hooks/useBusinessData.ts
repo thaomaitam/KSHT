@@ -69,7 +69,7 @@ export const useBusinessData = () => {
     const [dateTo, setDateTo] = useState('');
     const [productSearch, setProductSearch] = useState('');
     const [showProductDropdown, setShowProductDropdown] = useState(false);
-    const [addQuantity, setAddQuantity] = useState(1);
+    const [addQuantity, setAddQuantity] = useState<number | ''>('');
     const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
 
     // Transaction state
@@ -140,7 +140,7 @@ export const useBusinessData = () => {
         });
         setProductSearch('');
         setShowProductDropdown(false);
-        setAddQuantity(1);
+        setAddQuantity('');
     };
 
     const addProductFromList = (product: Product) => {

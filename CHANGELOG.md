@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0] - 2025-12-19
+
+### Changed
+- **Default Light Theme**: App now defaults to light theme. Only switches to dark when user explicitly chooses it (removed system preference auto-detection).
+- **Order Form Quantity**: Quantity input field now starts empty instead of defaulting to 1, allowing direct input without needing to clear first.
+- **Persistent Admin Session**: Admin login session is now preserved when closing the browser. Previously, closing the browser required re-login.
+
+### Fixed
+- **Quantity Input UX**: Fixed the quantity field in order form where users had to select-all before typing a new number. Now the field can be cleared completely.
+
+---
+
 ## [1.2.0] - 2025-12-18
 
 ### Added

@@ -256,8 +256,11 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                                     <input
                                         type="number"
                                         min="1"
-                                        value={addQuantity}
-                                        onChange={(e) => setAddQuantity(parseInt(e.target.value) || 1)}
+                                        value={addQuantity === '' ? '' : addQuantity}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            setAddQuantity(val === '' ? '' : parseInt(val) || '');
+                                        }}
                                         className="w-16 py-1 text-center font-black text-slate-800 focus:outline-none text-lg"
                                     />
                                 </div>

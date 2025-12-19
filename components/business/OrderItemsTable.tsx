@@ -68,9 +68,9 @@ export const OrderItemsTable: React.FC<OrderItemsTableProps> = ({
                                 <td className="px-2 py-3">
                                     <input
                                         type="number"
-                                        min="1"
-                                        value={item.quantity}
-                                        onChange={(e) => updateItemField(item.id, 'quantity', parseInt(e.target.value) || 1)}
+                                        min="0"
+                                        value={item.quantity || ''}
+                                        onChange={(e) => updateItemField(item.id, 'quantity', parseInt(e.target.value) || 0)}
                                         className="w-full px-1 py-1.5 border border-slate-100 rounded-lg text-center font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-transparent text-sm"
                                     />
                                 </td>
