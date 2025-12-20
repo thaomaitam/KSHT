@@ -1,4 +1,5 @@
 import React from 'react';
+import html2canvas from 'html2canvas';
 import { FileText, Search, Plus, ChevronDown, Store } from 'lucide-react';
 import { Product } from '../../types';
 import { Order, BankInfo, ShopTemplate, businessService } from '../../businessService';
@@ -78,20 +79,157 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
 
         const selectedTemplate = shopTemplates.find(t => t.id === newOrder.selectedTemplateId) || shopTemplates[0];
         const pdfContent = generatePDFContent(order, bankInfo, orderCount + 1, selectedTemplate);
-        const printWindow = window.open('', '_blank');
-        if (printWindow) {
-            printWindow.document.write(pdfContent);
-            printWindow.document.close();
-            printWindow.focus();
-            setTimeout(() => {
-                printWindow.print();
-            }, 500);
+
+        // Create hidden container to render the invoice HTML
+        const container = document.createElement('div');
+        container.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 800px; background: white;';
+        container.innerHTML = pdfContent;
+        document.body.appendChild(container);
+
+        // Find the actual content container inside the HTML
+        const contentElement = container.querySelector('.container') as HTMLElement;
+        if (!contentElement) {
+            document.body.removeChild(container);
+            alert('Lỗi: Không thể tạo ảnh hoá đơn');
+            return;
         }
 
-        const updatedOrders = await businessService.addOrder(order);
-        setOrders(updatedOrders);
-        await updateCustomer(order);
-        resetOrderForm();
+        // Wait for fonts and images to load
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        try {
+            // Convert HTML to PNG using html2canvas
+            const canvas = await html2canvas(contentElement, {
+                backgroundColor: '#ffffff',
+                scale: 2, // Higher quality
+                useCORS: true,
+                logging: false,
+                width: contentElement.scrollWidth,
+                height: contentElement.scrollHeight
+            });
+
+            const imageDataUrl = canvas.toDataURL('image/png');
+
+            // Clean up hidden container
+            document.body.removeChild(container);
+
+            // Open new window with the image
+            const imageWindow = window.open('', '_blank');
+            if (imageWindow) {
+                imageWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Đơn hàng #${orderCount + 1}</title>
+                        <style>
+                            * { margin: 0; padding: 0; box-sizing: border-box; }
+                            body { 
+                                background: #1a1a2e; 
+                                min-height: 100vh; 
+                                display: flex; 
+                                flex-direction: column;
+                                align-items: center; 
+                                padding: 20px;
+                                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            }
+                            .toolbar {
+                                position: fixed;
+                                top: 20px;
+                                right: 20px;
+                                display: flex;
+                                gap: 10px;
+                                z-index: 100;
+                            }
+                            .btn {
+                                padding: 12px 24px;
+                                border: none;
+                                border-radius: 8px;
+                                font-size: 14px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                                transition: all 0.2s;
+                            }
+                            .btn-print {
+                                background: #4CAF50;
+                                color: white;
+                            }
+                            .btn-print:hover { background: #45a049; }
+                            .hint {
+                                position: fixed;
+                                bottom: 20px;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                background: rgba(255,255,255,0.9);
+                                padding: 12px 24px;
+                                border-radius: 8px;
+                                font-size: 13px;
+                                color: #333;
+                                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                            }
+                            .invoice-image {
+                                max-width: 100%;
+                                height: auto;
+                                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                                border-radius: 8px;
+                                margin-top: 20px;
+                            }
+                            @media print {
+                                body { background: white; padding: 0; }
+                                .toolbar, .hint { display: none !important; }
+                                .invoice-image { 
+                                    box-shadow: none; 
+                                    border-radius: 0;
+                                    max-width: 100%;
+                                    margin: 0;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="toolbar">
+                            <button class="btn btn-print" onclick="window.print()">
+                                🖨️ In PDF
+                            </button>
+                        </div>
+                        <img src="${imageDataUrl}" alt="Hoá đơn" class="invoice-image" />
+                        <div class="hint">
+                            💡 <strong>Tip:</strong> Chuột phải vào ảnh → Sao chép hình ảnh để gửi khách qua Zalo/Messenger
+                        </div>
+                    </body>
+                    </html>
+                `);
+                imageWindow.document.close();
+            }
+
+            // Save order to database
+            const updatedOrders = await businessService.addOrder(order);
+            setOrders(updatedOrders);
+            await updateCustomer(order);
+            resetOrderForm();
+
+        } catch (error) {
+            console.error('Error generating invoice image:', error);
+            document.body.removeChild(container);
+
+            // Fallback to old PDF method
+            const printWindow = window.open('', '_blank');
+            if (printWindow) {
+                printWindow.document.write(pdfContent);
+                printWindow.document.close();
+                printWindow.focus();
+                setTimeout(() => {
+                    printWindow.print();
+                }, 500);
+            }
+
+            const updatedOrders = await businessService.addOrder(order);
+            setOrders(updatedOrders);
+            await updateCustomer(order);
+            resetOrderForm();
+        }
     };
 
     return (

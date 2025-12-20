@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.0] - 2025-12-20
+
+### Added
+- **Invoice Image Export (PNG)**: When creating or printing an invoice, the system now generates a PNG image that can be right-clicked to copy and send directly to customers via Zalo/Messenger. A print button is also available for PDF printing.
+  - Works in both "Create Order" and "Order History" tabs
+
+### Changed
+- **Mobile Manual Entry Layout**: The manual entry form (for items not in product list) now uses horizontal scrolling on mobile devices, making it easier to input all fields without awkward wrapping.
+
+---
+
 ## [1.3.0] - 2025-12-19
 
 ### Changed
