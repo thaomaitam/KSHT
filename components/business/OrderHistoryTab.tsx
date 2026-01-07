@@ -1,8 +1,8 @@
 import React from 'react';
 import html2canvas from 'html2canvas';
-import { History, Search, Filter, Printer, Trash2, Copy, ChevronRight } from 'lucide-react';
+import { History, Search, Filter, Printer, Trash2, RotateCcw, ChevronRight } from 'lucide-react';
 import { Order, BankInfo, businessService, Customer } from '../../businessService';
-import { generatePDFContent } from '../../utils/pdfGenerator';
+import { generatePDFContent, generateReceiptContent } from '../../utils/pdfGenerator';
 
 interface OrderHistoryTabProps {
     orders: Order[];
@@ -224,8 +224,27 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
                 printWindow.document.write(pdfContent);
                 printWindow.document.close();
                 printWindow.focus();
-                setTimeout(() => printWindow.print(), 500);
+                setTimeout(() => {
+                    printWindow.print();
+                    printWindow.close();
+                }, 500);
             }
+        }
+    };
+
+    const handleThermalPrint = (order: Order, index: number) => {
+        const orderNumber = orders.length - index;
+        const receiptContent = generateReceiptContent(order, orderNumber, undefined, bankInfo);
+
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+            printWindow.document.write(receiptContent);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
         }
     };
 
@@ -304,16 +323,23 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end gap-2">
                                                 <button
+                                                    onClick={() => handleThermalPrint(order, index)}
+                                                    className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                                                    title="IN BILL NHIỆT"
+                                                >
+                                                    <Printer size={16} className="text-orange-500" />
+                                                </button>
+                                                <button
                                                     onClick={() => onRecreateOrder(order)}
                                                     className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                                                     title="Tạo lại đơn"
                                                 >
-                                                    <Copy size={16} />
+                                                    <RotateCcw size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleExportPDF(order, index)}
                                                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                    title="In hóa đơn"
+                                                    title="In hóa đơn PDF"
                                                 >
                                                     <Printer size={16} />
                                                 </button>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Search, Filter, Phone, MapPin, History, Trash2, ChevronRight } from 'lucide-react';
+import { Users, Search, Filter, Phone, MapPin, History, Trash2, ChevronRight, FilePlus } from 'lucide-react';
 import { Customer, businessService } from '../../businessService';
 
 interface CustomersTabProps {
@@ -7,6 +7,7 @@ interface CustomersTabProps {
     setCustomers: React.Dispatch<React.SetStateAction<Customer[]>>;
     customerSearch: string;
     setCustomerSearch: (search: string) => void;
+    onCreateOrder: (customer: Customer) => void;
 }
 
 const formatPrice = (price: number): string => {
@@ -22,7 +23,7 @@ const formatDate = (dateString: string): string => {
 };
 
 export const CustomersTab: React.FC<CustomersTabProps> = ({
-    customers, setCustomers, customerSearch, setCustomerSearch
+    customers, setCustomers, customerSearch, setCustomerSearch, onCreateOrder
 }) => {
 
     const filteredCustomers = customers.filter(customer =>
@@ -112,6 +113,13 @@ export const CustomersTab: React.FC<CustomersTabProps> = ({
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end gap-2">
+                                                <button
+                                                    onClick={() => onCreateOrder(customer)}
+                                                    className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                                                    title="Tạo đơn mới"
+                                                >
+                                                    <FilePlus size={16} />
+                                                </button>
                                                 <button
                                                     onClick={() => handleDeleteCustomer(customer.id)}
                                                     className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"

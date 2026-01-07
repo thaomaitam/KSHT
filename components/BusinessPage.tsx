@@ -86,6 +86,26 @@ export const BusinessPage: React.FC = () => {
         setActiveTab('orders');
     };
 
+    // Handle create order from customer - populate customer info and switch to orders tab
+    const handleCreateOrderFromCustomer = (customer: any) => {
+        setNewOrder({
+            customerName: customer.name,
+            phone: customer.phone,
+            address: customer.address || '',
+            items: [],
+            shippingFee: 0,
+            discount: 0,
+            debt: 0,
+            note: '',
+            isManualEntry: false,
+            showSoCuon: false,
+            showSoKi: false,
+            selectedTemplateId: newOrder.selectedTemplateId
+        });
+
+        setActiveTab('orders');
+    };
+
     return (
         <div className="min-h-screen bg-slate-50 pb-20">
             {/* Header */}
@@ -168,6 +188,7 @@ export const BusinessPage: React.FC = () => {
                         setCustomers={setCustomers}
                         customerSearch={customerSearch}
                         setCustomerSearch={setCustomerSearch}
+                        onCreateOrder={handleCreateOrderFromCustomer}
                     />
                 )}
 

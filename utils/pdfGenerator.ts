@@ -215,3 +215,125 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
         </html>
     `;
 };
+
+export const generateReceiptContent = (order: Order, orderCount: number, shopTemplate?: ShopTemplate | null, bankInfo?: BankInfo | null): string => {
+    const today = new Date().toLocaleDateString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    const shop = shopTemplate || {
+        name: 'KHO SỈ HUY THẢO',
+        address: '119/16A Mễ Cốc, Phường 15, Quận 8, TP.HCM',
+        phone: '0964727949'
+    };
+
+    const bank = bankInfo || {
+        bankName: 'SACOMBANK',
+        accountNumber: '050122554391',
+        accountName: 'NGUYỄN THANH HUY'
+    };
+
+    let itemsHtml = '';
+    order.items.forEach((item: OrderItem, index: number) => {
+        itemsHtml += `
+            <div style="padding: 6px 0; border-bottom: 1px solid #ddd;">
+                <p style="margin: 0; font-weight: 500; color: #000; font-size: 12px;">
+                    ${index + 1}. ${item.name}
+                </p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
+                    <span style="color: #000; font-size: 11px;">
+                        ${item.unit} | ${item.quantity} x ${formatPrice(item.unitPrice)}
+                    </span>
+                    <span style="font-weight: 700; color: #000; font-size: 12px; padding-right: 13px;">
+                        ${formatPrice(item.total)}
+                    </span>
+                </div>
+            </div>
+        `;
+    });
+
+    return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Bill #${orderCount}</title>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                body { 
+                    font-family: 'Inter', -apple-system, sans-serif; 
+                    background: #fff; 
+                    color: #000;
+                    line-height: 1.4;
+                }
+                .receipt { 
+                    width: 80mm; 
+                    margin: 0 auto; 
+                    padding: 10px;
+                    background: white;
+                }
+                @media print {
+                    body { margin: 0; padding: 0; }
+                    .receipt { width: 100%; padding: 5px; }
+                    @page { margin: 0; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="receipt">
+                <!-- Header -->
+                <div style="text-align: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px dashed #000;">
+                    <h1 style="font-size: 18px; font-weight: 700; color: #000; margin-bottom: 4px; text-transform: uppercase;">${shop.name}</h1>
+                    <p style="font-size: 11px; color: #000; margin-bottom: 2px;">${shop.address}</p>
+                    <p style="font-size: 11px; color: #000;">SĐT: ${shop.phone}</p>
+                    <p style="font-size: 10px; color: #000; margin-top: 4px; font-weight: 600;">STK: ${bank.accountNumber} - ${bank.bankName}</p>
+                </div>
+
+                <!-- Order Info -->
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <h2 style="font-size: 15px; font-weight: 700; color: #000; margin-bottom: 2px;">ĐƠN HÀNG</h2>
+                    <p style="font-size: 11px; color: #000;">Ngày: ${today}</p>
+                </div>
+
+                <!-- Customer Info -->
+                <div style="margin-bottom: 12px; padding: 10px; border: 1px solid #000; border-radius: 4px; text-align: center;">
+                    <p style="font-size: 12px; color: #000; margin-bottom: 2px;"><strong>Khách hàng:</strong> ${order.customerName}</p>
+                    ${order.phone ? `<p style="font-size: 11px; color: #000; margin-bottom: 2px;">SĐT: ${order.phone}</p>` : ''}
+                    ${order.address ? `<p style="font-size: 11px; color: #000;">ĐC: ${order.address}</p>` : ''}
+                </div>
+
+                <!-- Items -->
+                <div style="margin-bottom: 12px;">
+                    ${itemsHtml}
+                </div>
+
+                <!-- Summary -->
+                <div style="border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 700; color: #000; font-size: 13px;">TỔNG CỘNG:</span>
+                        <span style="font-size: 16px; font-weight: 700; color: #000; padding-right: 10px;">${formatPrice(order.total)}</span>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                ${order.note ? `
+                <div style="margin-bottom: 12px; padding: 8px; border: 1px dashed #000; border-radius: 4px;">
+                    <p style="font-size: 11px; color: #000;"><strong>Ghi chú:</strong> ${order.note}</p>
+                </div>
+                ` : ''}
+
+                <!-- Footer -->
+                <div style="text-align: center; padding-top: 10px; border-top: 1px dashed #000;">
+                    <p style="font-size: 11px; color: #000;">Cảm ơn quý khách đã ủng hộ!</p>
+                    <p style="font-size: 10px; color: #000; margin-top: 4px;">Đơn hàng #${orderCount}</p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+};

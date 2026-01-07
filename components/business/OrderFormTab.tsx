@@ -4,7 +4,7 @@ import { FileText, Search, Plus, ChevronDown, Store } from 'lucide-react';
 import { Product } from '../../types';
 import { Order, BankInfo, ShopTemplate, businessService } from '../../businessService';
 import { NewOrder, OrderItem } from '../../hooks/useBusinessData';
-import { generatePDFContent } from '../../utils/pdfGenerator';
+import { generatePDFContent, generateReceiptContent } from '../../utils/pdfGenerator';
 import { ManualEntryRow } from './ManualEntryRow';
 import { OrderItemsTable } from './OrderItemsTable';
 import { OrderSummarySection } from './OrderSummarySection';
@@ -232,6 +232,53 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
         }
     };
 
+    const handleThermalPrint = async () => {
+        if (!newOrder.customerName.trim()) {
+            alert('Vui lòng nhập tên khách hàng');
+            return;
+        }
+        if (newOrder.items.length === 0) {
+            alert('Vui lòng thêm ít nhất 1 sản phẩm');
+            return;
+        }
+
+        const order: Order = {
+            id: 'order_' + Date.now(),
+            customerName: newOrder.customerName,
+            phone: newOrder.phone,
+            address: newOrder.address,
+            items: newOrder.items,
+            total: getTotal(),
+            status: 'pending',
+            createdAt: new Date().toISOString(),
+            paymentMethod: 'cod',
+            note: newOrder.note,
+            shippingFee: newOrder.shippingFee,
+            discount: newOrder.discount,
+            debt: newOrder.debt
+        };
+
+        const selectedTemplate = shopTemplates.find(t => t.id === newOrder.selectedTemplateId) || shopTemplates[0];
+        const receiptContent = generateReceiptContent(order, orderCount + 1, selectedTemplate, bankInfo);
+
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+            printWindow.document.write(receiptContent);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+
+        // Save order to database
+        const updatedOrders = await businessService.addOrder(order);
+        setOrders(updatedOrders);
+        await updateCustomer(order);
+        resetOrderForm();
+    };
+
     return (
         <div className="space-y-6">
             {/* Template Selection */}
@@ -394,10 +441,10 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                                     <input
                                         type="number"
                                         min="1"
-                                        value={addQuantity === '' ? '' : addQuantity}
+                                        value={addQuantity === 0 ? '' : addQuantity}
                                         onChange={(e) => {
                                             const val = e.target.value;
-                                            setAddQuantity(val === '' ? '' : parseInt(val) || '');
+                                            setAddQuantity(val === '' ? 0 : parseInt(val) || 0);
                                         }}
                                         className="w-16 py-1 text-center font-black text-slate-800 focus:outline-none text-lg"
                                     />
@@ -459,6 +506,7 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                         getTotal={getTotal}
                         formatPrice={formatPrice}
                         handleCreateAndExportPDF={handleCreateAndExportPDF}
+                        handleThermalPrint={handleThermalPrint}
                         handleSaveOrder={handleSaveOrder}
                     />
                 </div>

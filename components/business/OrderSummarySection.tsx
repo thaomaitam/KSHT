@@ -9,6 +9,7 @@ interface OrderSummarySectionProps {
     getTotal: () => number;
     formatPrice: (price: number) => string;
     handleCreateAndExportPDF: () => Promise<void>;
+    handleThermalPrint: () => Promise<void>;
     handleSaveOrder: () => Promise<any>;
 }
 
@@ -19,6 +20,7 @@ export const OrderSummarySection: React.FC<OrderSummarySectionProps> = ({
     getTotal,
     formatPrice,
     handleCreateAndExportPDF,
+    handleThermalPrint,
     handleSaveOrder
 }) => {
     return (
@@ -80,6 +82,13 @@ export const OrderSummarySection: React.FC<OrderSummarySectionProps> = ({
                 </div>
             </div>
             <div className="lg:col-span-4 flex flex-col gap-3 justify-center">
+                <button
+                    onClick={handleThermalPrint}
+                    className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-blue-500 text-white rounded-2xl font-bold hover:bg-blue-600 transition-all shadow-md shadow-blue-100 active:scale-95"
+                >
+                    <Printer size={20} />
+                    IN BILL NHIỆT (80MM)
+                </button>
                 <button
                     onClick={handleCreateAndExportPDF}
                     className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-emerald-500 text-white rounded-2xl font-bold hover:bg-emerald-600 transition-all shadow-md shadow-emerald-100 active:scale-95"

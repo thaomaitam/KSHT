@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.5.0] - 2026-01-07
+
+### Added
+- **Quick Order Creation from Customer List**: Added "Create Order" button (FilePlus icon) to each customer in the customer list. Clicking it automatically populates customer information and switches to the order form, streamlining the workflow for repeat customers.
+
+### Changed
+- **Thermal Receipt Layout (80mm)**:
+  - Increased base font size to 12px for better readability
+  - Centered customer information section with border frame
+  - Moved product name to its own full-width line to prevent truncation of long names
+  - Quantity × Price and Total now appear on the second line together
+  - Adjusted right padding (13px for items, 10px for total) to prevent currency symbol "đ" from being cut off
+  - Moved notes section below the total amount
+  - Added bank account information from settings (dynamic, customizable)
+  - Changed total section from dark background to bordered design for better thermal printer compatibility
+- **Order History Icons**: Changed "Recreate Order" icon from Copy to RotateCcw for clearer semantic meaning
+- **Button Order**: Moved thermal print button to the top of action lists for easier access
+
+### Fixed
+- **Thermal Receipt Printing**: Fixed price display being cut off at the right edge due to insufficient margin
+
+---
+
 ## [1.4.0] - 2025-12-20
 
 ### Added
