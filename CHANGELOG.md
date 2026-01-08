@@ -2,14 +2,35 @@
 
 ## [1.5.1] - 2026-01-08
 
+### Added
+- **Amount in Words Input**: New input field "Cộng Thành Tiền (viết bằng chữ)" in order form. Type amount in words before printing, or leave empty for manual handwriting after printing.
+- **Signature Section**: Added dual-column signature area at the bottom of thermal receipt:
+  - "Người Nhận Hàng" (left column)
+  - "Người Viết Hoá Đơn" (right column)
+  - Each with "(Ký, ghi rõ họ tên)" instruction and space for signing.
+
 ### Changed
-- **Thermal Receipt Enhancements**:
-  - Added "Cộng Thành Tiền (viết bằng chữ)" line below total.
-  - **New Feature**: Added input field in order form to type "Amount in words" before printing. If left empty, it will print dots for manual writing.
-  - Added signature section with "Người Nhận Hàng" and "Người Viết Hoá Đơn" at the bottom.
-- **Font Size & Layout**:
-  - Adjusted font sizes to a more balanced level (Shop header 20px, products 13px, customer info 14px) for better aesthetics while maintaining readability.
-  - Adjusted right margin (15px) for prices to prevent truncation without excessive whitespace.
+- **Thermal Receipt Font Sizes**: Optimized for 80mm thermal paper readability:
+  - Shop header: 18px (bold, uppercase)
+  - Shop address & phone: 11px
+  - Bank account info: 10px
+  - "ĐƠN HÀNG" title: 15px
+  - Customer name: 12px (bold)
+  - Customer SĐT & address: 11px
+  - Product name: 12px
+  - Product details (SL x Đơn giá): 11px
+  - Product total: 12px
+  - "TỔNG CỘNG" label: 13px
+  - Total amount: 16px (bold)
+  - Amount in words: 11px (italic)
+  - Notes: 11px
+  - Signatures: 11px (title), 9px (instruction)
+  - Footer: 11px / 10px
+- **Layout Adjustments**: 
+  - Reduced margins and padding for compact bill layout
+  - Price column right padding: 13px (prevents "đ" truncation)
+  - Signature area height reduced from 60px to 50px
+
 
 ## [1.5.0] - 2026-01-07
 

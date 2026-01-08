@@ -247,14 +247,14 @@ export const generateReceiptContent = (order: Order, orderCount: number, shopTem
     order.items.forEach((item: OrderItem, index: number) => {
         itemsHtml += `
             <div style="padding: 6px 0; border-bottom: 1px solid #ddd;">
-                <p style="margin: 0; font-weight: 500; color: #000; font-size: 13px;">
+                <p style="margin: 0; font-weight: 500; color: #000; font-size: 12px;">
                     ${index + 1}. ${item.name}
                 </p>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
-                    <span style="color: #000; font-size: 12px;">
+                    <span style="color: #000; font-size: 11px;">
                         ${item.unit} | ${item.quantity} x ${formatPrice(item.unitPrice)}
                     </span>
-                    <span style="font-weight: 700; color: #000; font-size: 13px; padding-right: 15px;">
+                    <span style="font-weight: 700; color: #000; font-size: 12px; padding-right: 13px;">
                         ${formatPrice(item.total)}
                     </span>
                 </div>
@@ -294,66 +294,66 @@ export const generateReceiptContent = (order: Order, orderCount: number, shopTem
             <div class="receipt">
                 <!-- Header -->
                 <div style="text-align: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px dashed #000;">
-                    <h1 style="font-size: 20px; font-weight: 700; color: #000; margin-bottom: 4px; text-transform: uppercase;">${shop.name}</h1>
-                    <p style="font-size: 12px; color: #000; margin-bottom: 2px;">${shop.address}</p>
-                    <p style="font-size: 12px; color: #000; font-weight: 500;">SĐT: ${shop.phone}</p>
-                    <p style="font-size: 11px; color: #000; margin-top: 4px; font-weight: 600;">STK: ${bank.accountNumber} - ${bank.bankName}</p>
+                    <h1 style="font-size: 18px; font-weight: 700; color: #000; margin-bottom: 4px; text-transform: uppercase;">${shop.name}</h1>
+                    <p style="font-size: 11px; color: #000; margin-bottom: 2px;">${shop.address}</p>
+                    <p style="font-size: 11px; color: #000;">SĐT: ${shop.phone}</p>
+                    <p style="font-size: 10px; color: #000; margin-top: 4px; font-weight: 600;">STK: ${bank.accountNumber} - ${bank.bankName}</p>
                 </div>
 
                 <!-- Order Info -->
                 <div style="text-align: center; margin-bottom: 10px;">
-                    <h2 style="font-size: 16px; font-weight: 700; color: #000; margin-bottom: 2px;">ĐƠN HÀNG</h2>
-                    <p style="font-size: 12px; color: #000;">Ngày: ${today}</p>
+                    <h2 style="font-size: 15px; font-weight: 700; color: #000; margin-bottom: 2px;">ĐƠN HÀNG</h2>
+                    <p style="font-size: 11px; color: #000;">Ngày: ${today}</p>
                 </div>
 
                 <!-- Customer Info -->
                 <div style="margin-bottom: 12px; padding: 10px; border: 1px solid #000; border-radius: 4px; text-align: center;">
-                    <p style="font-size: 14px; color: #000; margin-bottom: 2px;"><strong>Khách hàng:</strong> ${order.customerName}</p>
-                    ${order.phone ? `<p style="font-size: 12px; color: #000; margin-bottom: 2px;">SĐT: ${order.phone}</p>` : ''}
-                    ${order.address ? `<p style="font-size: 12px; color: #000;">ĐC: ${order.address}</p>` : ''}
+                    <p style="font-size: 12px; color: #000; margin-bottom: 2px;"><strong>Khách hàng:</strong> ${order.customerName}</p>
+                    ${order.phone ? `<p style="font-size: 11px; color: #000; margin-bottom: 2px;">SĐT: ${order.phone}</p>` : ''}
+                    ${order.address ? `<p style="font-size: 11px; color: #000;">ĐC: ${order.address}</p>` : ''}
                 </div>
 
                 <!-- Items -->
-                <div style="margin-bottom: 15px;">
+                <div style="margin-bottom: 12px;">
                     ${itemsHtml}
                 </div>
 
                 <!-- Summary -->
-                <div style="border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 6px;">
+                <div style="border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 10px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-weight: 700; color: #000; font-size: 14px;">TỔNG CỘNG:</span>
-                        <span style="font-size: 18px; font-weight: 700; color: #000; padding-right: 15px;">${formatPrice(order.total)}</span>
+                        <span style="font-weight: 700; color: #000; font-size: 13px;">TỔNG CỘNG:</span>
+                        <span style="font-size: 16px; font-weight: 700; color: #000; padding-right: 10px;">${formatPrice(order.total)}</span>
                     </div>
                 </div>
 
                 <!-- Amount in words -->
-                <div style="margin-bottom: 15px; font-size: 12px; font-style: italic; color: #000; line-height: 1.6;">
+                <div style="margin-bottom: 12px; font-size: 11px; font-style: italic; color: #000; line-height: 1.6;">
                     Cộng Thành Tiền (viết bằng chữ): ${order.totalAmountInWords || '.................................................................................................................................................................'}
                 </div>
 
                 <!-- Notes -->
                 ${order.note ? `
-                <div style="margin-bottom: 15px; padding: 8px; border: 1px dashed #000; border-radius: 4px;">
-                    <p style="font-size: 12px; color: #000;"><strong>Ghi chú:</strong> ${order.note}</p>
+                <div style="margin-bottom: 12px; padding: 8px; border: 1px dashed #000; border-radius: 4px;">
+                    <p style="font-size: 11px; color: #000;"><strong>Ghi chú:</strong> ${order.note}</p>
                 </div>
                 ` : ''}
 
                 <!-- Signatures -->
-                <div style="margin-top: 20px; margin-bottom: 60px; display: flex; justify-content: space-between;">
-                    <div style="text-align: center; width: 48%;">
-                        <p style="font-size: 12px; font-weight: 700;">Người Nhận Hàng</p>
-                        <p style="font-size: 10px; font-style: italic;">(Ký, ghi rõ họ tên)</p>
+                <div style="margin-top: 15px; margin-bottom: 50px; display: flex; justify-content: space-between;">
+                    <div style="text-align: center; width: 45%;">
+                        <p style="font-size: 11px; font-weight: 700;">Người Nhận Hàng</p>
+                        <p style="font-size: 9px; font-style: italic;">(Ký, ghi rõ họ tên)</p>
                     </div>
-                    <div style="text-align: center; width: 48%;">
-                        <p style="font-size: 12px; font-weight: 700;">Người Viết Hoá Đơn</p>
-                        <p style="font-size: 10px; font-style: italic;">(Ký, ghi rõ họ tên)</p>
+                    <div style="text-align: center; width: 45%;">
+                        <p style="font-size: 11px; font-weight: 700;">Người Viết Hoá Đơn</p>
+                        <p style="font-size: 9px; font-style: italic;">(Ký, ghi rõ họ tên)</p>
                     </div>
                 </div>
 
                 <!-- Footer -->
-                <div style="text-align: center; padding-top: 12px; border-top: 1px dashed #000;">
-                    <p style="font-size: 13px; color: #000;">Cảm ơn quý khách đã ủng hộ!</p>
-                    <p style="font-size: 12px; color: #000; margin-top: 6px;">Đơn hàng #${orderCount}</p>
+                <div style="text-align: center; padding-top: 10px; border-top: 1px dashed #000;">
+                    <p style="font-size: 11px; color: #000;">Cảm ơn quý khách đã ủng hộ!</p>
+                    <p style="font-size: 10px; color: #000; margin-top: 4px;">Đơn hàng #${orderCount}</p>
                 </div>
             </div>
         </body>
