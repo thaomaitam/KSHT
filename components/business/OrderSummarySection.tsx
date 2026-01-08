@@ -69,14 +69,24 @@ export const OrderSummarySection: React.FC<OrderSummarySectionProps> = ({
                             <span className="text-lg font-bold text-slate-800">Tổng cộng:</span>
                             <span className="text-2xl font-black text-emerald-600">{formatPrice(getTotal())}</span>
                         </div>
+                        <div className="pt-2">
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Cộng Thành Tiền (viết bằng chữ):</label>
+                            <input
+                                type="text"
+                                value={newOrder.totalAmountInWords || ''}
+                                onChange={(e) => setNewOrder({ ...newOrder, totalAmountInWords: e.target.value })}
+                                className="w-full px-4 py-2 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                                placeholder="Nhập số tiền bằng chữ (ví dụ: Mười hai triệu...)"
+                            />
+                        </div>
                     </div>
-                    <div className="hidden md:block w-px h-24 bg-slate-100"></div>
+                    <div className="hidden md:block w-px h-32 bg-slate-100"></div>
                     <div className="flex-1">
                         <textarea
                             placeholder="Ghi chú đơn hàng..."
                             value={newOrder.note}
                             onChange={(e) => setNewOrder({ ...newOrder, note: e.target.value })}
-                            className="w-full px-4 py-3 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none h-32 bg-slate-50/30 text-sm"
+                            className="w-full px-4 py-3 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none h-40 bg-slate-50/30 text-sm"
                         />
                     </div>
                 </div>

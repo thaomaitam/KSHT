@@ -74,7 +74,8 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
             note: newOrder.note,
             shippingFee: newOrder.shippingFee,
             discount: newOrder.discount,
-            debt: newOrder.debt
+            debt: newOrder.debt,
+            totalAmountInWords: newOrder.totalAmountInWords
         };
 
         const selectedTemplate = shopTemplates.find(t => t.id === newOrder.selectedTemplateId) || shopTemplates[0];
@@ -255,7 +256,8 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
             note: newOrder.note,
             shippingFee: newOrder.shippingFee,
             discount: newOrder.discount,
-            debt: newOrder.debt
+            debt: newOrder.debt,
+            totalAmountInWords: newOrder.totalAmountInWords
         };
 
         const selectedTemplate = shopTemplates.find(t => t.id === newOrder.selectedTemplateId) || shopTemplates[0];

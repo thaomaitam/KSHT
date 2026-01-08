@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.5.1] - 2026-01-08
+
+### Changed
+- **Thermal Receipt Enhancements**:
+  - Added "Cộng Thành Tiền (viết bằng chữ)" line below total.
+  - **New Feature**: Added input field in order form to type "Amount in words" before printing. If left empty, it will print dots for manual writing.
+  - Added signature section with "Người Nhận Hàng" and "Người Viết Hoá Đơn" at the bottom.
+- **Font Size & Layout**:
+  - Adjusted font sizes to a more balanced level (Shop header 20px, products 13px, customer info 14px) for better aesthetics while maintaining readability.
+  - Adjusted right margin (15px) for prices to prevent truncation without excessive whitespace.
+
 ## [1.5.0] - 2026-01-07
 
 ### Added

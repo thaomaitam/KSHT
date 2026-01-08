@@ -32,6 +32,7 @@ export interface NewOrder {
     showSoCuon: boolean;     // Toggle column visibility
     showSoKi: boolean;       // Toggle column visibility
     selectedTemplateId: string; // New field
+    totalAmountInWords: string;
 }
 
 export const useBusinessData = () => {
@@ -57,7 +58,8 @@ export const useBusinessData = () => {
         isManualEntry: false,
         showSoCuon: false,
         showSoKi: false,
-        selectedTemplateId: 'default'
+        selectedTemplateId: 'default',
+        totalAmountInWords: ''
     });
 
     // Search and filter states
@@ -211,7 +213,8 @@ export const useBusinessData = () => {
             isManualEntry: false,
             showSoCuon: false,
             showSoKi: false,
-            selectedTemplateId: 'default'
+            selectedTemplateId: 'default',
+            totalAmountInWords: ''
         });
     };
 
@@ -269,7 +272,8 @@ export const useBusinessData = () => {
             shippingFee: newOrder.shippingFee,
             discount: newOrder.discount,
             debt: newOrder.debt,
-            paymentStatus: (newOrder.debt || 0) > 0 ? 'unpaid' : 'paid'
+            paymentStatus: (newOrder.debt || 0) > 0 ? 'unpaid' : 'paid',
+            totalAmountInWords: newOrder.totalAmountInWords
         };
 
         const updatedOrders = await businessService.addOrder(order);

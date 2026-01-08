@@ -15,6 +15,7 @@ export interface Order {
     discount?: number;
     debt?: number;
     paymentStatus?: 'paid' | 'unpaid';
+    totalAmountInWords?: string;
 }
 
 export interface Customer {
