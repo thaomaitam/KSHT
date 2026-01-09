@@ -35,11 +35,11 @@ const formatPrice = (price: number): string => {
 export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orderCount: number, shopTemplate?: ShopTemplate | null): string => {
     const today = new Date().toLocaleDateString('vi-VN');
 
-    // Default shop info if not provided
+    // Use provided shop template or show placeholder
     const shop = shopTemplate || {
-        name: 'KHO SỈ HUY THẢO',
-        address: '119/16A Mễ Cốc, Phường 15, Quận 8, TP.HCM',
-        phone: '0964727949'
+        name: '[Chưa có mẫu cửa hàng]',
+        address: '[Vui lòng tạo mẫu trong Cài đặt]',
+        phone: ''
     };
 
     const hasSoCuon = order.items.some((item: OrderItem) => item.soCuon !== undefined && item.soCuon > 0);
@@ -138,13 +138,13 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
                         </p>
                         <div style="padding: 12px 15px;">
                             <p style="margin: 5px 0; font-size: 12px; color: ${PDF_COLORS.textDark}; font-weight: 700;">
-                                Ngân hàng: <span style="font-weight: 400;">${bankInfo?.bankName || 'SACOMBANK'}</span>
+                                Ngân hàng: <span style="font-weight: 400;">${bankInfo?.bankName || '[Chưa cài đặt]'}</span>
                             </p>
                             <p style="margin: 5px 0; font-size: 12px; color: ${PDF_COLORS.textDark}; font-weight: 700;">
-                                Số TK: <span style="font-weight: 400;">${bankInfo?.accountNumber || '050122554391'}</span>
+                                Số TK: <span style="font-weight: 400;">${bankInfo?.accountNumber || ''}</span>
                             </p>
                             <p style="margin: 5px 0; font-size: 12px; color: ${PDF_COLORS.textDark}; font-weight: 700;">
-                                Chủ TK: <span style="font-weight: 400;">${bankInfo?.accountName || 'NGUYỄN THANH HUY'}</span>
+                                Chủ TK: <span style="font-weight: 400;">${bankInfo?.accountName || ''}</span>
                             </p>
                         </div>
                     </div>
@@ -232,15 +232,15 @@ export const generateReceiptContent = (order: Order, orderCount: number, shopTem
     });
 
     const shop = shopTemplate || {
-        name: 'KHO SỈ HUY THẢO',
-        address: '119/16A Mễ Cốc, Phường 15, Quận 8, TP.HCM',
-        phone: '0964727949'
+        name: '[Chưa có mẫu cửa hàng]',
+        address: '[Vui lòng tạo mẫu trong Cài đặt]',
+        phone: ''
     };
 
     const bank = bankInfo || {
-        bankName: 'SACOMBANK',
-        accountNumber: '050122554391',
-        accountName: 'NGUYỄN THANH HUY'
+        bankName: '[Chưa cài đặt]',
+        accountNumber: '',
+        accountName: ''
     };
 
     let itemsHtml = '';

@@ -1,7 +1,7 @@
 import React from 'react';
 import html2canvas from 'html2canvas';
 import { History, Search, Filter, Printer, Trash2, RotateCcw, ChevronRight } from 'lucide-react';
-import { Order, BankInfo, businessService, Customer } from '../../businessService';
+import { Order, BankInfo, ShopTemplate, businessService, Customer } from '../../businessService';
 import { generatePDFContent, generateReceiptContent } from '../../utils/pdfGenerator';
 
 interface OrderHistoryTabProps {
@@ -10,6 +10,7 @@ interface OrderHistoryTabProps {
     orderSearch: string;
     setOrderSearch: (search: string) => void;
     bankInfo: BankInfo | null;
+    shopTemplates: ShopTemplate[];
     updateCustomer: (order: Order) => Promise<void>;
     customers: Customer[];
     setCustomers: React.Dispatch<React.SetStateAction<Customer[]>>;
@@ -31,7 +32,7 @@ const formatDate = (dateString: string): string => {
 };
 
 export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
-    orders, setOrders, orderSearch, setOrderSearch, bankInfo, updateCustomer, customers, setCustomers, onRecreateOrder
+    orders, setOrders, orderSearch, setOrderSearch, bankInfo, shopTemplates, updateCustomer, customers, setCustomers, onRecreateOrder
 }) => {
 
     const filteredOrders = orders.filter(order =>
@@ -83,7 +84,12 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
     };
 
     const handleExportPDF = async (order: Order, index: number) => {
-        const pdfContent = generatePDFContent(order, bankInfo, orders.length - index);
+        // Find the template used for this order, or use default
+        const savedTemplate = shopTemplates.find(t => t.id === order.shopTemplateId);
+        const defaultTemplate = shopTemplates.find(t => t.isDefault);
+        const templateToUse = savedTemplate || defaultTemplate || shopTemplates[0];
+
+        const pdfContent = generatePDFContent(order, bankInfo, orders.length - index, templateToUse);
 
         // Create hidden container to render the invoice HTML
         const container = document.createElement('div');
@@ -233,8 +239,13 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
     };
 
     const handleThermalPrint = (order: Order, index: number) => {
+        // Find the template used for this order, or use default
+        const savedTemplate = shopTemplates.find(t => t.id === order.shopTemplateId);
+        const defaultTemplate = shopTemplates.find(t => t.isDefault);
+        const templateToUse = savedTemplate || defaultTemplate || shopTemplates[0];
+
         const orderNumber = orders.length - index;
-        const receiptContent = generateReceiptContent(order, orderNumber, undefined, bankInfo);
+        const receiptContent = generateReceiptContent(order, orderNumber, templateToUse, bankInfo);
 
         const printWindow = window.open('', '_blank');
         if (printWindow) {

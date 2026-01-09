@@ -16,6 +16,7 @@ export interface Order {
     debt?: number;
     paymentStatus?: 'paid' | 'unpaid';
     totalAmountInWords?: string;
+    shopTemplateId?: string;
 }
 
 export interface Customer {
@@ -170,17 +171,7 @@ export const businessService = {
     // Shop Templates (for PDF header)
     async getShopTemplates(): Promise<ShopTemplate[]> {
         const data = await apiService.get<ShopTemplate[]>('shopTemplates');
-        if (!data || data.length === 0) {
-            // Return default template
-            return [{
-                id: 'default',
-                name: 'KHO SỈ HUY THẢO',
-                address: '119/16A Mễ Cốc, Phường 15, Quận 8, TP.HCM',
-                phone: '0964727949',
-                isDefault: true
-            }];
-        }
-        return data;
+        return data || [];
     },
 
     async saveShopTemplates(templates: ShopTemplate[]): Promise<boolean> {

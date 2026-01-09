@@ -68,6 +68,11 @@ export const BusinessPage: React.FC = () => {
         const hasSoCuon = items.some(item => item.soCuon !== undefined && item.soCuon > 0);
         const hasSoKi = items.some(item => item.soKi !== undefined && item.soKi > 0);
 
+        // Use original template if it still exists, otherwise use current default
+        const originalTemplate = shopTemplates.find(t => t.id === order.shopTemplateId);
+        const defaultTemplate = shopTemplates.find(t => t.isDefault) || shopTemplates[0];
+        const templateToUse = originalTemplate || defaultTemplate;
+
         setNewOrder({
             customerName: order.customerName,
             phone: order.phone,
@@ -80,7 +85,8 @@ export const BusinessPage: React.FC = () => {
             isManualEntry: true,
             showSoCuon: hasSoCuon,
             showSoKi: hasSoKi,
-            selectedTemplateId: newOrder.selectedTemplateId
+            selectedTemplateId: templateToUse?.id || 'default',
+            totalAmountInWords: order.totalAmountInWords || ''
         });
 
         setActiveTab('orders');
@@ -179,6 +185,10 @@ export const BusinessPage: React.FC = () => {
                         setOrderSearch={setOrderSearch}
                         onRecreateOrder={handleRecreateOrder}
                         bankInfo={bankInfo}
+                        shopTemplates={shopTemplates}
+                        updateCustomer={updateCustomer}
+                        customers={customers}
+                        setCustomers={setCustomers}
                     />
                 )}
 

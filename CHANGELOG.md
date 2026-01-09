@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.6.0] - 2026-01-09
+
+### Added
+- **Template Tracking**: Orders now save the shop template ID used at creation time, ensuring reprints always use the correct store information even if templates are modified or deleted later.
+- **Smart Template Initialization**: Order form now automatically selects the template marked as "Default" when opening or resetting the form.
+
+### Changed
+- **Removed Hardcoded Data**: Completely removed hardcoded shop information ("Kho sỉ Huy Thảo") and bank account defaults from PDF and thermal receipt generators. System now exclusively uses user-created templates from Settings.
+- **Template Fallback**: When a saved template is deleted, the system intelligently falls back to the current default template when reprinting orders.
+- **History Tab Synchronization**: Order history now receives the full template list and uses the correct template when reprinting PDF invoices or thermal receipts.
+
+### Fixed
+- **Template Persistence**: Fixed issue where deleting a shop template would cause errors when reprinting old orders. System now gracefully handles missing templates.
+- **Form Reset**: Fixed order form reset to properly select the current default template instead of a non-existent hardcoded value.
+
+---
+
 ## [1.5.1] - 2026-01-08
 
 ### Added

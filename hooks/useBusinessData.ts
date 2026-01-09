@@ -201,6 +201,9 @@ export const useBusinessData = () => {
     };
 
     const resetOrderForm = () => {
+        // Get current default template
+        const defaultTemplate = shopTemplates.find(t => t.isDefault) || shopTemplates[0];
+
         setNewOrder({
             customerName: '',
             phone: '',
@@ -213,7 +216,7 @@ export const useBusinessData = () => {
             isManualEntry: false,
             showSoCuon: false,
             showSoKi: false,
-            selectedTemplateId: 'default',
+            selectedTemplateId: defaultTemplate?.id || 'default',
             totalAmountInWords: ''
         });
     };
@@ -273,7 +276,8 @@ export const useBusinessData = () => {
             discount: newOrder.discount,
             debt: newOrder.debt,
             paymentStatus: (newOrder.debt || 0) > 0 ? 'unpaid' : 'paid',
-            totalAmountInWords: newOrder.totalAmountInWords
+            totalAmountInWords: newOrder.totalAmountInWords,
+            shopTemplateId: newOrder.selectedTemplateId
         };
 
         const updatedOrders = await businessService.addOrder(order);
