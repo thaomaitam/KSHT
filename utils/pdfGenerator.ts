@@ -298,6 +298,7 @@ export const generateReceiptContent = (order: Order, orderCount: number, shopTem
                     <p style="font-size: 11px; color: #000; margin-bottom: 2px;">${shop.address}</p>
                     <p style="font-size: 11px; color: #000;">SĐT: ${shop.phone}</p>
                     <p style="font-size: 10px; color: #000; margin-top: 4px; font-weight: 600;">STK: ${bank.accountNumber} - ${bank.bankName}</p>
+                    <p style="font-size: 10px; color: #000; font-weight: 600;">Chủ TK: ${bank.accountName}</p>
                 </div>
 
                 <!-- Order Info -->
@@ -319,8 +320,35 @@ export const generateReceiptContent = (order: Order, orderCount: number, shopTem
                 </div>
 
                 <!-- Summary -->
-                <div style="border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 10px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="border-top: 2px solid #000; padding: 8px 0; margin-bottom: 10px;">
+                    <!-- Subtotal -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <span style="color: #000; font-size: 11px;">Tạm tính:</span>
+                        <span style="font-size: 11px; color: #000; padding-right: 10px;">${formatPrice(order.items.reduce((sum: number, item: OrderItem) => sum + item.total, 0))}</span>
+                    </div>
+                    ${order.shippingFee ? `
+                    <!-- Shipping Fee -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <span style="color: #000; font-size: 11px;">Phí vận chuyển:</span>
+                        <span style="font-size: 11px; color: #000; padding-right: 10px;">+${formatPrice(order.shippingFee)}</span>
+                    </div>
+                    ` : ''}
+                    ${order.discount ? `
+                    <!-- Discount -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <span style="color: #E53E3E; font-size: 11px;">Chiết khấu:</span>
+                        <span style="font-size: 11px; color: #E53E3E; padding-right: 10px;">-${formatPrice(order.discount)}</span>
+                    </div>
+                    ` : ''}
+                    ${order.debt ? `
+                    <!-- Debt -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <span style="color: #F57C00; font-size: 11px;">Công nợ cũ:</span>
+                        <span style="font-size: 11px; color: #F57C00; padding-right: 10px;">+${formatPrice(order.debt)}</span>
+                    </div>
+                    ` : ''}
+                    <!-- Total -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 6px; border-top: 1px solid #000;">
                         <span style="font-weight: 700; color: #000; font-size: 13px;">TỔNG CỘNG:</span>
                         <span style="font-size: 16px; font-weight: 700; color: #000; padding-right: 10px;">${formatPrice(order.total)}</span>
                     </div>

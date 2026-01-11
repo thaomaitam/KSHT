@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.1] - 2026-01-11
+
+### Fixed
+- **Thermal Receipt Price Breakdown**: Added missing subtotal (Tạm tính), shipping fee (Phí vận chuyển), discount (Chiết khấu), and debt (Công nợ) to thermal receipt. Previously only the final total was shown.
+- **Thermal Receipt Bank Info**: Added account holder name (Chủ TK) display so customers can verify correct transfer recipient.
+
+---
+
 ## [1.6.0] - 2026-01-09
 
 ### Added
