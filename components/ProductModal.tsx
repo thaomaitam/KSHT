@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Product, ProductVariant } from '../types';
 import { ZALO_LINK } from '../constants';
-import { X, MessageCircle, ShoppingCart, Plus, Check } from 'lucide-react';
+import { X, MessageCircle, ShoppingCart, Plus, Check, ZoomIn } from 'lucide-react';
 import { useCart } from '../CartContext';
 import { settingsService } from '../settingsService';
 
@@ -13,6 +13,7 @@ interface ProductModalProps {
 export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
   const { addToCart, items } = useCart();
   const [addedVariant, setAddedVariant] = useState<string | null>(null);
+  const [isImageZoomed, setIsImageZoomed] = useState(false);
 
   useEffect(() => {
     if (product) {
@@ -70,15 +71,49 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              onClick={() => setIsImageZoomed(true)}
+              className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 cursor-zoom-in"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+            {/* Zoom hint button */}
+            <button
+              onClick={() => setIsImageZoomed(true)}
+              className="absolute bottom-4 right-4 p-2 bg-white/90 dark:bg-slate-700/90 hover:bg-white dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 rounded-xl shadow-lg transition-all hover:scale-110 z-10"
+              title="Phóng to ảnh"
+            >
+              <ZoomIn size={20} />
+            </button>
             {product.isHot && (
               <div className="absolute top-4 left-4 md:top-6 md:left-6 bg-gradient-to-r from-red-600 to-orange-500 text-white text-[10px] font-black px-3 md:px-4 py-1 md:py-1.5 rounded-full shadow-xl tracking-widest uppercase z-10">
                 Hot Item
               </div>
             )}
           </div>
+
+          {/* Fullscreen Image Zoom Overlay */}
+          {isImageZoomed && (
+            <div
+              className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center animate-in fade-in zoom-in-95 duration-200"
+              onClick={() => setIsImageZoomed(false)}
+            >
+              <button
+                onClick={() => setIsImageZoomed(false)}
+                className="absolute top-4 right-4 z-20 p-3 bg-white/20 hover:bg-white/30 text-white rounded-full transition-all"
+              >
+                <X size={24} />
+              </button>
+              <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-sm">
+                Chạm vào để đóng • Pinch để zoom
+              </p>
+              <img
+                src={product.image}
+                alt={product.name}
+                className="max-w-[95vw] max-h-[90vh] object-contain touch-pinch-zoom"
+                style={{ touchAction: 'pinch-zoom' }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+          )}
 
           {/* Content Section */}
           <div className="w-full md:w-1/2 p-4 md:p-10 flex flex-col md:overflow-y-auto">

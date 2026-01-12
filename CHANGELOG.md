@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.6.2] - 2026-01-12
+
+### Added
+- **Product Image Zoom**: Customers can now click on product images to view them in fullscreen mode. Features include:
+  - Fullscreen overlay with dark background for better focus
+  - Pinch-to-zoom support on mobile devices
+  - Tap anywhere to close
+  - Zoom button indicator in bottom-right corner
+
+### Fixed
+- **Product Image Display**: Fixed product images being cropped in the modal view on both PC and Android. Images now display fully using `object-contain` instead of `object-cover`, allowing customers to see the complete product.
+
+---
+
 ## [1.6.1] - 2026-01-11
 
 ### Fixed
