@@ -141,7 +141,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                 className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition-colors"
                             >
                                 <Send size={18} />
-                                <span>Gởi Đơn Nhanh</span>
+                                <span>Phiếu soạn hàng</span>
                             </button>
                         </div>
                     </div>

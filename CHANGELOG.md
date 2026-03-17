@@ -1,5 +1,26 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- **Picking Slip PNG Download**: The customer-facing "Xác nhận phiếu soạn hàng" flow now downloads a PNG image directly, making it easier for customers to send the slip via Zalo/Messenger.
+- **Shared Print Helpers**: Added reusable print helpers in `utils/pdfGenerator.ts` for opening print windows, generating the customer picking slip HTML, and rendering image preview pages.
+
+### Changed
+- **Storefront Picking Slip Terminology**: Updated customer cart/order confirmation wording to match the new picking slip workflow:
+  - "Gởi Đơn Nhanh" → "Phiếu soạn hàng"
+  - "Xác nhận đơn hàng" → "Xác nhận phiếu soạn hàng"
+  - "ĐƠN HÀNG" → "PHIẾU SOẠN HÀNG"
+- **Admin Print Terminology**: Updated admin/business PDF and thermal print titles from "Đơn hàng" to "Phiếu xuất kho".
+- **Contact Label Alignment**: Updated the customer picking slip contact line to use "Số điện thoại liên hệ" for consistency with Admin Settings.
+- **Storefront Product Modal Actions**: Removed the "Nhắn Zalo tư vấn" button and kept a single primary action to open the cart.
+- **Cart Confirmation Actions**: Removed the extra Zalo send button from the customer picking slip confirmation modal.
+
+### Fixed
+- **Picking Slip Template Consistency**: The customer download/export flow now uses a shared picking slip template so the generated output stays aligned with the visible confirmation layout.
+
+---
+
 ## [1.6.2] - 2026-01-12
 
 ### Added

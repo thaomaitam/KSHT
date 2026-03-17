@@ -2,7 +2,7 @@ import React from 'react';
 import html2canvas from 'html2canvas';
 import { History, Search, Filter, Printer, Trash2, RotateCcw, ChevronRight } from 'lucide-react';
 import { Order, BankInfo, ShopTemplate, businessService, Customer } from '../../businessService';
-import { generatePDFContent, generateReceiptContent } from '../../utils/pdfGenerator';
+import { generateImagePreviewContent, generatePDFContent, generateReceiptContent, openPrintWindow } from '../../utils/pdfGenerator';
 
 interface OrderHistoryTabProps {
     orders: Order[];
@@ -102,11 +102,8 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
         if (!contentElement) {
             document.body.removeChild(container);
             // Fallback to old method
-            const printWindow = window.open('', '_blank');
+            const printWindow = openPrintWindow(pdfContent);
             if (printWindow) {
-                printWindow.document.write(pdfContent);
-                printWindow.document.close();
-                printWindow.focus();
                 setTimeout(() => printWindow.print(), 500);
             }
             return;
@@ -130,106 +127,19 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
             document.body.removeChild(container);
 
             // Open new window with the image
-            const imageWindow = window.open('', '_blank');
-            if (imageWindow) {
-                const orderNumber = orders.length - index;
-                imageWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Đơn hàng #${orderNumber}</title>
-                        <style>
-                            * { margin: 0; padding: 0; box-sizing: border-box; }
-                            body { 
-                                background: #1a1a2e; 
-                                min-height: 100vh; 
-                                display: flex; 
-                                flex-direction: column;
-                                align-items: center; 
-                                padding: 20px;
-                                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                            }
-                            .toolbar {
-                                position: fixed;
-                                top: 20px;
-                                right: 20px;
-                                display: flex;
-                                gap: 10px;
-                                z-index: 100;
-                            }
-                            .btn {
-                                padding: 12px 24px;
-                                border: none;
-                                border-radius: 8px;
-                                font-size: 14px;
-                                font-weight: 600;
-                                cursor: pointer;
-                                display: flex;
-                                align-items: center;
-                                gap: 8px;
-                                transition: all 0.2s;
-                            }
-                            .btn-print {
-                                background: #4CAF50;
-                                color: white;
-                            }
-                            .btn-print:hover { background: #45a049; }
-                            .hint {
-                                position: fixed;
-                                bottom: 20px;
-                                left: 50%;
-                                transform: translateX(-50%);
-                                background: rgba(255,255,255,0.9);
-                                padding: 12px 24px;
-                                border-radius: 8px;
-                                font-size: 13px;
-                                color: #333;
-                                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                            }
-                            .invoice-image {
-                                max-width: 100%;
-                                height: auto;
-                                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-                                border-radius: 8px;
-                                margin-top: 20px;
-                            }
-                            @media print {
-                                body { background: white; padding: 0; }
-                                .toolbar, .hint { display: none !important; }
-                                .invoice-image { 
-                                    box-shadow: none; 
-                                    border-radius: 0;
-                                    max-width: 100%;
-                                    margin: 0;
-                                }
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="toolbar">
-                            <button class="btn btn-print" onclick="window.print()">
-                                🖨️ In PDF
-                            </button>
-                        </div>
-                        <img src="${imageDataUrl}" alt="Hoá đơn" class="invoice-image" />
-                        <div class="hint">
-                            💡 <strong>Tip:</strong> Chuột phải vào ảnh → Sao chép hình ảnh để gửi khách qua Zalo/Messenger
-                        </div>
-                    </body>
-                    </html>
-                `);
-                imageWindow.document.close();
-            }
+            const orderNumber = orders.length - index;
+            openPrintWindow(generateImagePreviewContent(
+                `Phiếu xuất kho #${orderNumber}`,
+                imageDataUrl,
+                'Hoá đơn'
+            ));
         } catch (error) {
             console.error('Error generating invoice image:', error);
             document.body.removeChild(container);
 
             // Fallback to old PDF method
-            const printWindow = window.open('', '_blank');
+            const printWindow = openPrintWindow(pdfContent);
             if (printWindow) {
-                printWindow.document.write(pdfContent);
-                printWindow.document.close();
-                printWindow.focus();
                 setTimeout(() => {
                     printWindow.print();
                     printWindow.close();
@@ -247,11 +157,8 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
         const orderNumber = orders.length - index;
         const receiptContent = generateReceiptContent(order, orderNumber, templateToUse, bankInfo);
 
-        const printWindow = window.open('', '_blank');
+        const printWindow = openPrintWindow(receiptContent);
         if (printWindow) {
-            printWindow.document.write(receiptContent);
-            printWindow.document.close();
-            printWindow.focus();
             setTimeout(() => {
                 printWindow.print();
                 printWindow.close();

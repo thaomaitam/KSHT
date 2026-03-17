@@ -32,6 +32,329 @@ const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
 };
 
+const currencyFormatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+});
+
+const formatCurrency = (price: number): string => currencyFormatter.format(price);
+
+const escapeHtml = (value: string): string => value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+export interface PickingSlipItem {
+    name: string;
+    variant: string;
+    quantity: number;
+    unitPrice: number;
+    total: number;
+}
+
+export const openPrintWindow = (content: string): Window | null => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return null;
+
+    printWindow.document.write(content);
+    printWindow.document.close();
+    printWindow.focus();
+
+    return printWindow;
+};
+
+export const generatePickingSlipContent = (
+    items: PickingSlipItem[],
+    total: number,
+    today: string,
+    phoneNumber: string
+): string => {
+    const itemsHtml = items.map((item, index) => `
+        <div class="item-row">
+            <div class="item-left">
+                <p class="item-name">${index + 1}. ${escapeHtml(item.name)}</p>
+                <p class="item-meta">${escapeHtml(item.variant)} | ${item.quantity} x ${formatCurrency(item.unitPrice)}</p>
+            </div>
+            <p class="item-total">${formatCurrency(item.total)}</p>
+        </div>
+    `).join('');
+
+    return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Phiếu soạn hàng</title>
+            <style>
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                body {
+                    font-family: Arial, sans-serif;
+                    background: #f8fafc;
+                    color: #0f172a;
+                    padding: 24px;
+                }
+                .sheet {
+                    max-width: 480px;
+                    margin: 0 auto;
+                    background: #ffffff;
+                    border-radius: 24px;
+                    overflow: hidden;
+                    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+                    border: 1px solid #e2e8f0;
+                }
+                .sheet-header {
+                    padding: 20px 24px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    border-bottom: 1px solid #e2e8f0;
+                }
+                .sheet-header h2 {
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: #1e293b;
+                }
+                .sheet-content {
+                    padding: 24px;
+                }
+                .summary-header {
+                    text-align: center;
+                    margin-bottom: 24px;
+                    padding-bottom: 16px;
+                    border-bottom: 2px dashed #e2e8f0;
+                }
+                .summary-icon {
+                    width: 48px;
+                    height: 48px;
+                    margin: 0 auto 12px;
+                    border-radius: 9999px;
+                    background: #dbeafe;
+                    color: #2563eb;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 24px;
+                }
+                .summary-title {
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: #1e293b;
+                    margin-bottom: 4px;
+                }
+                .summary-date {
+                    font-size: 14px;
+                    color: #64748b;
+                }
+                .items {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    margin-bottom: 24px;
+                }
+                .item-row {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    gap: 16px;
+                    padding: 8px 0;
+                    border-bottom: 1px solid #f1f5f9;
+                }
+                .item-row:last-child {
+                    border-bottom: 0;
+                }
+                .item-left {
+                    flex: 1;
+                    min-width: 0;
+                }
+                .item-name {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: #1e293b;
+                    margin-bottom: 4px;
+                    word-break: break-word;
+                }
+                .item-meta {
+                    font-size: 12px;
+                    color: #64748b;
+                }
+                .item-total {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #2563eb;
+                    white-space: nowrap;
+                }
+                .total-box {
+                    background: #f8fafc;
+                    border-radius: 16px;
+                    padding: 16px;
+                    margin-bottom: 16px;
+                }
+                .total-row {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 16px;
+                }
+                .total-label {
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: #334155;
+                }
+                .total-value {
+                    font-size: 24px;
+                    font-weight: 700;
+                    color: #2563eb;
+                    white-space: nowrap;
+                }
+                .contact-box {
+                    text-align: center;
+                    padding-top: 16px;
+                    border-top: 2px dashed #e2e8f0;
+                    font-size: 14px;
+                    color: #64748b;
+                }
+                .contact-box strong {
+                    color: #334155;
+                }
+                @media print {
+                    body {
+                        padding: 0;
+                        background: #ffffff;
+                    }
+                    .sheet {
+                        box-shadow: none;
+                        border: 0;
+                        max-width: 100%;
+                        border-radius: 0;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="sheet">
+                <div class="sheet-header">
+                    <h2>Xác nhận phiếu soạn hàng</h2>
+                </div>
+                <div class="sheet-content">
+                    <div class="summary-header">
+                        <div class="summary-icon">🛍️</div>
+                        <div class="summary-title">PHIẾU SOẠN HÀNG</div>
+                        <div class="summary-date">Ngày: ${today}</div>
+                    </div>
+
+                    <div class="items">
+                        ${itemsHtml}
+                    </div>
+
+                    <div class="total-box">
+                        <div class="total-row">
+                            <span class="total-label">TỔNG CỘNG:</span>
+                            <span class="total-value">${formatCurrency(total)}</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-box">
+                        <p>📱 Số điện thoại liên hệ: <strong>${escapeHtml(phoneNumber)}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+};
+
+export const generateImagePreviewContent = (
+    title: string,
+    imageDataUrl: string,
+    imageAlt = 'Hoá đơn'
+): string => `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>${escapeHtml(title)}</title>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+                background: #1a1a2e;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            }
+            .toolbar {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                display: flex;
+                gap: 10px;
+                z-index: 100;
+            }
+            .btn {
+                padding: 12px 24px;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.2s;
+            }
+            .btn-print {
+                background: #4CAF50;
+                color: white;
+            }
+            .btn-print:hover { background: #45a049; }
+            .hint {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(255,255,255,0.9);
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 13px;
+                color: #333;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            .invoice-image {
+                max-width: 100%;
+                height: auto;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                border-radius: 8px;
+                margin-top: 20px;
+            }
+            @media print {
+                body { background: white; padding: 0; }
+                .toolbar, .hint { display: none !important; }
+                .invoice-image {
+                    box-shadow: none;
+                    border-radius: 0;
+                    max-width: 100%;
+                    margin: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="toolbar">
+            <button class="btn btn-print" onclick="window.print()">
+                🖨️ In PDF
+            </button>
+        </div>
+        <img src="${imageDataUrl}" alt="${escapeHtml(imageAlt)}" class="invoice-image" />
+        <div class="hint">
+            💡 <strong>Tip:</strong> Chuột phải vào ảnh → Sao chép hình ảnh để gửi khách qua Zalo/Messenger
+        </div>
+    </body>
+    </html>
+`;
+
 export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orderCount: number, shopTemplate?: ShopTemplate | null): string => {
     const today = new Date().toLocaleDateString('vi-VN');
 
@@ -71,7 +394,7 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>Đơn hàng #${orderCount}</title>
+            <title>Phiếu xuất kho #${orderCount}</title>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap');
                 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -214,7 +537,7 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
 
                 <!-- Footer -->
                 <div style="text-align: center; color: ${PDF_COLORS.textLight}; font-size: 12px; margin-top: 40px; padding-top: 10px; border-top: 1px solid ${PDF_COLORS.grayBorder};">
-                    Cảm ơn quý khách! • Đơn hàng #${orderCount} • ${today}
+                    Cảm ơn quý khách! • Phiếu xuất kho #${orderCount} • ${today}
                 </div>
             </div>
         </body>
@@ -303,7 +626,7 @@ export const generateReceiptContent = (order: Order, orderCount: number, shopTem
 
                 <!-- Order Info -->
                 <div style="text-align: center; margin-bottom: 10px;">
-                    <h2 style="font-size: 15px; font-weight: 700; color: #000; margin-bottom: 2px;">ĐƠN HÀNG</h2>
+                    <h2 style="font-size: 15px; font-weight: 700; color: #000; margin-bottom: 2px;">PHIẾU XUẤT KHO</h2>
                     <p style="font-size: 11px; color: #000;">Ngày: ${today}</p>
                 </div>
 
@@ -381,7 +704,7 @@ export const generateReceiptContent = (order: Order, orderCount: number, shopTem
                 <!-- Footer -->
                 <div style="text-align: center; padding-top: 10px; border-top: 1px dashed #000;">
                     <p style="font-size: 11px; color: #000;">Cảm ơn quý khách đã ủng hộ!</p>
-                    <p style="font-size: 10px; color: #000; margin-top: 4px;">Đơn hàng #${orderCount}</p>
+                    <p style="font-size: 10px; color: #000; margin-top: 4px;">Phiếu xuất kho #${orderCount}</p>
                 </div>
             </div>
         </body>

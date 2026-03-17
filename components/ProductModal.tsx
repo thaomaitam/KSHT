@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Product, ProductVariant } from '../types';
-import { ZALO_LINK } from '../constants';
-import { X, MessageCircle, ShoppingCart, Plus, Check, ZoomIn } from 'lucide-react';
+import { X, ShoppingCart, Plus, Check, ZoomIn } from 'lucide-react';
 import { useCart } from '../CartContext';
-import { settingsService } from '../settingsService';
 
 interface ProductModalProps {
   product: Product | null;
@@ -178,24 +176,14 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
               </div>
             </div>
 
-            {/* Action Buttons - Icon only on mobile, full text on sm+ */}
-            <div className="mt-auto pt-4 md:pt-6 border-t border-slate-100 dark:border-slate-600 flex gap-3 md:gap-4">
-              <a
-                href={settingsService.getZaloLink()}
-                target="_blank"
-                rel="noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 bg-[#0068ff] hover:bg-[#0056d6] text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-100 dark:shadow-blue-900/30"
-                title="Nhắn Zalo tư vấn"
-              >
-                <MessageCircle size={20} fill="currentColor" />
-                <span className="hidden sm:inline">NHẮN ZALO TƯ VẤN</span>
-              </a>
+            {/* Action Button */}
+            <div className="mt-auto pt-4 md:pt-6 border-t border-slate-100 dark:border-slate-600">
               <button
                 onClick={() => {
                   onClose();
                   window.dispatchEvent(new CustomEvent('open-cart'));
                 }}
-                className="flex-1 flex items-center justify-center gap-2 bg-slate-900 dark:bg-slate-700 hover:bg-black dark:hover:bg-slate-600 text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-slate-200 dark:shadow-slate-900/30"
+                className="w-full flex items-center justify-center gap-2 bg-slate-900 dark:bg-slate-700 hover:bg-black dark:hover:bg-slate-600 text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-slate-200 dark:shadow-slate-900/30"
                 title="Xem giỏ hàng"
               >
                 <ShoppingCart size={20} />
