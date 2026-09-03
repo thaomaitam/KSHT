@@ -22,6 +22,7 @@ npm run dev
 ```
 
 Vite phục vụ ứng dụng tại `http://localhost:3000`.
+Origin `http://localhost:3000` không nằm trong `ALLOWED_ORIGINS`. Trình duyệt gọi Worker từ Vite local nhận 403 và UI fallback `localStorage`/sample trong `constants.ts`. Không đổi `ALLOWED_ORIGINS` nếu chưa được phép.
 
 ## Kiểm tra
 
