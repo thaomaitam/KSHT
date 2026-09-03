@@ -10,12 +10,13 @@ Completed
 
 ## Outcome
 
-The Cloudflare Worker no longer exposes sensitive KV data or a reusable root admin secret to unauthenticated browser clients; the verified security patch is applied to the intended Worker, Google AI Studio residue and confirmed dead code are removed, repository checks pass, and the authorized changes are captured in scoped Git commits on `origin/master`.
+The Cloudflare Worker no longer exposes sensitive KV data or a reusable root admin secret to unauthenticated browser clients; the verified security patch is applied to the intended Worker; Google AI Studio residue and confirmed dead code are removed; repository checks pass; authorized changes are on `origin/master`; and GitHub Pages serves the session-token frontend.
 
 ## Authority And Context
 
 - User explicitly requested: patch Worker security first, then clean Google AI Studio residue and dead code, and commit the authorized work.
-- User follow-up authorized `git push` of `master` and completion of this plan. GitHub Pages deploy and extra Cloudflare changes remain unauthorized.
+- User follow-up authorized `git push` of `master` and completion of this plan.
+- User follow-up authorized GitHub Pages deploy of the current master frontend. Extra Cloudflare changes remain unauthorized.
 - User explicitly requested Cloudflare login via an approval URL before implementation.
 - Repository AGENTS.md identifies cloudflare_worker.js as the Worker/KV backend and treats authentication, localStorage credentials, CORS, bindings, and customer/order data as security-sensitive.
 - Static repository evidence shows unauthenticated GET access to arbitrary KV keys, login returning env.ADMIN_SECRET, and the frontend storing that secret in localStorage. The live deployment must be identified and compared without retrieving customer data.
@@ -34,12 +35,13 @@ In scope:
 - Update README and package scripts/documentation needed to reflect the actual Vite + Cloudflare architecture.
 - Create scoped Git commit(s) for the authorized changes.
 - Push `origin/master` after the user explicitly authorized that follow-up.
+- Deploy the current master frontend to the existing `gh-pages` branch with `npm run deploy`.
 
 Out of scope:
 
 - Reading or exporting live customer, order, transaction, bank, credential, or KV values.
 - Changing or deleting Cloudflare accounts, zones, domains, KV namespaces, unrelated Workers, routes, or other live resources.
-- Pull request creation, Git history rewrite, force operations, GitHub Pages deployment, or unrelated refactoring.
+- Pull request creation, Git history rewrite of `master`, Worker redeploy, or unrelated refactoring.
 - Deleting public/images/01.jpg unless repository/runtime evidence proves it is not referenced by deployed data.
 - Large source-tree relocation or framework migration.
 
@@ -82,6 +84,7 @@ Out of scope:
 - [x] Remove confirmed AI Studio residue and dead code, then run repository verification.
 - [x] Review and create scoped local commit(s) without push.
 - [x] Push `origin/master` after explicit follow-up authorization.
+- [x] Deploy GitHub Pages frontend with `npm run deploy` and verify without reading KV data.
 
 ## Decisions
 
@@ -125,4 +128,4 @@ Promote lasting product or architecture decisions into repository-owned decision
 
 ## Result
 
-Security patch is live on Worker `ksht-api` version `d74d3eaf-b280-46ab-9389-32c3050daa62`, with rollback target `d7fda599-af6a-46de-822e-77b2afc328ba`. Google AI Studio residue, stale `data.json` initialization, unused alias/scripts, nonfunctional filter/chevron controls, and unused business-page state were removed. Local verification passed (`tsc --noEmit`, unused-code check, 13 Worker tests, production build without the missing `/index.css` warning, `git diff --check`). Commits `aeaf1e8` (security) and `536ac3c` (cleanup) are on `origin/master`. No GitHub Pages deploy and no extra Cloudflare resource changes were performed. The production frontend still needs a separate authorized deploy before browsers pick up the session-token client.
+Security patch is live on Worker `ksht-api` version `d74d3eaf-b280-46ab-9389-32c3050daa62`, with rollback target `d7fda599-af6a-46de-822e-77b2afc328ba`. Cleanup commits are on `origin/master` (`381b59c`). `npm run deploy` published `dist/` to `origin/gh-pages` `a90db67` (from `1d5b1dc`); published `index.html` references `./assets/index-D3szXL94.js` and has no AI Studio import map; `CNAME` remains `giaban.khosihuythao.com`. `origin/master` was not mutated by the Pages publish. A live GET of `https://giaban.khosihuythao.com/` still returned the previous HTML (`index-Dlv58Zvm.js` plus `aistudiocdn` import map) with `cf-cache-status: HIT`; Cloudflare cache was not purged. Worker/KV were not changed. Pages rollback target remains `1d5b1dc`.
