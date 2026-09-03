@@ -1,9 +1,10 @@
 import React from 'react';
 import { Lock } from 'lucide-react';
+import { logoutAdmin } from '../LoginModal';
 
 export const SecuritySettings: React.FC = () => {
     const handleLogout = () => {
-        localStorage.removeItem('giaban_admin_auth');
+        logoutAdmin();
         window.location.hash = '#/';
         window.location.reload();
     };
@@ -11,6 +12,7 @@ export const SecuritySettings: React.FC = () => {
     const handleResetApp = () => {
         if (confirm('BẠN CÓ CHẮC CHẮN? Hành động này sẽ xóa sạch dữ liệu lưu trên trình duyệt này và đăng xuất.')) {
             localStorage.clear();
+            sessionStorage.clear();
             window.location.hash = '#/';
             window.location.reload();
         }
@@ -51,7 +53,7 @@ export const SecuritySettings: React.FC = () => {
                     <div className="flex items-center justify-between p-4 border border-red-100 rounded-xl bg-red-50/30">
                         <div>
                             <h4 className="font-medium text-red-800">Xóa toàn bộ dữ liệu máy này</h4>
-                            <p className="text-xs text-red-500">Xóa sạch localStorage (Sản phẩm, Cài đặt, Token). Không ảnh hưởng đến Cloud.</p>
+                            <p className="text-xs text-red-500">Xóa dữ liệu và phiên đăng nhập trên trình duyệt này. Không ảnh hưởng đến Cloud.</p>
                         </div>
                         <button
                             onClick={handleResetApp}

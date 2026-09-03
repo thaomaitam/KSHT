@@ -1,132 +1,171 @@
+import { PUBLIC_READ_KEYS } from './workerContract.js';
+
 const API_URL_KEY = 'giaban_api_url';
-const ADMIN_SECRET_KEY = 'giaban_admin_secret';
+const SESSION_TOKEN_KEY = 'giaban_admin_session_token';
+const SESSION_EXPIRY_KEY = 'giaban_admin_session_expiry';
+const ADMIN_AUTH_KEY = 'giaban_admin_auth';
+const LEGACY_ADMIN_SECRET_KEY = 'giaban_admin_secret';
 const DEFAULT_API_URL = 'https://ksht-api.ngthanhhuy951.workers.dev';
+const PUBLIC_READ_KEY_SET = new Set(PUBLIC_READ_KEYS);
+
+interface LoginResult {
+    success: boolean;
+    token?: string;
+    expiresAt?: number;
+}
+
+const removeLegacyCredential = () => {
+    localStorage.removeItem(LEGACY_ADMIN_SECRET_KEY);
+};
+
+const clearSession = () => {
+    sessionStorage.removeItem(SESSION_TOKEN_KEY);
+    sessionStorage.removeItem(SESSION_EXPIRY_KEY);
+    sessionStorage.removeItem(ADMIN_AUTH_KEY);
+    localStorage.removeItem(ADMIN_AUTH_KEY);
+    removeLegacyCredential();
+};
+
+const getSessionToken = (): string => {
+    removeLegacyCredential();
+
+    const token = sessionStorage.getItem(SESSION_TOKEN_KEY) || '';
+    const expiresAt = Number(sessionStorage.getItem(SESSION_EXPIRY_KEY));
+    if (!token || !Number.isSafeInteger(expiresAt) || expiresAt <= Date.now()) {
+        clearSession();
+        return '';
+    }
+
+    return token;
+};
+
+const getAuthorizationHeaders = (key?: string): Record<string, string> => {
+    if (key && PUBLIC_READ_KEY_SET.has(key)) return {};
+
+    const token = getSessionToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+const readLocal = <T>(key: string): T | null => {
+    try {
+        const stored = localStorage.getItem(`giaban_${key}`);
+        return stored ? JSON.parse(stored) : null;
+    } catch {
+        return null;
+    }
+};
 
 export const apiService = {
     getApiUrl(): string {
         return localStorage.getItem(API_URL_KEY) || DEFAULT_API_URL;
     },
 
-    getAdminSecret(): string {
-        return localStorage.getItem(ADMIN_SECRET_KEY) || '';
+    setApiUrl(url: string): void {
+        localStorage.setItem(API_URL_KEY, url.trim().replace(/\/$/, ''));
     },
 
-    setApiCredentials(url: string, secret: string) {
-        localStorage.setItem(API_URL_KEY, url);
-        localStorage.setItem(ADMIN_SECRET_KEY, secret);
+    getSessionToken,
+
+    setSession(token: string, expiresAt: number): void {
+        clearSession();
+        if (!token || !Number.isSafeInteger(expiresAt) || expiresAt <= Date.now()) return;
+
+        sessionStorage.setItem(SESSION_TOKEN_KEY, token);
+        sessionStorage.setItem(SESSION_EXPIRY_KEY, String(expiresAt));
+        sessionStorage.setItem(ADMIN_AUTH_KEY, 'true');
+    },
+
+    clearSession,
+
+    async getCloud<T>(key: string): Promise<T | null> {
+        const apiUrl = this.getApiUrl();
+        if (!apiUrl) return null;
+
+        try {
+            const response = await fetch(`${apiUrl}/api/data/${key}`, {
+                method: 'GET',
+                headers: getAuthorizationHeaders(key),
+            });
+
+            if (response.status === 401) clearSession();
+            return response.ok ? await response.json() : null;
+        } catch (error) {
+            console.warn(`API Get Warning ${key}:`, error);
+            return null;
+        }
     },
 
     async get<T>(key: string): Promise<T | null> {
-        const apiUrl = this.getApiUrl();
-        const adminSecret = this.getAdminSecret();
-
-        // Helper to get from localStorage
-        const getFromLocal = (): T | null => {
+        const data = await apiService.getCloud<T>(key);
+        if (data !== null) {
             try {
-                const stored = localStorage.getItem(`giaban_${key}`);
-                if (stored) {
-                    return JSON.parse(stored);
-                }
+                localStorage.setItem(`giaban_${key}`, JSON.stringify(data));
             } catch {
-                // Parse error, return null
+                // Storage quota exceeded; the cloud result is still usable.
             }
-            return null;
-        };
-
-        // If no Cloud URL configured, use localStorage only
-        if (!apiUrl) {
-            return getFromLocal();
+            return data;
         }
 
-        // Try Cloud first (no auth required for reading)
-        try {
-            const headers: Record<string, string> = {
-                'Content-Type': 'application/json'
-            };
-            // Only include secret if available (for admin access)
-            if (adminSecret) {
-                headers['X-Admin-Secret'] = adminSecret;
-            }
-
-            const response = await fetch(`${apiUrl}/api/data/${key}`, {
-                method: 'GET',
-                headers
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                // Cache to localStorage for offline access
-                try {
-                    localStorage.setItem(`giaban_${key}`, JSON.stringify(data));
-                } catch {
-                    // Storage quota exceeded, ignore
-                }
-                return data;
-            }
-        } catch (error) {
-            console.warn(`API Get Warning ${key}, falling back to local:`, error);
-        }
-
-        // Fallback to localStorage
-        return getFromLocal();
+        return readLocal<T>(key);
     },
 
-    async save<T>(key: string, data: T): Promise<boolean> {
-        // Always save to localStorage first as backup
-        try {
-            localStorage.setItem(`giaban_${key}`, JSON.stringify(data));
-        } catch (e) {
-            console.warn(`LocalStorage save failed for ${key}:`, e);
-        }
-
-        // Then try to save to Cloud if configured
+    async saveCloud<T>(key: string, data: T): Promise<boolean> {
         const apiUrl = this.getApiUrl();
-        const adminSecret = this.getAdminSecret();
-        if (!apiUrl || !adminSecret) return true; // Local save succeeded
+        const token = getSessionToken();
+        if (!apiUrl || !token) return false;
 
         try {
             const response = await fetch(`${apiUrl}/api/data/${key}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Admin-Secret': adminSecret
+                    Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
             });
 
+            if (response.status === 401) clearSession();
             if (!response.ok) {
                 console.warn(`API Save Warning ${key}:`, response.statusText);
-                return true; // Local save succeeded, Cloud failed but that's ok
             }
-
-            return true;
+            return response.ok;
         } catch (error) {
             console.warn(`API Save Warning ${key}:`, error);
-            return true; // Local save succeeded
+            return false;
         }
     },
 
-    async login(username: string, password: string): Promise<{ success: boolean; secret?: string }> {
+    async save<T>(key: string, data: T): Promise<boolean> {
+        try {
+            localStorage.setItem(`giaban_${key}`, JSON.stringify(data));
+        } catch (error) {
+            console.warn(`LocalStorage save failed for ${key}:`, error);
+        }
+
+        await apiService.saveCloud(key, data);
+        return true;
+    },
+
+    async login(username: string, password: string): Promise<LoginResult> {
         const apiUrl = this.getApiUrl();
         if (!apiUrl) return { success: false };
 
         try {
             const response = await fetch(`${apiUrl}/api/login`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
             });
+            if (!response.ok) return { success: false };
 
-            if (response.ok) {
-                const data = await response.json();
-                return { success: true, secret: data.secret };
+            const data = await response.json();
+            if (typeof data.token !== 'string' || !Number.isSafeInteger(data.expiresAt)) {
+                return { success: false };
             }
-            return { success: false };
+            return { success: true, token: data.token, expiresAt: data.expiresAt };
         } catch (error) {
             console.error('Login Error:', error);
             return { success: false };
         }
-    }
+    },
 };

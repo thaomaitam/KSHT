@@ -29,7 +29,6 @@ export const AdminSettings: React.FC = () => {
         taxRate, setTaxRate,
         bankSaveSuccess,
         apiUrl, setApiUrl,
-        adminSecret, setAdminSecret,
         connectionSaveSuccess,
         isSyncing, isPulling,
         handleSavePhone,
@@ -89,8 +88,6 @@ export const AdminSettings: React.FC = () => {
                 <CloudSettings
                     apiUrl={apiUrl}
                     setApiUrl={setApiUrl}
-                    adminSecret={adminSecret}
-                    setAdminSecret={setAdminSecret}
                     handleSaveConnection={handleSaveConnection}
                     connectionSaveSuccess={connectionSaveSuccess}
                 />

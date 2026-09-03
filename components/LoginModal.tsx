@@ -40,17 +40,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onSuccess, onClose }) =>
                     throw new Error('API URL phải bắt đầu bằng http:// hoặc https://');
                 }
                 urlToUse = apiUrl.replace(/\/$/, ''); // Remove trailing slash
-                apiService.setApiCredentials(urlToUse, ''); // Temp save URL
+                apiService.setApiUrl(urlToUse);
             }
 
             // Login with backend
             const result = await apiService.login(username, password);
 
-            if (result.success && result.secret) {
-                // Store auth in localStorage (persists until logout)
-                localStorage.setItem('giaban_admin_auth', 'true');
-                // Save credentials permanently
-                apiService.setApiCredentials(urlToUse, result.secret);
+            if (result.success && result.token && result.expiresAt) {
+                apiService.setApiUrl(urlToUse);
+                apiService.setSession(result.token, result.expiresAt);
                 onSuccess();
             } else {
                 setError('Tài khoản hoặc mật khẩu không đúng');
@@ -155,9 +153,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onSuccess, onClose }) =>
 
 // Auth check helper
 export const isAdminAuthenticated = (): boolean => {
-    return localStorage.getItem('giaban_admin_auth') === 'true';
+    return sessionStorage.getItem('giaban_admin_auth') === 'true'
+        && Boolean(apiService.getSessionToken());
 };
 
 export const logoutAdmin = (): void => {
-    localStorage.removeItem('giaban_admin_auth');
+    apiService.clearSession();
 };

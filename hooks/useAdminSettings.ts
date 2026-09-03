@@ -25,7 +25,6 @@ export const useAdminSettings = () => {
 
     // Cloudflare connection states
     const [apiUrl, setApiUrl] = useState('');
-    const [adminSecret, setAdminSecret] = useState('');
     const [connectionSaveSuccess, setConnectionSaveSuccess] = useState(false);
 
     const [isSyncing, setIsSyncing] = useState(false);
@@ -49,7 +48,6 @@ export const useAdminSettings = () => {
         setTaxRate(taxRateData);
 
         setApiUrl(apiService.getApiUrl());
-        setAdminSecret(apiService.getAdminSecret());
     };
 
     const handleSavePhone = async () => {
@@ -66,7 +64,7 @@ export const useAdminSettings = () => {
     };
 
     const handleSaveConnection = () => {
-        apiService.setApiCredentials(apiUrl, adminSecret);
+        apiService.setApiUrl(apiUrl);
         setConnectionSaveSuccess(true);
         setTimeout(() => setConnectionSaveSuccess(false), 2000);
     };
@@ -164,8 +162,8 @@ export const useAdminSettings = () => {
     };
 
     const handleSyncToCloud = async () => {
-        if (!apiService.getAdminSecret()) {
-            alert('Vui lòng cấu hình kết nối Cloudflare trước khi đồng bộ.');
+        if (!apiService.getSessionToken()) {
+            alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại trước khi đồng bộ.');
             return;
         }
         if (!confirm('Bạn có muốn đẩy toàn bộ dữ liệu máy này lên Cloud? Dữ liệu cũ trên Cloud sẽ bị ghi đè hoàn toàn.')) return;
@@ -185,31 +183,34 @@ export const useAdminSettings = () => {
                 businessService.getShopTemplates()
             ]);
 
-            await Promise.all([
-                storageService.saveProducts(products),
-                settingsService.saveCategories(categories),
-                settingsService.saveSettings(settings),
-                businessService.saveOrders(orders),
-                businessService.saveCustomers(customers),
-                businessService.saveCostPrices(costPrices),
-                businessService.saveTransactions(transactions),
-                bankInfo ? businessService.saveBankInfo(bankInfo) : Promise.resolve(),
-                businessService.saveTaxRate(taxRate),
-                businessService.saveShopTemplates(shopTemplates)
+            const syncResults = await Promise.all([
+                apiService.saveCloud('products', products),
+                apiService.saveCloud('categories', categories),
+                apiService.saveCloud('settings', settings),
+                apiService.saveCloud('orders', orders),
+                apiService.saveCloud('customers', customers),
+                apiService.saveCloud('costPrices', costPrices),
+                apiService.saveCloud('transactions', transactions),
+                bankInfo ? apiService.saveCloud('bankInfo', bankInfo) : Promise.resolve(true),
+                apiService.saveCloud('taxRate', { rate: taxRate }),
+                apiService.saveCloud('shopTemplates', shopTemplates)
             ]);
+            if (syncResults.some(result => !result)) {
+                throw new Error('One or more cloud writes failed');
+            }
 
             alert('Đồng bộ dữ liệu lên Cloud thành công!');
         } catch (error) {
             console.error('Sync error:', error);
-            alert('Lỗi khi đồng bộ dữ liệu. Vui lòng kiểm tra lại API URL và Admin Secret.');
+            alert('Lỗi khi đồng bộ dữ liệu. Vui lòng kiểm tra lại API URL và phiên đăng nhập.');
         } finally {
             setIsSyncing(false);
         }
     };
 
     const handlePullFromCloud = async () => {
-        if (!apiService.getAdminSecret()) {
-            alert('Vui lòng cấu hình kết nối Cloudflare trước.');
+        if (!apiService.getSessionToken()) {
+            alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
             return;
         }
         if (!confirm('Bạn có muốn tải toàn bộ dữ liệu từ Cloud về máy này? Dữ liệu hiện tại trên máy sẽ bị ghi đè.')) return;
@@ -217,25 +218,8 @@ export const useAdminSettings = () => {
         setIsPulling(true);
         try {
             // Fetch all data from Cloud API directly
-            const apiUrl = apiService.getApiUrl();
-            const adminSecret = apiService.getAdminSecret();
-
             const fetchFromCloud = async <T>(key: string): Promise<T | null> => {
-                try {
-                    const response = await fetch(`${apiUrl}/api/data/${key}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Admin-Secret': adminSecret
-                        }
-                    });
-                    if (response.ok) {
-                        return await response.json();
-                    }
-                    return null;
-                } catch {
-                    return null;
-                }
+                return apiService.getCloud<T>(key);
             };
 
             // Pull all data from Cloud
@@ -291,7 +275,6 @@ export const useAdminSettings = () => {
         taxRate, setTaxRate,
         bankSaveSuccess,
         apiUrl, setApiUrl,
-        adminSecret, setAdminSecret,
         connectionSaveSuccess,
         isSyncing, isPulling,
         handleSavePhone,

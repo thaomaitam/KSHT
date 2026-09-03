@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ksht-api",
+  "main": "cloudflare_worker.js",
+  "compatibility_date": "2025-12-11",
+  "workers_dev": true,
+  "kv_namespaces": [
+    {
+      "binding": "DB",
+      "id": "0164f092258245eaac06221e6aef4df7"
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://giaban.khosihuythao.com"
+  },
+  "ratelimits": [
+    {
+      "name": "LOGIN_RATE_LIMITER",
+      "namespace_id": "724951",
+      "simple": {
+        "limit": 10,
+        "period": 60
+      }
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

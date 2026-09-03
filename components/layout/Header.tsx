@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShoppingBag, Search, ShoppingCart, Package, BarChart3, Settings, RefreshCw, Lock, Tags, Sun, Moon } from 'lucide-react';
 import { CategoryItem } from '../../settingsService';
-import { isAdminAuthenticated } from '../LoginModal';
+import { isAdminAuthenticated, logoutAdmin } from '../LoginModal';
 import { useCart } from '../../CartContext';
 import { useTheme } from '../../hooks/useTheme';
 
@@ -114,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
                                 </button>
                                 <button
                                     onClick={() => {
-                                        localStorage.removeItem('giaban_admin_auth');
+                                        logoutAdmin();
                                         window.location.hash = '#/';
                                         window.location.reload();
                                     }}
