@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { businessService, Order, Customer, Transaction, BankInfo, ShopTemplate } from '../businessService';
 import { storageService } from '../storageService';
-import { settingsService, CategoryItem } from '../settingsService';
 import { Product } from '../types';
 
 export type TabType = 'orders' | 'history' | 'customers' | 'profit' | 'reports';
@@ -41,7 +40,6 @@ export const useBusinessData = () => {
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
-    const [categories, setCategories] = useState<CategoryItem[]>([]);
     const [bankInfo, setBankInfo] = useState<BankInfo | null>(null);
     const [shopTemplates, setShopTemplates] = useState<ShopTemplate[]>([]);
 
@@ -62,26 +60,11 @@ export const useBusinessData = () => {
         totalAmountInWords: ''
     });
 
-    // Search and filter states
-    const [searchTerm, setSearchTerm] = useState('');
     const [orderSearch, setOrderSearch] = useState('');
     const [customerSearch, setCustomerSearch] = useState('');
-    const [transactionSearch, setTransactionSearch] = useState('');
-    const [dateFrom, setDateFrom] = useState('');
-    const [dateTo, setDateTo] = useState('');
     const [productSearch, setProductSearch] = useState('');
     const [showProductDropdown, setShowProductDropdown] = useState(false);
     const [addQuantity, setAddQuantity] = useState<number | ''>('');
-    const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
-
-    // Transaction state
-    const [showTransactionModal, setShowTransactionModal] = useState(false);
-    const [newTransaction, setNewTransaction] = useState({
-        type: 'income' as 'income' | 'expense',
-        amount: 0,
-        description: '',
-        category: 'Bán hàng'
-    });
 
     const productDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -90,13 +73,12 @@ export const useBusinessData = () => {
     }, []);
 
     const loadData = async () => {
-        const [ordersData, customersData, transactionsData, productsData, bankInfoData, categoriesData, shopTemplatesData] = await Promise.all([
+        const [ordersData, customersData, transactionsData, productsData, bankInfoData, shopTemplatesData] = await Promise.all([
             businessService.getOrders(),
             businessService.getCustomers(),
             businessService.getTransactions(),
             storageService.getProducts(),
             businessService.getBankInfo(),
-            settingsService.getCategories(),
             businessService.getShopTemplates()
         ]);
         setOrders(ordersData);
@@ -104,7 +86,6 @@ export const useBusinessData = () => {
         setTransactions(transactionsData);
         setProducts(productsData);
         setBankInfo(bankInfoData);
-        setCategories(categoriesData);
         setShopTemplates(shopTemplatesData);
 
         // Set initial selected template to default
@@ -287,57 +268,24 @@ export const useBusinessData = () => {
         return order;
     };
 
-    const handleAddTransaction = async () => {
-        if (newTransaction.amount <= 0 || !newTransaction.description) {
-            alert('Vui lòng nhập đầy đủ thông tin giao dịch');
-            return;
-        }
-
-        const transaction: Transaction = {
-            id: 'trans_' + Date.now(),
-            date: new Date().toISOString(),
-            ...newTransaction
-        };
-
-        const updated = await businessService.addTransaction(transaction);
-        setTransactions(updated);
-        setShowTransactionModal(false);
-        setNewTransaction({
-            type: 'income',
-            amount: 0,
-            description: '',
-            category: 'Bán hàng'
-        });
-    };
-
     return {
         activeTab, setActiveTab,
         orders, setOrders,
         customers, setCustomers,
-        transactions, setTransactions,
-        products, setProducts,
-        categories, setCategories,
+        transactions,
         bankInfo, setBankInfo,
         shopTemplates, setShopTemplates,
         newOrder, setNewOrder,
-        searchTerm, setSearchTerm,
         orderSearch, setOrderSearch,
         customerSearch, setCustomerSearch,
-        transactionSearch, setTransactionSearch,
-        dateFrom, setDateFrom,
-        dateTo, setDateTo,
         productSearch, setProductSearch,
         showProductDropdown, setShowProductDropdown,
         addQuantity, setAddQuantity,
-        editingCustomer, setEditingCustomer,
-        showTransactionModal, setShowTransactionModal,
-        newTransaction, setNewTransaction,
         productDropdownRef,
         filteredProducts,
         getSubtotal, getTotal,
         addProductFromList, addVariantToOrder, updateItemField, removeItem,
         handleSaveOrder,
-        resetOrderForm, updateCustomer,
-        handleAddTransaction
+        resetOrderForm, updateCustomer
     };
 };

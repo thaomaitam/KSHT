@@ -13,14 +13,6 @@ const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
 };
 
-const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString('vi-VN', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    });
-};
-
 const formatDateTime = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('vi-VN', {
         day: '2-digit',

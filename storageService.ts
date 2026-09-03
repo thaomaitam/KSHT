@@ -3,58 +3,6 @@ import { PRODUCTS } from './constants';
 import { apiService } from './apiService';
 
 const STORAGE_KEY = 'giaban_products';
-const DATA_LOADED_KEY = 'giaban_data_loaded';
-
-// Load initial data from data.json
-async function loadDataFromJson(): Promise<Product[]> {
-  try {
-    const response = await fetch('./data.json');
-    if (response.ok) {
-      const data = await response.json();
-      if (data.products && data.products.length > 0) {
-        return data.products;
-      }
-    }
-  } catch (error) {
-    console.log('Could not load data.json, using defaults');
-  }
-  return PRODUCTS;
-}
-
-// Initialize data (call this on app start)
-export async function initializeData(): Promise<void> {
-  const alreadyLoaded = localStorage.getItem(DATA_LOADED_KEY);
-
-  // If data.json has been updated (during dev), we should reload it
-  // Check by comparing with what's in data.json
-  try {
-    const response = await fetch('./data.json');
-    if (response.ok) {
-      const data = await response.json();
-      if (data.products && data.products.length > 0) {
-        // Save to localStorage
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data.products));
-        localStorage.setItem(DATA_LOADED_KEY, 'true');
-
-        // Also update settings if present
-        if (data.settings?.phoneNumber) {
-          const settings = JSON.parse(localStorage.getItem('giaban_settings') || '{}');
-          settings.phoneNumber = data.settings.phoneNumber;
-          localStorage.setItem('giaban_settings', JSON.stringify(settings));
-        }
-        if (data.categories) {
-          localStorage.setItem('giaban_categories', JSON.stringify(data.categories));
-        }
-      }
-    }
-  } catch (error) {
-    // If can't fetch, use existing localStorage or defaults
-    if (!alreadyLoaded) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(PRODUCTS));
-      localStorage.setItem(DATA_LOADED_KEY, 'true');
-    }
-  }
-}
 
 export const storageService = {
   // Get products from Cloud API first, fallback to localStorage

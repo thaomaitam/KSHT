@@ -1,7 +1,6 @@
 import { Product } from './types';
 
-export const PHONE_NUMBER = "0901234567"; // Example phone number
-export const ZALO_LINK = `https://zalo.me/${PHONE_NUMBER}`;
+export const PHONE_NUMBER = "0901234567";
 
 export const CATEGORIES: { id: string; label: string; value: import('./types').Category }[] = [
   { id: '1', label: 'Tất cả', value: 'ALL' },

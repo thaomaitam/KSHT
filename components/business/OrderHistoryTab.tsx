@@ -1,6 +1,6 @@
 import React from 'react';
 import html2canvas from 'html2canvas';
-import { History, Search, Filter, Printer, Trash2, RotateCcw, ChevronRight } from 'lucide-react';
+import { History, Search, Printer, Trash2, RotateCcw } from 'lucide-react';
 import { Order, BankInfo, ShopTemplate, businessService, Customer } from '../../businessService';
 import { generateImagePreviewContent, generatePDFContent, generateReceiptContent, openPrintWindow } from '../../utils/pdfGenerator';
 
@@ -11,7 +11,6 @@ interface OrderHistoryTabProps {
     setOrderSearch: (search: string) => void;
     bankInfo: BankInfo | null;
     shopTemplates: ShopTemplate[];
-    updateCustomer: (order: Order) => Promise<void>;
     customers: Customer[];
     setCustomers: React.Dispatch<React.SetStateAction<Customer[]>>;
     onRecreateOrder: (order: Order) => void;
@@ -32,7 +31,7 @@ const formatDate = (dateString: string): string => {
 };
 
 export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
-    orders, setOrders, orderSearch, setOrderSearch, bankInfo, shopTemplates, updateCustomer, customers, setCustomers, onRecreateOrder
+    orders, setOrders, orderSearch, setOrderSearch, bankInfo, shopTemplates, customers, setCustomers, onRecreateOrder
 }) => {
 
     const filteredOrders = orders.filter(order =>
@@ -185,9 +184,6 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
                                 className="pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-64"
                             />
                         </div>
-                        <button className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors border border-slate-200">
-                            <Filter size={18} />
-                        </button>
                     </div>
                 </div>
                 <div className="overflow-x-auto">
@@ -267,9 +263,6 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
                                                     title="Xóa đơn"
                                                 >
                                                     <Trash2 size={16} />
-                                                </button>
-                                                <button className="p-2 text-slate-400 hover:bg-slate-100 rounded-lg transition-colors">
-                                                    <ChevronRight size={16} />
                                                 </button>
                                             </div>
                                         </td>

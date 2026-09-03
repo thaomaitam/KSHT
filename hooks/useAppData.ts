@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Product } from '../types';
-import { storageService, initializeData } from '../storageService';
+import { storageService } from '../storageService';
 import { settingsService, CategoryItem } from '../settingsService';
 import { isAdminAuthenticated } from '../components/LoginModal';
 import { searchProducts } from '../utils/searchUtils';
@@ -51,15 +51,7 @@ export const useAppData = () => {
             }
         };
 
-        const init = async () => {
-            await handleHashChange();
-            await initializeData();
-            const prods = await storageService.getProducts();
-            const cats = await settingsService.getCategories();
-            setProducts(prods);
-            setCategories(cats);
-        };
-        init();
+        void handleHashChange();
 
         window.addEventListener('hashchange', handleHashChange);
         return () => window.removeEventListener('hashchange', handleHashChange);

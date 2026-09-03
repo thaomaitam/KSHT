@@ -14,8 +14,7 @@ export const BusinessPage: React.FC = () => {
         activeTab, setActiveTab,
         orders, setOrders,
         customers, setCustomers,
-        transactions, setTransactions,
-        products,
+        transactions,
         bankInfo,
         shopTemplates,
         newOrder, setNewOrder,
@@ -25,9 +24,6 @@ export const BusinessPage: React.FC = () => {
         productDropdownRef,
         orderSearch, setOrderSearch,
         customerSearch, setCustomerSearch,
-        transactionSearch, setTransactionSearch,
-        showTransactionModal, setShowTransactionModal,
-        newTransaction, setNewTransaction,
         filteredProducts,
         addProductFromList,
         addVariantToOrder,
@@ -37,8 +33,7 @@ export const BusinessPage: React.FC = () => {
         getTotal,
         handleSaveOrder,
         resetOrderForm,
-        updateCustomer,
-        handleAddTransaction
+        updateCustomer
     } = useBusinessData();
 
     const tabs = [
@@ -186,7 +181,6 @@ export const BusinessPage: React.FC = () => {
                         onRecreateOrder={handleRecreateOrder}
                         bankInfo={bankInfo}
                         shopTemplates={shopTemplates}
-                        updateCustomer={updateCustomer}
                         customers={customers}
                         setCustomers={setCustomers}
                     />
@@ -203,18 +197,7 @@ export const BusinessPage: React.FC = () => {
                 )}
 
                 {activeTab === 'profit' && (
-                    <ProfitTab
-                        orders={orders}
-                        transactions={transactions}
-                        setTransactions={setTransactions}
-                        transactionSearch={transactionSearch}
-                        setTransactionSearch={setTransactionSearch}
-                        showTransactionModal={showTransactionModal}
-                        setShowTransactionModal={setShowTransactionModal}
-                        newTransaction={newTransaction}
-                        setNewTransaction={setNewTransaction}
-                        handleAddTransaction={handleAddTransaction}
-                    />
+                    <ProfitTab orders={orders} />
                 )}
 
                 {activeTab === 'reports' && (
