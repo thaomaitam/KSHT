@@ -207,6 +207,12 @@ export const handleMcpRequest = async (
       } else {
         return rpcError(message.id, -32000, "Domain binding unavailable");
       }
+      if (policy.operationId === "getStatus" && result && typeof result === "object" && !Array.isArray(result)) {
+        result = {
+          ...(result as Record<string, unknown>),
+          mcpMutationsEnabled: env.MCP_WRITE_DISABLED !== "1",
+        };
+      }
       if (policy.operationId === "getCapabilities" && result && typeof result === "object" && !Array.isArray(result)) {
         result = {
           ...(result as Record<string, unknown>),
@@ -214,6 +220,11 @@ export const handleMcpRequest = async (
             .filter((operation) => !PERSONAL_MCP_DISABLED_OPERATION_IDS.has(operation.operationId))
             .map((operation) => operation.operationId),
           mcpTools: tools.map((tool) => tool.name),
+          killSwitches: {
+            mcpRead: env.MCP_READ_DISABLED === "1",
+            mcpWrite: env.MCP_WRITE_DISABLED === "1",
+            mcpChannel: env.MCP_CHANNEL_DISABLED === "1",
+          },
         };
       }
       return rpcResult(message.id, {

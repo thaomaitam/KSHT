@@ -345,9 +345,18 @@ export class GiabanApplication {
   }
 
   private dispatch(operationId: string, input: Record<string, unknown>, context: InvocationContext): Promise<unknown> | unknown {
-    const migrationBlockerCount = Array.isArray((this.store as MemoryStore & { migrationBlockers?: unknown[] }).migrationBlockers)
-      ? (this.store as MemoryStore & { migrationBlockers: unknown[] }).migrationBlockers.length
+    const migrationStore = this.store as MemoryStore & {
+      migrationBlockers?: unknown[];
+      migrationBlockerSummary?: Array<{ type: string; count: number }>;
+    };
+    const migrationBlockerCount = Array.isArray(migrationStore.migrationBlockers)
+      ? migrationStore.migrationBlockers.length
       : 0;
+    const migrationBlockerSummary = Array.isArray(migrationStore.migrationBlockerSummary)
+      ? migrationStore.migrationBlockerSummary
+        .filter((item) => typeof item?.type === "string" && Number.isSafeInteger(item.count) && item.count > 0)
+        .map((item) => ({ type: item.type, count: item.count }))
+      : [];
     switch (operationId) {
       case "getStatus":
         return {
@@ -359,6 +368,7 @@ export class GiabanApplication {
           mcpMutationsEnabled: true,
           migrationReady: migrationBlockerCount === 0,
           migrationBlockerCount,
+          migrationBlockerSummary,
         };
       case "getCapabilities":
         return {

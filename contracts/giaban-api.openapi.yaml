@@ -1764,7 +1764,7 @@ components:
     StatusView:
       type: object
       additionalProperties: false
-      required: [ok, contractVersion, authoritativeStore, datasetGenerationId, writeFence, migrationReady, migrationBlockerCount]
+      required: [ok, contractVersion, authoritativeStore, datasetGenerationId, writeFence, migrationReady, migrationBlockerCount, migrationBlockerSummary, mcpMutationsEnabled]
       properties:
         ok: { type: boolean }
         contractVersion: { type: string }
@@ -1773,7 +1773,17 @@ components:
         writeFence: { type: boolean }
         migrationReady: { type: boolean }
         migrationBlockerCount: { type: integer, minimum: 0 }
+        migrationBlockerSummary:
+          type: array
+          items: { $ref: "#/components/schemas/MigrationBlockerSummaryItem" }
         mcpMutationsEnabled: { type: boolean }
+    MigrationBlockerSummaryItem:
+      type: object
+      additionalProperties: false
+      required: [type, count]
+      properties:
+        type: { type: string }
+        count: { type: integer, minimum: 1 }
     CapabilitiesView:
       type: object
       additionalProperties: false

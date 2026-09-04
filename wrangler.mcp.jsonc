@@ -7,6 +7,9 @@
   "observability": {
     "enabled": true
   },
+  "vars": {
+    "MCP_WRITE_DISABLED": "1"
+  },
   "kv_namespaces": [
     {
       "binding": "DB",

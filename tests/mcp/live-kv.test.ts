@@ -199,9 +199,18 @@ test("ambiguous legacy debt and customer links block financial writes without bl
   const store = await LiveKvStore.open(new MemoryCoordinator(), kv, { minimumWriteIntervalMs: 0 });
   const app = new GiabanApplication(store);
 
-  const status = await app.query({ operationId: "getStatus", input: {} }, ownerContext()) as { migrationReady: boolean; migrationBlockerCount: number };
+  const status = await app.query({ operationId: "getStatus", input: {} }, ownerContext()) as {
+    migrationReady: boolean;
+    migrationBlockerCount: number;
+    migrationBlockerSummary: Array<{ type: string; count: number }>;
+  };
   assert.equal(status.migrationReady, false);
   assert.equal(status.migrationBlockerCount, 2);
+  assert.deepEqual(status.migrationBlockerSummary, [
+    { type: "order:customer_id_requires_review", count: 1 },
+    { type: "order:legacy_total_or_debt_requires_review", count: 1 },
+  ]);
+  assert.equal(JSON.stringify(status.migrationBlockerSummary).includes("o_live"), false);
   await assert.rejects(
     () => app.execute({ operationId: "createCustomer", input: { name: "B", phone: "0902", address: "HN" } }, ownerContext({ idempotencyKey: "blocked-customer" })),
     (error: unknown) => Boolean(error && typeof error === "object" && "code" in error && error.code === "MIGRATION_READ_ONLY"),

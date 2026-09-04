@@ -150,3 +150,25 @@ test("write kill switch blocks mutations", async () => {
   const body = await response.json();
   assert.equal(body.error.message, "MCP writes disabled");
 });
+
+test("status and capabilities expose the active write kill switch", async () => {
+  const app = new GiabanApplication(new MemoryStore());
+  const env = { MCP_WRITE_DISABLED: "1" };
+  const statusResponse = await handleMcpRequest(
+    rpc("tools/call", { name: "giaban_get_status", arguments: {} }),
+    app,
+    ownerContext(),
+    env,
+  );
+  const capabilitiesResponse = await handleMcpRequest(
+    rpc("tools/call", { name: "giaban_get_capabilities", arguments: {} }),
+    app,
+    ownerContext(),
+    env,
+  );
+  const status = await statusResponse.json();
+  const capabilities = await capabilitiesResponse.json();
+
+  assert.equal(status.result.structuredContent.mcpMutationsEnabled, false);
+  assert.equal(capabilities.result.structuredContent.killSwitches.mcpWrite, true);
+});

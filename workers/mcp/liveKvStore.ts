@@ -583,6 +583,62 @@ const projectLegacy = (state: MemoryState, base: LegacyDocuments): LegacyDocumen
   };
 };
 
+export interface MigrationBlockerSummaryItem {
+  type: string;
+  count: number;
+}
+
+const STATIC_MIGRATION_BLOCKER_TYPES = new Set([
+  "products:document_must_be_array",
+  "products:malformed_row",
+  "categories:document_must_be_array",
+  "categories:malformed_row",
+  "orders:document_must_be_array",
+  "orders:malformed_row",
+  "customers:document_must_be_array",
+  "customers:malformed_row",
+  "transactions:document_must_be_array",
+  "transactions:malformed_row",
+  "shopTemplates:document_must_be_array",
+  "shopTemplates:malformed_row",
+  "costPrices:missing_or_duplicate_product_id",
+  "categories:missing_or_duplicate_id_or_value",
+  "products:missing_or_duplicate_id",
+  "customers:missing_or_duplicate_id",
+  "transactions:missing_or_duplicate_id",
+  "shopTemplates:missing_or_duplicate_id",
+]);
+
+const RECORD_SCOPED_MIGRATION_BLOCKERS = [
+  { prefix: "product:", suffix: ":missing_variants", type: "product:missing_variants" },
+  { prefix: "order:", suffix: ":missing_or_duplicate_id", type: "order:missing_or_duplicate_id" },
+  { prefix: "order:", suffix: ":customer_id_requires_review", type: "order:customer_id_requires_review" },
+  { prefix: "order:", suffix: ":missing_or_duplicate_line_id", type: "order:missing_or_duplicate_line_id" },
+  { prefix: "order:", suffix: ":missing_items", type: "order:missing_items" },
+  { prefix: "order:", suffix: ":legacy_total_or_debt_requires_review", type: "order:legacy_total_or_debt_requires_review" },
+] as const;
+
+const safeMigrationBlockerType = (blocker: string): string => {
+  if (STATIC_MIGRATION_BLOCKER_TYPES.has(blocker)) return blocker;
+  for (const candidate of RECORD_SCOPED_MIGRATION_BLOCKERS) {
+    if (blocker.startsWith(candidate.prefix) && blocker.endsWith(candidate.suffix)) return candidate.type;
+  }
+  if (blocker.startsWith("external_kv_change:")) return "external_kv_change";
+  if (blocker.startsWith("external_or_stale_kv:")) return "external_or_stale_kv";
+  return "other";
+};
+
+const summarizeMigrationBlockers = (blockers: string[]): MigrationBlockerSummaryItem[] => {
+  const counts = new Map<string, number>();
+  for (const blocker of blockers) {
+    const type = safeMigrationBlockerType(blocker);
+    counts.set(type, (counts.get(type) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([type, count]) => ({ type, count }));
+};
+
 const sameDocument = (left: unknown, right: unknown): boolean => JSON.stringify(left) === JSON.stringify(right);
 
 export class LiveKvStore extends MemoryStore {
@@ -617,6 +673,10 @@ export class LiveKvStore extends MemoryStore {
     this.migrationBlockers = migrationBlockers;
     this.blockedKeys = blockedKeys;
     this.blockAllWrites = blockAllWrites;
+  }
+
+  get migrationBlockerSummary(): MigrationBlockerSummaryItem[] {
+    return summarizeMigrationBlockers(this.migrationBlockers);
   }
 
   static async open(coordinator: CoordinatorStorage, kv: LiveKvNamespace, options: LiveKvStoreOptions = {}): Promise<LiveKvStore> {
