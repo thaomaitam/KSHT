@@ -20,5 +20,6 @@
     "jsx": "react-jsx",
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "exclude": ["node_modules", "dist", "tests", "workers", "migrations"]
 }

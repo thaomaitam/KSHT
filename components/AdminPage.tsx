@@ -22,7 +22,7 @@ export const AdminPage: React.FC = () => {
 
     useEffect(() => {
         const loadData = async () => {
-            const prods = await storageService.getProducts();
+            const prods = await storageService.getAdminProducts();
             const cats = await settingsService.getCategories();
             setProducts(prods);
             setCategories(cats);
@@ -31,18 +31,26 @@ export const AdminPage: React.FC = () => {
     }, []);
 
     const handleSave = async (product: Product) => {
-        if (editingProduct) {
-            setProducts(await storageService.updateProduct(product));
-        } else {
-            setProducts(await storageService.addProduct(product));
+        try {
+            if (editingProduct) {
+                setProducts(await storageService.updateProduct(product));
+            } else {
+                setProducts(await storageService.addProduct(product));
+            }
+            setShowForm(false);
+            setEditingProduct(null);
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không lưu được sản phẩm.');
         }
-        setShowForm(false);
-        setEditingProduct(null);
     };
 
     const handleDelete = async (id: string) => {
-        setProducts(await storageService.deleteProduct(id));
-        setShowDeleteConfirm(null);
+        try {
+            setProducts(await storageService.deleteProduct(id));
+            setShowDeleteConfirm(null);
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không xóa được sản phẩm.');
+        }
     };
 
     const openAddForm = () => {

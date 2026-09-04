@@ -8,9 +8,20 @@ Date: 2026-09-03
 
 Active
 
+## Current Owner Direction (supersedes the original OAuth/D1 topology)
+
+- Owner-private Pi MCP uses `KSHT_API_KEY`; GitHub OAuth is cancelled and must not be required or exposed by the personal MCP.
+- The business outcome is Pi replacing manual web-admin work: catalog add/edit/archive, orders, customers, payments/debt, reports, and settings/templates.
+- Existing live shop data is already in Cloudflare KV. Local/sample data is historical Google AI Studio residue and is not authoritative.
+- Customers only consume public storefront prices/catalog. MCP must mutate the same live Cloudflare shop dataset and publish storefront-compatible public documents; a permanently isolated Durable Object shop copy is not acceptable.
+- `GiabanShop` is a single-owner coordinator, recovery journal, and strongly consistent mirror of the last fully published commit. The live adapter hydrates legacy KV, preserves explicit stable IDs, stores versioned canonical state privately, and projects changed legacy documents back to KV with public cost redaction. Ambiguous/malformed/duplicate IDs and debt/totals block affected writes instead of being guessed.
+- The user delegated technical choices but not Cloudflare deployment. This slice may change source/config/tests; deploying `ksht-mcp`, initializing canonical live state, Pages publication, `DOMAIN_AUTHORITATIVE=1`, D1 cutover, push, and unrelated live changes remain out of scope until separately named.
+- Do not use legacy web-admin writes concurrently with MCP. Workers KV is eventually consistent, has no cross-Worker CAS/transaction, and limits each key to one write per second; the MCP coordinator throttles and journals its own writes but cannot serialize the legacy Worker.
+- Older sections below describing GitHub OAuth, a two-Worker Service Binding, or D1 as the selected personal-MCP path are retained as historical design context only and are not current implementation authority.
+
 ## Outcome
 
-Giaban has one typed, audited domain/application platform shared by the frontend and a private standards-based remote MCP server; a dedicated MCP edge Worker authenticates Pi through GitHub OAuth and reaches a sole D1-writing Domain/API Worker only through a typed Service Binding; Pi can safely perform every approved business operation, legacy KV data is migrated with reconciliation and rollback, and production rollout occurs only through separately authorized, evidence-gated steps.
+Giaban has one typed, audited domain/application platform used by an owner-private remote MCP server; Pi authenticates with `KSHT_API_KEY` and performs the same live-shop business work previously done through web admin, using the existing Cloudflare KV dataset while the customer storefront continues to read its public catalog documents. Live binding deployment and first hydration remain separately authorized, evidence-gated operations.
 
 ## Authority And Context
 
@@ -361,19 +372,53 @@ These links record planning evidence, not pinned implementation authority. Phase
 ## Progress
 
 - [x] Confirm Shared Understanding and create this architecture specification/execution plan.
-- [ ] Phase 0 — Refresh evidence and freeze the authoritative contract and implementation pins.
-- [ ] Phase 1 — Implement and prove the pure domain/application core.
+- [x] Phase 0 — Refresh evidence and freeze the authoritative contract and implementation pins.
+- [x] Phase 1 — Implement and prove the pure domain/application core.
 - [ ] Phase 2 — Implement and prove D1 persistence and safety primitives.
 - [ ] Phase 3 — Implement and prove the Domain/API Worker, Service Binding entrypoint, and compatibility lane.
-- [ ] Phase 4 — Implement and prove the isolated GitHub OAuth/MCP shell with mutation disabled.
+- [x] Phase 4 — Implement and prove the owner-private `KSHT_API_KEY` MCP shell; GitHub OAuth cancelled.
 - [ ] Phase 5 — Deliver and prove all approved MCP business tool slices.
-- [ ] Phase 6 — Migrate and prove the frontend consumer; eliminate revisionless business writers.
+- [x] Phase 6 — Migrate and prove the frontend consumer; eliminate revisionless business writers.
 - [ ] Phase 7 — Rehearse and reconcile the deterministic KV-to-D1 migration and recovery.
 - [ ] Phase 8 — Complete integrated staging, Pi acceptance, and recovery rehearsal.
 - [ ] Phase 9 — Record production-specific facts and obtain action-specific authority.
 - [ ] Phase 10 — Perform only the separately authorized staged production rollout.
 - [ ] Phase 11 — Remove compatibility paths in a later validated release and record the final result.
 
+### Local implementation evidence — 2026-09-04
+
+- Contract: `contracts/giaban-api.openapi.yaml`, `contracts/PINS.md`, `npm run test:contract`.
+- Domain/application: write fence, backup restore onto a new generation, owner/legacy/public contexts, `npm run test:application`.
+- Sqlite unit-of-work persists/reloads/rolls back. Production `wrangler.jsonc` still points at KV `cloudflare_worker.js`. Local Domain worker entry is `workers/api/index.ts` + `wrangler.domain.jsonc` (not production-wired).
+- HTTP `/api/v1` covers the OpenAPI path set. `DOMAIN_AUTHORITATIVE=1` rejects whole-key writes (423) and serves public `/api/data/products` without cost. Default compose still falls through to the KV worker.
+- MCP: every registry tool is listed; catalog→order→payment→report works; tools/call can use `GiabanDomain.invoke` + HMAC assertion; GitHub authorize/callback is owner-gated (injectable user lookup). No live GitHub OAuth app.
+- `client/giabanClient.ts` is the v1 client. Admin/storefront writers no longer POST `/api/data/:key`; they use `/api/v1` per-resource operations. Production KV Worker still accepts whole-key POST until a later authorized cutover. `DOMAIN_AUTHORITATIVE=1` is not enabled in production.
+- KV transform/import/reconcile is local-only. No live KV export or production D1 import.
+- No Pi session, MCP Inspector, or staging environment. Phases 9–11 unauthorized. No deploy, publish, push, or live Cloudflare mutation.
+- Local Pi (non-production, isolated MemoryStore): `npm run mcp:local` serves `http://127.0.0.1:8788/mcp`. The local test bearer is accepted only with `TEST_OWNER_ID` and `LOCAL_MCP_BEARER`; do not put it on a public Worker. MCP 2026 results stamp `resultType: "complete"`. Restart `mcp:local` after handler changes, then `/reload`.
+- Executable checks on this slice: `npm run test:platform` (53 pass, earlier local MCP slice), `npx tsc --noEmit`, `npm run build`, `npm run test:worker` (13 pass, earlier Worker slice).
+
+### Phase 6 frontend evidence — 2026-09-04
+
+- Removed `apiService.save` / `saveCloud`. Admin catalog, settings, customers, orders, payments, cash, bank/tax, and shop templates write through `giabanClient` `/api/v1` with `Idempotency-Key` and `If-Match-Revision`.
+- Storefront reads `GET /api/v1/public/products|categories|settings` (no cost). Shopper cart stays local. Admin catalog uses protected `/api/v1/products` (cost-bearing).
+- Order create: `createCustomer` (or reuse listed id) → `createDraftOrder` → `confirmOrder` → optional `recordPayment` for `total - debt`. Order total no longer includes previous debt.
+- Delete order maps draft → discard, confirmed → preview/confirm cancel. Paid toggle records payment; unpaid toggle records refund. Customer debt is derived from receivables, not a writable field.
+- JSON whole-file restore and whole-key sync-to-cloud are disabled (honest alert). Pull reloads `/api/v1`. Conflict/401/validation surface `CloudWriteError` instead of silent local success.
+- Legacy allowlist expanded only for compatibility UI workflows (invoice, discard/cancel, payment refund, cash reverse, template archive). Merge/backup restore/audit remain 403 for legacy sessions.
+- Writer detection: `npm run test:frontend` (1 pass). HTTP flow: `node --experimental-strip-types --test tests/http/phase6.test.ts` (1 pass). Application/legacy HTTP: 15 pass. `npm run typecheck` and `npm run build` pass. `test:worker` skipped (no Worker/auth/CORS/data-key change).
+- Does not enable production MCP writes, `DOMAIN_AUTHORITATIVE=1`, KV→D1, deploy, GitHub OAuth, or Pages publish.
+
+### Personal MCP convenience — 2026-09-04
+
+- HTTP MCP accepts `KSHT_API_KEY` (or Bearer equal to that secret). It does not use admin password / `ADMIN_SECRET`. GitHub OAuth routes are not exposed. `LOCAL_MCP_BEARER` remains test-only.
+- Cloudflare Free always-on: Worker `ksht-mcp` at `https://ksht-mcp.ngthanhhuy951.workers.dev/mcp` plus SQLite Durable Object `GiabanShop` (one owner instance). Worker only routes; domain state lives in the DO so Free 10ms CPU is not spent on catalog work. No production `ksht-api` KV, Pages, or `giaban.khosihuythao.com` route.
+- `.mcp.json` points at that URL with header `KSHT_API_KEY=${KSHT_API_KEY}`. Secret is not in git. `npx wrangler secret put KSHT_API_KEY --config wrangler.mcp.jsonc` is still required before tools/call succeed.
+- The earlier deployed version remains isolated until a separately authorized `ksht-mcp` deploy. Source/config now bind the existing live shop KV and use `LiveKvStore`: read-only initial legacy hydration, explicit ID/status/cost mapping, private canonical key, changed-document projection, strict public allowlists, same-key throttling, and DO roll-forward journal.
+- Migration safety: ambiguous customer links/debt/totals or malformed/duplicate IDs make affected writes `MIGRATION_READ_ONLY`. The DO commit mirror prevents eventual-consistency reads after restart from rolling state backward; any mismatch blocks writes until KV catches up or explicit reconciliation handles an external edit. `getStatus` exposes only readiness and blocker count, not customer data.
+- Personal MCP omits unfinished backup import/export/restore tools. Tests also prove MCP forwards idempotency/revision controls and rejects those unsafe tools.
+- Tests `tests/mcp/live-kv.test.ts` prove current KV hydration, storefront-compatible product publication without unknown/cost fields, order/payment publication, scoped migration blocking, missing/duplicate-ID blocking, external-writer drift blocking, stale-read rollback prevention, and same-instance partial-write recovery. `npx wrangler deploy --dry-run --config=wrangler.mcp.jsonc` confirms `GIABAN_SHOP` and live `DB` bindings. No live data was read or changed and no deploy occurred.
+- Final local evidence for this slice: `npm run test:platform -- --test-concurrency=1 --test-reporter=dot` passed 66/66; `npm run test:worker -- --test-reporter=dot` passed 13/13; `npm run test:frontend -- --test-reporter=dot` passed 1/1; `./node_modules/.bin/tsc --noEmit --pretty false`, `npm run build -- --mode production`, `git diff --check`, and Wrangler MCP dry-run passed. Build retains the existing >500 kB chunk warning.
 ## Decisions
 
 - Business scope is comprehensive for existing Giaban capabilities; infrastructure administration and unrelated new product domains remain out of scope.

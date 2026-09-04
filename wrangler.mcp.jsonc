@@ -1,0 +1,30 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ksht-mcp",
+  "main": "workers/mcp/index.ts",
+  "compatibility_date": "2026-09-04",
+  "workers_dev": true,
+  "observability": {
+    "enabled": true
+  },
+  "kv_namespaces": [
+    {
+      "binding": "DB",
+      "id": "0164f092258245eaac06221e6aef4df7"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "GIABAN_SHOP",
+        "class_name": "GiabanShop"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["GiabanShop"]
+    }
+  ]
+}

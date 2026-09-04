@@ -14,7 +14,6 @@ export const useAdminSettings = () => {
     const [saveSuccess, setSaveSuccess] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Bank Info states
     const [bankInfo, setBankInfo] = useState<BankInfo>({
         bankName: '',
         accountNumber: '',
@@ -23,7 +22,6 @@ export const useAdminSettings = () => {
     const [taxRate, setTaxRate] = useState<number>(0);
     const [bankSaveSuccess, setBankSaveSuccess] = useState(false);
 
-    // Cloudflare connection states
     const [apiUrl, setApiUrl] = useState('');
     const [connectionSaveSuccess, setConnectionSaveSuccess] = useState(false);
 
@@ -51,16 +49,24 @@ export const useAdminSettings = () => {
     };
 
     const handleSavePhone = async () => {
-        await settingsService.saveSettings(settings);
-        setSaveSuccess(true);
-        setTimeout(() => setSaveSuccess(false), 2000);
+        try {
+            await settingsService.saveSettings(settings);
+            setSaveSuccess(true);
+            setTimeout(() => setSaveSuccess(false), 2000);
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không lưu được số điện thoại.');
+        }
     };
 
     const handleSaveBankInfo = async () => {
-        await businessService.saveBankInfo(bankInfo);
-        await businessService.saveTaxRate(taxRate);
-        setBankSaveSuccess(true);
-        setTimeout(() => setBankSaveSuccess(false), 2000);
+        try {
+            await businessService.saveBankInfo(bankInfo);
+            await businessService.saveTaxRate(taxRate);
+            setBankSaveSuccess(true);
+            setTimeout(() => setBankSaveSuccess(false), 2000);
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không lưu được thông tin ngân hàng.');
+        }
     };
 
     const handleSaveConnection = () => {
@@ -70,26 +76,33 @@ export const useAdminSettings = () => {
     };
 
     const handleAddCategory = async () => {
-        if (newCategoryName.trim()) {
-            const updated = await settingsService.addCategory(newCategoryName.trim());
-            setCategories(updated);
+        if (!newCategoryName.trim()) return;
+        try {
+            setCategories(await settingsService.addCategory(newCategoryName.trim()));
             setNewCategoryName('');
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không thêm được danh mục.');
         }
     };
 
     const handleUpdateCategory = async (id: string) => {
-        if (editCategoryName.trim()) {
-            const updated = await settingsService.updateCategory(id, editCategoryName.trim());
-            setCategories(updated);
+        if (!editCategoryName.trim()) return;
+        try {
+            setCategories(await settingsService.updateCategory(id, editCategoryName.trim()));
             setEditingCategory(null);
             setEditCategoryName('');
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không cập nhật được danh mục.');
         }
     };
 
     const handleDeleteCategory = async (id: string) => {
-        const updated = await settingsService.deleteCategory(id);
-        setCategories(updated);
-        setShowDeleteConfirm(null);
+        try {
+            setCategories(await settingsService.deleteCategory(id));
+            setShowDeleteConfirm(null);
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không xóa được danh mục.');
+        }
     };
 
     const startEditing = (category: CategoryItem) => {
@@ -99,7 +112,7 @@ export const useAdminSettings = () => {
 
     const handleBackup = async () => {
         const data = {
-            products: await storageService.getProducts(),
+            products: await storageService.getAdminProducts(),
             categories: await settingsService.getCategories(),
             settings: await settingsService.getSettings(),
             orders: await businessService.getOrders(),
@@ -125,40 +138,9 @@ export const useAdminSettings = () => {
     };
 
     const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            try {
-                const content = e.target?.result as string;
-                const data = JSON.parse(content);
-
-                if (confirm('Bạn có chắc chắn muốn khôi phục dữ liệu từ file này? Dữ liệu hiện tại (bao gồm cả trên Cloud nếu đang kết nối) sẽ bị thay thế.')) {
-                    setIsSyncing(true);
-                    if (data.products) await storageService.saveProducts(data.products);
-                    if (data.categories) await settingsService.saveCategories(data.categories);
-                    if (data.settings) await settingsService.saveSettings(data.settings);
-                    if (data.orders) await businessService.saveOrders(data.orders);
-                    if (data.customers) await businessService.saveCustomers(data.customers);
-                    if (data.costPrices) await businessService.saveCostPrices(data.costPrices);
-                    if (data.transactions) await businessService.saveTransactions(data.transactions);
-                    if (data.bankInfo) await businessService.saveBankInfo(data.bankInfo);
-                    if (data.taxRate !== undefined) await businessService.saveTaxRate(data.taxRate);
-                    if (data.shopTemplates) await businessService.saveShopTemplates(data.shopTemplates);
-
-                    alert('Khôi phục dữ liệu thành công! Trang sẽ được tải lại để áp dụng thay đổi.');
-                    window.location.reload();
-                }
-            } catch (error) {
-                console.error('Import error:', error);
-                alert('Lỗi khi đọc file backup. Vui lòng kiểm tra lại định dạng file.');
-            } finally {
-                setIsSyncing(false);
-            }
-        };
-        reader.readAsText(file);
         if (fileInputRef.current) fileInputRef.current.value = '';
+        alert('Khôi phục file JSON toàn bộ đã tắt. Dùng MCP backup/restore (preview rồi confirm).');
+        void event;
     };
 
     const handleSyncToCloud = async () => {
@@ -166,46 +148,7 @@ export const useAdminSettings = () => {
             alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại trước khi đồng bộ.');
             return;
         }
-        if (!confirm('Bạn có muốn đẩy toàn bộ dữ liệu máy này lên Cloud? Dữ liệu cũ trên Cloud sẽ bị ghi đè hoàn toàn.')) return;
-
-        setIsSyncing(true);
-        try {
-            const [products, categories, settings, orders, customers, costPrices, transactions, bankInfo, taxRate, shopTemplates] = await Promise.all([
-                storageService.getProducts(),
-                settingsService.getCategories(),
-                settingsService.getSettings(),
-                businessService.getOrders(),
-                businessService.getCustomers(),
-                businessService.getCostPrices(),
-                businessService.getTransactions(),
-                businessService.getBankInfo(),
-                businessService.getTaxRate(),
-                businessService.getShopTemplates()
-            ]);
-
-            const syncResults = await Promise.all([
-                apiService.saveCloud('products', products),
-                apiService.saveCloud('categories', categories),
-                apiService.saveCloud('settings', settings),
-                apiService.saveCloud('orders', orders),
-                apiService.saveCloud('customers', customers),
-                apiService.saveCloud('costPrices', costPrices),
-                apiService.saveCloud('transactions', transactions),
-                bankInfo ? apiService.saveCloud('bankInfo', bankInfo) : Promise.resolve(true),
-                apiService.saveCloud('taxRate', { rate: taxRate }),
-                apiService.saveCloud('shopTemplates', shopTemplates)
-            ]);
-            if (syncResults.some(result => !result)) {
-                throw new Error('One or more cloud writes failed');
-            }
-
-            alert('Đồng bộ dữ liệu lên Cloud thành công!');
-        } catch (error) {
-            console.error('Sync error:', error);
-            alert('Lỗi khi đồng bộ dữ liệu. Vui lòng kiểm tra lại API URL và phiên đăng nhập.');
-        } finally {
-            setIsSyncing(false);
-        }
+        alert('Ghi admin đã đi qua /api/v1. Không còn đẩy whole-key /api/data.');
     };
 
     const handlePullFromCloud = async () => {
@@ -213,50 +156,12 @@ export const useAdminSettings = () => {
             alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
             return;
         }
-        if (!confirm('Bạn có muốn tải toàn bộ dữ liệu từ Cloud về máy này? Dữ liệu hiện tại trên máy sẽ bị ghi đè.')) return;
-
         setIsPulling(true);
         try {
-            // Fetch all data from Cloud API directly
-            const fetchFromCloud = async <T>(key: string): Promise<T | null> => {
-                return apiService.getCloud<T>(key);
-            };
-
-            // Pull all data from Cloud
-            const [
-                products, categories, settings, orders, customers,
-                costPrices, transactions, bankInfo, taxRate, shopTemplates
-            ] = await Promise.all([
-                fetchFromCloud<any[]>('products'),
-                fetchFromCloud<any[]>('categories'),
-                fetchFromCloud<any>('settings'),
-                fetchFromCloud<any[]>('orders'),
-                fetchFromCloud<any[]>('customers'),
-                fetchFromCloud<any[]>('costPrices'),
-                fetchFromCloud<any[]>('transactions'),
-                fetchFromCloud<any>('bankInfo'),
-                fetchFromCloud<{ rate: number }>('taxRate'),
-                fetchFromCloud<any[]>('shopTemplates')
-            ]);
-
-            // Save to localStorage directly (bypass cloud save to avoid circular sync)
-            // Keys must match apiService format: giaban_{apiKey}
-            if (products) localStorage.setItem('giaban_products', JSON.stringify(products));
-            if (categories) localStorage.setItem('giaban_categories', JSON.stringify(categories));
-            if (settings) localStorage.setItem('giaban_settings', JSON.stringify(settings));
-            if (orders) localStorage.setItem('giaban_orders', JSON.stringify(orders));
-            if (customers) localStorage.setItem('giaban_customers', JSON.stringify(customers));
-            if (costPrices) localStorage.setItem('giaban_costPrices', JSON.stringify(costPrices));
-            if (transactions) localStorage.setItem('giaban_transactions', JSON.stringify(transactions));
-            if (bankInfo) localStorage.setItem('giaban_bankInfo', JSON.stringify(bankInfo));
-            if (taxRate) localStorage.setItem('giaban_taxRate', JSON.stringify(taxRate));
-            if (shopTemplates) localStorage.setItem('giaban_shopTemplates', JSON.stringify(shopTemplates));
-
-            alert('Đã tải dữ liệu từ Cloud về máy thành công! Trang sẽ tải lại.');
-            window.location.reload();
+            await loadData();
+            alert('Đã tải lại dữ liệu từ /api/v1.');
         } catch (error) {
-            console.error('Pull error:', error);
-            alert('Lỗi khi tải dữ liệu từ Cloud. Vui lòng kiểm tra kết nối.');
+            alert(error instanceof Error ? error.message : 'Không tải được dữ liệu từ máy chủ.');
         } finally {
             setIsPulling(false);
         }

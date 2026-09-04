@@ -77,7 +77,7 @@ export const useBusinessData = () => {
             businessService.getOrders(),
             businessService.getCustomers(),
             businessService.getTransactions(),
-            storageService.getProducts(),
+            storageService.getAdminProducts(),
             businessService.getBankInfo(),
             businessService.getShopTemplates()
         ]);
@@ -104,7 +104,7 @@ export const useBusinessData = () => {
     };
 
     const getTotal = (): number => {
-        return getSubtotal() + (newOrder.shippingFee || 0) + (newOrder.debt || 0) - (newOrder.discount || 0);
+        return getSubtotal() + (newOrder.shippingFee || 0) - (newOrder.discount || 0);
     };
 
     const addVariantToOrder = (product: Product, variant: import('../types').ProductVariant) => {
@@ -202,39 +202,13 @@ export const useBusinessData = () => {
         });
     };
 
-    const updateCustomer = async (order: Order) => {
-        const existingCustomer = customers.find(c => c.phone === order.phone || c.name === order.customerName);
-
-        if (existingCustomer) {
-            const updated: Customer = {
-                ...existingCustomer,
-                totalSpent: existingCustomer.totalSpent + order.total,
-                lastOrderDate: order.createdAt,
-                debt: (existingCustomer.debt || 0) + (order.debt || 0)
-            };
-            const newCustomers = customers.map(c => c.id === existingCustomer.id ? updated : c);
-            await businessService.saveCustomers(newCustomers);
-            setCustomers(newCustomers);
-        } else {
-            const newCustomer: Customer = {
-                id: 'customer_' + Date.now(),
-                name: order.customerName,
-                phone: order.phone,
-                address: order.address,
-                totalSpent: order.total,
-                lastOrderDate: order.createdAt,
-                orderCount: 1,
-                debt: order.debt || 0
-            };
-            const newCustomers = [newCustomer, ...customers];
-            await businessService.saveCustomers(newCustomers);
-            setCustomers(newCustomers);
-        }
-    };
-
     const handleSaveOrder = async (): Promise<Order | null> => {
         if (!newOrder.customerName.trim()) {
             alert('Vui lòng nhập tên khách hàng');
+            return null;
+        }
+        if (!newOrder.phone.trim() || !newOrder.address.trim()) {
+            alert('Vui lòng nhập số điện thoại và địa chỉ');
             return null;
         }
         if (newOrder.items.length === 0) {
@@ -242,30 +216,31 @@ export const useBusinessData = () => {
             return null;
         }
 
-        const order: Order = {
-            id: 'order_' + Date.now(),
-            customerName: newOrder.customerName,
-            phone: newOrder.phone,
-            address: newOrder.address,
-            items: newOrder.items,
-            total: getTotal(),
-            status: 'pending',
-            createdAt: new Date().toISOString(),
-            paymentMethod: 'cod',
-            note: newOrder.note,
-            shippingFee: newOrder.shippingFee,
-            discount: newOrder.discount,
-            debt: newOrder.debt,
-            paymentStatus: (newOrder.debt || 0) > 0 ? 'unpaid' : 'paid',
-            totalAmountInWords: newOrder.totalAmountInWords,
-            shopTemplateId: newOrder.selectedTemplateId
-        };
-
-        const updatedOrders = await businessService.addOrder(order);
-        setOrders(updatedOrders);
-        await updateCustomer(order);
-        resetOrderForm();
-        return order;
+        try {
+            const total = getTotal();
+            const saved = await businessService.placeOrder({
+                customerName: newOrder.customerName,
+                phone: newOrder.phone,
+                address: newOrder.address,
+                items: newOrder.items,
+                shippingFee: newOrder.shippingFee || 0,
+                discount: newOrder.discount || 0,
+                note: newOrder.note,
+                shopTemplateId: newOrder.selectedTemplateId,
+                collectAmount: Math.max(0, total - (newOrder.debt || 0)),
+            });
+            const [ordersData, customersData] = await Promise.all([
+                businessService.getOrders(),
+                businessService.getCustomers(),
+            ]);
+            setOrders(ordersData);
+            setCustomers(customersData);
+            resetOrderForm();
+            return saved;
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không lưu được đơn lên máy chủ.');
+            return null;
+        }
     };
 
     return {
@@ -286,6 +261,6 @@ export const useBusinessData = () => {
         getSubtotal, getTotal,
         addProductFromList, addVariantToOrder, updateItemField, removeItem,
         handleSaveOrder,
-        resetOrderForm, updateCustomer
+        resetOrderForm
     };
 };

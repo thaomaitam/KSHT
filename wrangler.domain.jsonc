@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ksht-api-domain",
+  "main": "workers/api/index.ts",
+  "compatibility_date": "2026-09-04",
+  "workers_dev": true,
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "ALLOWED_ORIGINS": "https://giaban.khosihuythao.com",
+    "DOMAIN_AUTHORITATIVE": "0"
+  }
+}

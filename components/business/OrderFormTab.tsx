@@ -2,7 +2,7 @@ import React from 'react';
 import html2canvas from 'html2canvas';
 import { FileText, Search, Plus, ChevronDown, Store } from 'lucide-react';
 import { Product } from '../../types';
-import { Order, BankInfo, ShopTemplate, businessService } from '../../businessService';
+import { Order, BankInfo, ShopTemplate } from '../../businessService';
 import { NewOrder, OrderItem } from '../../hooks/useBusinessData';
 import { generateImagePreviewContent, generatePDFContent, generateReceiptContent, openPrintWindow } from '../../utils/pdfGenerator';
 import { ManualEntryRow } from './ManualEntryRow';
@@ -30,8 +30,6 @@ interface OrderFormTabProps {
     shopTemplates: ShopTemplate[];
     orderCount: number;
     resetOrderForm: () => void;
-    updateCustomer: (order: Order) => Promise<void>;
-    setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
     productDropdownRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -45,50 +43,24 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
     addProductFromList, addVariantToOrder, addQuantity, setAddQuantity,
     updateItemField, removeItem, getSubtotal, getTotal,
     handleSaveOrder, bankInfo, shopTemplates, orderCount, resetOrderForm,
-    updateCustomer, setOrders, productDropdownRef
+    productDropdownRef
 }) => {
     const [expandedProductId, setExpandedProductId] = React.useState<string | null>(null);
     const hasSoCuonInTable = newOrder.items.some(item => item.soCuon !== undefined && item.soCuon > 0);
     const hasSoKiInTable = newOrder.items.some(item => item.soKi !== undefined && item.soKi > 0);
 
     const handleCreateAndExportPDF = async () => {
-        if (!newOrder.customerName.trim()) {
-            alert('Vui lòng nhập tên khách hàng');
-            return;
-        }
-        if (newOrder.items.length === 0) {
-            alert('Vui lòng thêm ít nhất 1 sản phẩm');
-            return;
-        }
+        const order = await handleSaveOrder();
+        if (!order) return;
 
-        const order: Order = {
-            id: 'order_' + Date.now(),
-            customerName: newOrder.customerName,
-            phone: newOrder.phone,
-            address: newOrder.address,
-            items: newOrder.items,
-            total: getTotal(),
-            status: 'pending',
-            createdAt: new Date().toISOString(),
-            paymentMethod: 'cod',
-            note: newOrder.note,
-            shippingFee: newOrder.shippingFee,
-            discount: newOrder.discount,
-            debt: newOrder.debt,
-            totalAmountInWords: newOrder.totalAmountInWords,
-            shopTemplateId: newOrder.selectedTemplateId
-        };
-
-        const selectedTemplate = shopTemplates.find(t => t.id === newOrder.selectedTemplateId) || shopTemplates[0];
+        const selectedTemplate = shopTemplates.find(t => t.id === order.shopTemplateId) || shopTemplates[0];
         const pdfContent = generatePDFContent(order, bankInfo, orderCount + 1, selectedTemplate);
 
-        // Create hidden container to render the invoice HTML
         const container = document.createElement('div');
         container.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 800px; background: white;';
         container.innerHTML = pdfContent;
         document.body.appendChild(container);
 
-        // Find the actual content container inside the HTML
         const contentElement = container.querySelector('.container') as HTMLElement;
         if (!contentElement) {
             document.body.removeChild(container);
@@ -96,14 +68,12 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
             return;
         }
 
-        // Wait for fonts and images to load
         await new Promise(resolve => setTimeout(resolve, 500));
 
         try {
-            // Convert HTML to PNG using html2canvas
             const canvas = await html2canvas(contentElement, {
                 backgroundColor: '#ffffff',
-                scale: 2, // Higher quality
+                scale: 2,
                 useCORS: true,
                 logging: false,
                 width: contentElement.scrollWidth,
@@ -111,71 +81,29 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
             });
 
             const imageDataUrl = canvas.toDataURL('image/png');
-
-            // Clean up hidden container
             document.body.removeChild(container);
-
-            // Open new window with the image
             openPrintWindow(generateImagePreviewContent(
                 `Phiếu xuất kho #${orderCount + 1}`,
                 imageDataUrl,
                 'Hoá đơn'
             ));
-
-            // Save order to database
-            const updatedOrders = await businessService.addOrder(order);
-            setOrders(updatedOrders);
-            await updateCustomer(order);
-            resetOrderForm();
-
         } catch (error) {
             console.error('Error generating invoice image:', error);
             document.body.removeChild(container);
-
-            // Fallback to old PDF method
             const printWindow = openPrintWindow(pdfContent);
             if (printWindow) {
                 setTimeout(() => {
                     printWindow.print();
                 }, 500);
             }
-
-            const updatedOrders = await businessService.addOrder(order);
-            setOrders(updatedOrders);
-            await updateCustomer(order);
-            resetOrderForm();
         }
     };
 
     const handleThermalPrint = async () => {
-        if (!newOrder.customerName.trim()) {
-            alert('Vui lòng nhập tên khách hàng');
-            return;
-        }
-        if (newOrder.items.length === 0) {
-            alert('Vui lòng thêm ít nhất 1 sản phẩm');
-            return;
-        }
+        const order = await handleSaveOrder();
+        if (!order) return;
 
-        const order: Order = {
-            id: 'order_' + Date.now(),
-            customerName: newOrder.customerName,
-            phone: newOrder.phone,
-            address: newOrder.address,
-            items: newOrder.items,
-            total: getTotal(),
-            status: 'pending',
-            createdAt: new Date().toISOString(),
-            paymentMethod: 'cod',
-            note: newOrder.note,
-            shippingFee: newOrder.shippingFee,
-            discount: newOrder.discount,
-            debt: newOrder.debt,
-            totalAmountInWords: newOrder.totalAmountInWords,
-            shopTemplateId: newOrder.selectedTemplateId
-        };
-
-        const selectedTemplate = shopTemplates.find(t => t.id === newOrder.selectedTemplateId) || shopTemplates[0];
+        const selectedTemplate = shopTemplates.find(t => t.id === order.shopTemplateId) || shopTemplates[0];
         const receiptContent = generateReceiptContent(order, orderCount + 1, selectedTemplate, bankInfo);
 
         const printWindow = openPrintWindow(receiptContent);
@@ -185,12 +113,6 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                 printWindow.close();
             }, 500);
         }
-
-        // Save order to database
-        const updatedOrders = await businessService.addOrder(order);
-        setOrders(updatedOrders);
-        await updateCustomer(order);
-        resetOrderForm();
     };
 
     return (

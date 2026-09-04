@@ -24,9 +24,11 @@ export const CustomersTab: React.FC<CustomersTabProps> = ({
     );
 
     const handleDeleteCustomer = async (customerId: string) => {
-        if (window.confirm('Bạn có chắc chắn muốn xóa khách hàng này?')) {
-            const updatedCustomers = await businessService.deleteCustomer(customerId);
-            setCustomers(updatedCustomers);
+        if (!window.confirm('Bạn có chắc chắn muốn xóa khách hàng này?')) return;
+        try {
+            setCustomers(await businessService.deleteCustomer(customerId));
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không xóa được khách hàng.');
         }
     };
 

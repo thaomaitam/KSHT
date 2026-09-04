@@ -109,43 +109,6 @@ export const apiService = {
         return readLocal<T>(key);
     },
 
-    async saveCloud<T>(key: string, data: T): Promise<boolean> {
-        const apiUrl = this.getApiUrl();
-        const token = getSessionToken();
-        if (!apiUrl || !token) return false;
-
-        try {
-            const response = await fetch(`${apiUrl}/api/data/${key}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (response.status === 401) clearSession();
-            if (!response.ok) {
-                console.warn(`API Save Warning ${key}:`, response.statusText);
-            }
-            return response.ok;
-        } catch (error) {
-            console.warn(`API Save Warning ${key}:`, error);
-            return false;
-        }
-    },
-
-    async save<T>(key: string, data: T): Promise<boolean> {
-        try {
-            localStorage.setItem(`giaban_${key}`, JSON.stringify(data));
-        } catch (error) {
-            console.warn(`LocalStorage save failed for ${key}:`, error);
-        }
-
-        await apiService.saveCloud(key, data);
-        return true;
-    },
-
     async login(username: string, password: string): Promise<LoginResult> {
         const apiUrl = this.getApiUrl();
         if (!apiUrl) return { success: false };

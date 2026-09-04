@@ -1,0 +1,2481 @@
+openapi: 3.1.0
+info:
+  title: Giaban API
+  version: 1.0.0
+  summary: Authoritative Giaban HTTP, RPC, and MCP boundary contract
+  description: >
+    Single machine-checkable contract for the Domain/API Worker, frontend, Service Binding,
+    and MCP adapters. Adapters MUST NOT invent totals, identity, lifecycle, payment, PII,
+    or authorization rules. Local $ref only.
+  x-giaban-rpc:
+    entrypoint: GiabanDomain
+    method: invoke
+    envelope: InvokeEnvelope
+  x-giaban-limits:
+    pageDefault: 50
+    pageMax: 100
+    confirmationTtlSeconds: 600
+    idempotencyTtlSeconds: 86400
+    internalAssertionTtlSeconds: 60
+    businessTimezone: Asia/Ho_Chi_Minh
+    mcpProtocolVersion: "2026-07-28"
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+tags:
+  - name: system
+  - name: public
+  - name: catalog
+  - name: customers
+  - name: orders
+  - name: payments
+  - name: cash
+  - name: reports
+  - name: settings
+  - name: backups
+  - name: audit
+paths:
+  /status:
+    get:
+      operationId: getStatus
+      tags: [system]
+      x-giaban-mcp:
+        tool: giaban_get_status
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: []
+      responses:
+        "200":
+          description: Worker and dataset status
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StatusView" }
+        default: { $ref: "#/components/responses/Error" }
+  /capabilities:
+    get:
+      operationId: getCapabilities
+      tags: [system]
+      x-giaban-mcp:
+        tool: giaban_get_capabilities
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: []
+      responses:
+        "200":
+          description: Enabled operations, kill switches, and contract version
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CapabilitiesView" }
+        default: { $ref: "#/components/responses/Error" }
+  /public/products:
+    get:
+      operationId: listPublicProducts
+      tags: [public]
+      security: []
+      x-giaban-scopes: []
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: q, in: query, schema: { type: string, maxLength: 200 } }
+        - { name: categoryId, in: query, schema: { type: string } }
+      responses:
+        "200":
+          description: Cost-free public catalog page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PublicProductPage" }
+        default: { $ref: "#/components/responses/Error" }
+  /public/products/{productId}:
+    get:
+      operationId: getPublicProduct
+      tags: [public]
+      security: []
+      x-giaban-scopes: []
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+      responses:
+        "200":
+          description: Cost-free public product
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PublicProduct" }
+        default: { $ref: "#/components/responses/Error" }
+  /public/categories:
+    get:
+      operationId: listPublicCategories
+      tags: [public]
+      security: []
+      x-giaban-scopes: []
+      responses:
+        "200":
+          description: Public categories
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PublicCategoryPage" }
+        default: { $ref: "#/components/responses/Error" }
+  /public/settings:
+    get:
+      operationId: getPublicSettings
+      tags: [public]
+      security: []
+      x-giaban-scopes: []
+      responses:
+        "200":
+          description: Public-safe shop settings
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PublicSettings" }
+        default: { $ref: "#/components/responses/Error" }
+  /products:
+    get:
+      operationId: listProducts
+      tags: [catalog]
+      x-giaban-mcp:
+        tool: giaban_list_products
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [catalog:read]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: q, in: query, schema: { type: string, maxLength: 200 } }
+        - { name: categoryId, in: query, schema: { type: string } }
+        - { name: includeArchived, in: query, schema: { type: boolean, default: false } }
+      responses:
+        "200":
+          description: Admin product page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminProductPage" }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: createProduct
+      tags: [catalog]
+      x-giaban-mcp:
+        tool: giaban_create_product
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [catalog:write]
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProductWrite" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminProduct" }
+        default: { $ref: "#/components/responses/Error" }
+  /products/{productId}:
+    get:
+      operationId: getProduct
+      tags: [catalog]
+      x-giaban-mcp:
+        tool: giaban_get_product
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [catalog:read]
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+      responses:
+        "200":
+          description: Admin product including cost
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminProduct" }
+        default: { $ref: "#/components/responses/Error" }
+    patch:
+      operationId: updateProduct
+      tags: [catalog]
+      x-giaban-mcp:
+        tool: giaban_update_product
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [catalog:write]
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProductWrite" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminProduct" }
+        default: { $ref: "#/components/responses/Error" }
+  /products/{productId}/archive:
+    post:
+      operationId: archiveProduct
+      tags: [catalog]
+      x-giaban-mcp:
+        tool: giaban_archive_product
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [catalog:write]
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Archived
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminProduct" }
+        default: { $ref: "#/components/responses/Error" }
+  /products/{productId}/restore:
+    post:
+      operationId: restoreProduct
+      tags: [catalog]
+      x-giaban-mcp:
+        tool: giaban_restore_product
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [catalog:write]
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Restored
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminProduct" }
+        default: { $ref: "#/components/responses/Error" }
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [catalog]
+      x-giaban-mcp:
+        tool: giaban_list_categories
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [catalog:read]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: includeArchived, in: query, schema: { type: boolean, default: false } }
+      responses:
+        "200":
+          description: Category page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CategoryPage" }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: createCategory
+      tags: [catalog]
+      x-giaban-mcp:
+        tool: giaban_create_category
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [catalog:write]
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CategoryWrite" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Category" }
+        default: { $ref: "#/components/responses/Error" }
+  /categories/{categoryId}:
+    patch:
+      operationId: updateCategory
+      tags: [catalog]
+      x-giaban-mcp:
+        tool: giaban_update_category
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [catalog:write]
+      parameters:
+        - $ref: "#/components/parameters/CategoryId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CategoryWrite" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Category" }
+        default: { $ref: "#/components/responses/Error" }
+  /categories/{categoryId}/archive:
+    post:
+      operationId: archiveCategory
+      tags: [catalog]
+      x-giaban-mcp:
+        tool: giaban_archive_category
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [catalog:write]
+      parameters:
+        - $ref: "#/components/parameters/CategoryId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Archived
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Category" }
+        default: { $ref: "#/components/responses/Error" }
+  /categories/{categoryId}/restore:
+    post:
+      operationId: restoreCategory
+      tags: [catalog]
+      x-giaban-mcp:
+        tool: giaban_restore_category
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [catalog:write]
+      parameters:
+        - $ref: "#/components/parameters/CategoryId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Restored
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Category" }
+        default: { $ref: "#/components/responses/Error" }
+  /customers:
+    get:
+      operationId: listCustomers
+      tags: [customers]
+      x-giaban-mcp:
+        tool: giaban_list_customers
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [customers:read]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: q, in: query, schema: { type: string, maxLength: 200 } }
+        - { name: includeArchived, in: query, schema: { type: boolean, default: false } }
+      responses:
+        "200":
+          description: Masked customer page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MaskedCustomerPage" }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: createCustomer
+      tags: [customers]
+      x-giaban-mcp:
+        tool: giaban_create_customer
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [customers:write]
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CustomerWrite" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CustomerDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /customers/{customerId}:
+    get:
+      operationId: getCustomer
+      tags: [customers]
+      x-giaban-mcp:
+        tool: giaban_get_customer
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [customers:read, customers:pii:read]
+      x-giaban-sensitive-read: true
+      parameters:
+        - $ref: "#/components/parameters/CustomerId"
+      responses:
+        "200":
+          description: PII customer detail
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CustomerDetail" }
+        default: { $ref: "#/components/responses/Error" }
+    patch:
+      operationId: updateCustomer
+      tags: [customers]
+      x-giaban-mcp:
+        tool: giaban_update_customer
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [customers:write]
+      parameters:
+        - $ref: "#/components/parameters/CustomerId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CustomerWrite" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CustomerDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /customers/{customerId}/archive:
+    post:
+      operationId: archiveCustomer
+      tags: [customers]
+      x-giaban-mcp:
+        tool: giaban_archive_customer
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [customers:write]
+      parameters:
+        - $ref: "#/components/parameters/CustomerId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Archived
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CustomerDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /customers/{customerId}/restore:
+    post:
+      operationId: restoreCustomer
+      tags: [customers]
+      x-giaban-mcp:
+        tool: giaban_restore_customer
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [customers:write]
+      parameters:
+        - $ref: "#/components/parameters/CustomerId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Restored
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CustomerDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /customers/merge/preview:
+    post:
+      operationId: previewCustomerMerge
+      tags: [customers]
+      x-giaban-mcp:
+        tool: giaban_preview_customer_merge
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [customers:merge]
+      x-giaban-confirmation: preview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CustomerMergeRequest" }
+      responses:
+        "200":
+          description: Confirmation preview
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConfirmationPreview" }
+        default: { $ref: "#/components/responses/Error" }
+  /customers/merge/confirm:
+    post:
+      operationId: confirmCustomerMerge
+      tags: [customers]
+      x-giaban-mcp:
+        tool: giaban_confirm_customer_merge
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [customers:merge]
+      x-giaban-confirmation: confirm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConfirmationExecute" }
+      responses:
+        "200":
+          description: Merge result
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CustomerDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /customers/unmerge/preview:
+    post:
+      operationId: previewCustomerUnmerge
+      tags: [customers]
+      x-giaban-mcp:
+        tool: giaban_preview_customer_unmerge
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [customers:merge]
+      x-giaban-confirmation: preview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CustomerUnmergeRequest" }
+      responses:
+        "200":
+          description: Confirmation preview
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConfirmationPreview" }
+        default: { $ref: "#/components/responses/Error" }
+  /customers/unmerge/confirm:
+    post:
+      operationId: confirmCustomerUnmerge
+      tags: [customers]
+      x-giaban-mcp:
+        tool: giaban_confirm_customer_unmerge
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [customers:merge]
+      x-giaban-confirmation: confirm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConfirmationExecute" }
+      responses:
+        "200":
+          description: Unmerge result
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CustomerDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders:
+    get:
+      operationId: listOrders
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_list_orders
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [orders:read]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: q, in: query, schema: { type: string, maxLength: 200 } }
+        - { name: status, in: query, schema: { $ref: "#/components/schemas/OrderStatus" } }
+        - { name: customerId, in: query, schema: { type: string } }
+        - { name: fromDate, in: query, schema: { type: string, format: date } }
+        - { name: toDate, in: query, schema: { type: string, format: date } }
+      responses:
+        "200":
+          description: Masked order page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MaskedOrderPage" }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: createDraftOrder
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_create_draft_order
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:write]
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/DraftOrderWrite" }
+      responses:
+        "201":
+          description: Draft created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OrderDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/{orderId}:
+    get:
+      operationId: getOrder
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_get_order
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [orders:read]
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      responses:
+        "200":
+          description: Masked order
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MaskedOrder" }
+        default: { $ref: "#/components/responses/Error" }
+    patch:
+      operationId: updateDraftOrder
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_update_draft_order
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:write]
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/DraftOrderWrite" }
+      responses:
+        "200":
+          description: Draft updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OrderDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/{orderId}/invoice:
+    get:
+      operationId: getOrderInvoice
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_get_order_invoice
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [orders:read, customers:pii:read]
+      x-giaban-sensitive-read: true
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      responses:
+        "200":
+          description: PII invoice snapshot
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OrderDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/{orderId}/discard:
+    post:
+      operationId: discardDraftOrder
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_discard_draft_order
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:write]
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Draft tombstoned
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OrderDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/{orderId}/restore-draft:
+    post:
+      operationId: restoreDraftOrder
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_restore_draft_order
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:write]
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Draft restored
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OrderDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/{orderId}/confirm:
+    post:
+      operationId: confirmOrder
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_confirm_order
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:lifecycle]
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Confirmed
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OrderDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/{orderId}/shipping:
+    post:
+      operationId: markOrderShipping
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_mark_order_shipping
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:lifecycle]
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Shipping
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OrderDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/{orderId}/complete:
+    post:
+      operationId: completeOrder
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_complete_order
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:lifecycle]
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Completed
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OrderDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/{orderId}/clone:
+    post:
+      operationId: cloneOrder
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_clone_order
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:write]
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "201":
+          description: New draft cloned from snapshots
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OrderDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/{orderId}/cancel/preview:
+    post:
+      operationId: previewOrderCancellation
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_preview_order_cancellation
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:cancel]
+      x-giaban-confirmation: preview
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CancelOrderRequest" }
+      responses:
+        "200":
+          description: Cancellation preview including unsettled payment
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConfirmationPreview" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/{orderId}/cancel/confirm:
+    post:
+      operationId: confirmOrderCancellation
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_confirm_order_cancellation
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:cancel]
+      x-giaban-confirmation: confirm
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConfirmationExecute" }
+      responses:
+        "200":
+          description: Cancelled
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OrderDetail" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/{orderId}/payments:
+    post:
+      operationId: recordPayment
+      tags: [payments]
+      x-giaban-mcp:
+        tool: giaban_record_payment
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [payments:write]
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PaymentWrite" }
+      responses:
+        "201":
+          description: Payment recorded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Payment" }
+        default: { $ref: "#/components/responses/Error" }
+  /payments:
+    get:
+      operationId: listPayments
+      tags: [payments]
+      x-giaban-mcp:
+        tool: giaban_list_payments
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [payments:read]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: orderId, in: query, schema: { type: string } }
+        - { name: fromDate, in: query, schema: { type: string, format: date } }
+        - { name: toDate, in: query, schema: { type: string, format: date } }
+      responses:
+        "200":
+          description: Payment page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PaymentPage" }
+        default: { $ref: "#/components/responses/Error" }
+  /receivables:
+    get:
+      operationId: listReceivables
+      tags: [payments]
+      x-giaban-mcp:
+        tool: giaban_list_receivables
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [payments:read]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: customerId, in: query, schema: { type: string } }
+      responses:
+        "200":
+          description: Derived outstanding balances
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReceivablePage" }
+        default: { $ref: "#/components/responses/Error" }
+  /payments/{paymentId}/reverse/preview:
+    post:
+      operationId: previewPaymentReversal
+      tags: [payments]
+      x-giaban-mcp:
+        tool: giaban_preview_payment_reversal
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [payments:reverse]
+      x-giaban-confirmation: preview
+      parameters:
+        - $ref: "#/components/parameters/PaymentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PaymentAdjustmentRequest" }
+      responses:
+        "200":
+          description: Reversal preview
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConfirmationPreview" }
+        default: { $ref: "#/components/responses/Error" }
+  /payments/{paymentId}/reverse/confirm:
+    post:
+      operationId: confirmPaymentReversal
+      tags: [payments]
+      x-giaban-mcp:
+        tool: giaban_confirm_payment_reversal
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [payments:reverse]
+      x-giaban-confirmation: confirm
+      parameters:
+        - $ref: "#/components/parameters/PaymentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConfirmationExecute" }
+      responses:
+        "200":
+          description: Reversal recorded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Payment" }
+        default: { $ref: "#/components/responses/Error" }
+  /payments/{paymentId}/refund/preview:
+    post:
+      operationId: previewPaymentRefund
+      tags: [payments]
+      x-giaban-mcp:
+        tool: giaban_preview_payment_refund
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [payments:refund]
+      x-giaban-confirmation: preview
+      parameters:
+        - $ref: "#/components/parameters/PaymentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PaymentAdjustmentRequest" }
+      responses:
+        "200":
+          description: Refund recording preview
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConfirmationPreview" }
+        default: { $ref: "#/components/responses/Error" }
+  /payments/{paymentId}/refund/confirm:
+    post:
+      operationId: confirmPaymentRefund
+      tags: [payments]
+      x-giaban-mcp:
+        tool: giaban_confirm_payment_refund
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [payments:refund]
+      x-giaban-confirmation: confirm
+      parameters:
+        - $ref: "#/components/parameters/PaymentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConfirmationExecute" }
+      responses:
+        "200":
+          description: Refund recorded; no external transfer is initiated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Payment" }
+        default: { $ref: "#/components/responses/Error" }
+  /cash-transactions:
+    get:
+      operationId: listCashTransactions
+      tags: [cash]
+      x-giaban-mcp:
+        tool: giaban_list_cash_transactions
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [transactions:read]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: type, in: query, schema: { $ref: "#/components/schemas/CashType" } }
+        - { name: fromDate, in: query, schema: { type: string, format: date } }
+        - { name: toDate, in: query, schema: { type: string, format: date } }
+      responses:
+        "200":
+          description: Cashbook page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CashTransactionPage" }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: createCashTransaction
+      tags: [cash]
+      x-giaban-mcp:
+        tool: giaban_create_cash_transaction
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [transactions:write]
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CashTransactionWrite" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CashTransaction" }
+        default: { $ref: "#/components/responses/Error" }
+  /cash-transactions/{transactionId}/reverse/preview:
+    post:
+      operationId: previewCashReversal
+      tags: [cash]
+      x-giaban-mcp:
+        tool: giaban_preview_cash_reversal
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [transactions:reverse]
+      x-giaban-confirmation: preview
+      parameters:
+        - $ref: "#/components/parameters/TransactionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CashReversalRequest" }
+      responses:
+        "200":
+          description: Reversal preview
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConfirmationPreview" }
+        default: { $ref: "#/components/responses/Error" }
+  /cash-transactions/{transactionId}/reverse/confirm:
+    post:
+      operationId: confirmCashReversal
+      tags: [cash]
+      x-giaban-mcp:
+        tool: giaban_confirm_cash_reversal
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [transactions:reverse]
+      x-giaban-confirmation: confirm
+      parameters:
+        - $ref: "#/components/parameters/TransactionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConfirmationExecute" }
+      responses:
+        "200":
+          description: Reversal recorded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CashTransaction" }
+        default: { $ref: "#/components/responses/Error" }
+  /reports/summary:
+    get:
+      operationId: getReportSummary
+      tags: [reports]
+      x-giaban-mcp:
+        tool: giaban_get_report_summary
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [reports:read]
+      parameters:
+        - $ref: "#/components/parameters/FromDate"
+        - $ref: "#/components/parameters/ToDate"
+      responses:
+        "200":
+          description: Backend-owned report summary
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReportSummary" }
+        default: { $ref: "#/components/responses/Error" }
+  /reports/confirmed-sales:
+    get:
+      operationId: getConfirmedSalesReport
+      tags: [reports]
+      x-giaban-mcp:
+        tool: giaban_get_confirmed_sales_report
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [reports:read]
+      parameters:
+        - $ref: "#/components/parameters/FromDate"
+        - $ref: "#/components/parameters/ToDate"
+      responses:
+        "200":
+          description: Confirmed sales
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MoneyReport" }
+        default: { $ref: "#/components/responses/Error" }
+  /reports/receipts:
+    get:
+      operationId: getReceiptsReport
+      tags: [reports]
+      x-giaban-mcp:
+        tool: giaban_get_receipts_report
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [reports:read]
+      parameters:
+        - $ref: "#/components/parameters/FromDate"
+        - $ref: "#/components/parameters/ToDate"
+      responses:
+        "200":
+          description: Gross receipts, refunds, and net receipts
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReceiptsReport" }
+        default: { $ref: "#/components/responses/Error" }
+  /reports/receivables:
+    get:
+      operationId: getReceivablesReport
+      tags: [reports]
+      x-giaban-mcp:
+        tool: giaban_get_receivables_report
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [reports:read]
+      parameters:
+        - $ref: "#/components/parameters/AsOfDate"
+      responses:
+        "200":
+          description: Derived receivables
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MoneyReport" }
+        default: { $ref: "#/components/responses/Error" }
+  /reports/discounts-shipping:
+    get:
+      operationId: getDiscountsShippingReport
+      tags: [reports]
+      x-giaban-mcp:
+        tool: giaban_get_discounts_shipping_report
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [reports:read]
+      parameters:
+        - $ref: "#/components/parameters/FromDate"
+        - $ref: "#/components/parameters/ToDate"
+      responses:
+        "200":
+          description: Discounts and shipping
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DiscountShippingReport" }
+        default: { $ref: "#/components/responses/Error" }
+  /reports/cogs-profit:
+    get:
+      operationId: getCogsProfitReport
+      tags: [reports]
+      x-giaban-mcp:
+        tool: giaban_get_cogs_profit_report
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [reports:read]
+      parameters:
+        - $ref: "#/components/parameters/FromDate"
+        - $ref: "#/components/parameters/ToDate"
+      responses:
+        "200":
+          description: COGS and backend profit
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CogsProfitReport" }
+        default: { $ref: "#/components/responses/Error" }
+  /settings/phone:
+    get:
+      operationId: getPhoneSettings
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_get_phone_settings
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [settings:read]
+      responses:
+        "200":
+          description: Phone settings
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PhoneSettings" }
+        default: { $ref: "#/components/responses/Error" }
+    patch:
+      operationId: updatePhoneSettings
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_update_phone_settings
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [settings:write]
+      parameters:
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PhoneSettingsWrite" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PhoneSettings" }
+        default: { $ref: "#/components/responses/Error" }
+  /settings/shop:
+    get:
+      operationId: getShopSettings
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_get_shop_settings
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [settings:read]
+      responses:
+        "200":
+          description: Shop settings
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ShopSettings" }
+        default: { $ref: "#/components/responses/Error" }
+    patch:
+      operationId: updateShopSettings
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_update_shop_settings
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [settings:write]
+      parameters:
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ShopSettingsWrite" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ShopSettings" }
+        default: { $ref: "#/components/responses/Error" }
+  /settings/bank:
+    get:
+      operationId: getBankSettings
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_get_bank_settings
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [settings:read]
+      responses:
+        "200":
+          description: Bank settings
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BankSettings" }
+        default: { $ref: "#/components/responses/Error" }
+    patch:
+      operationId: updateBankSettings
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_update_bank_settings
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [settings:write]
+      parameters:
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BankSettingsWrite" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BankSettings" }
+        default: { $ref: "#/components/responses/Error" }
+  /settings/tax:
+    get:
+      operationId: getTaxSettings
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_get_tax_settings
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [settings:read]
+      responses:
+        "200":
+          description: Tax settings
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaxSettings" }
+        default: { $ref: "#/components/responses/Error" }
+    patch:
+      operationId: updateTaxSettings
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_update_tax_settings
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [settings:write]
+      parameters:
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TaxSettingsWrite" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaxSettings" }
+        default: { $ref: "#/components/responses/Error" }
+  /shop-templates:
+    get:
+      operationId: listShopTemplates
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_list_shop_templates
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [settings:read]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: includeArchived, in: query, schema: { type: boolean, default: false } }
+      responses:
+        "200":
+          description: Templates
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ShopTemplatePage" }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: createShopTemplate
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_create_shop_template
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [settings:write]
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ShopTemplateWrite" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ShopTemplate" }
+        default: { $ref: "#/components/responses/Error" }
+  /shop-templates/{templateId}:
+    patch:
+      operationId: updateShopTemplate
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_update_shop_template
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [settings:write]
+      parameters:
+        - $ref: "#/components/parameters/TemplateId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ShopTemplateWrite" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ShopTemplate" }
+        default: { $ref: "#/components/responses/Error" }
+  /shop-templates/{templateId}/archive:
+    post:
+      operationId: archiveShopTemplate
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_archive_shop_template
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [settings:write]
+      parameters:
+        - $ref: "#/components/parameters/TemplateId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Archived
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ShopTemplate" }
+        default: { $ref: "#/components/responses/Error" }
+  /shop-templates/{templateId}/restore:
+    post:
+      operationId: restoreShopTemplate
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_restore_shop_template
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [settings:write]
+      parameters:
+        - $ref: "#/components/parameters/TemplateId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Restored
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ShopTemplate" }
+        default: { $ref: "#/components/responses/Error" }
+  /shop-templates/{templateId}/default:
+    post:
+      operationId: setDefaultShopTemplate
+      tags: [settings]
+      x-giaban-mcp:
+        tool: giaban_set_default_shop_template
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [settings:write]
+      parameters:
+        - $ref: "#/components/parameters/TemplateId"
+        - $ref: "#/components/parameters/ExpectedRevision"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Default set
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ShopTemplate" }
+        default: { $ref: "#/components/responses/Error" }
+  /backups/export/preview:
+    post:
+      operationId: previewBackupExport
+      tags: [backups]
+      x-giaban-mcp:
+        tool: giaban_preview_backup_export
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [backups:export]
+      x-giaban-confirmation: preview
+      responses:
+        "200":
+          description: Export preview
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConfirmationPreview" }
+        default: { $ref: "#/components/responses/Error" }
+  /backups/export/confirm:
+    post:
+      operationId: confirmBackupExport
+      tags: [backups]
+      x-giaban-mcp:
+        tool: giaban_confirm_backup_export
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [backups:export]
+      x-giaban-confirmation: confirm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConfirmationExecute" }
+      responses:
+        "200":
+          description: Export started or ready
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BackupManifest" }
+        default: { $ref: "#/components/responses/Error" }
+  /backups/{backupId}:
+    get:
+      operationId: getBackupManifest
+      tags: [backups]
+      x-giaban-mcp:
+        tool: giaban_get_backup_manifest
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [backups:export]
+      parameters:
+        - $ref: "#/components/parameters/BackupId"
+      responses:
+        "200":
+          description: Bounded manifest
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BackupManifest" }
+        default: { $ref: "#/components/responses/Error" }
+  /backups/{backupId}/download-grants:
+    post:
+      operationId: createBackupDownloadGrant
+      tags: [backups]
+      x-giaban-mcp:
+        tool: giaban_create_backup_download_grant
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [backups:export]
+      parameters:
+        - $ref: "#/components/parameters/BackupId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "201":
+          description: Short-lived download grant
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ArtifactGrant" }
+        default: { $ref: "#/components/responses/Error" }
+  /backups/uploads:
+    post:
+      operationId: createBackupUploadIntent
+      tags: [backups]
+      x-giaban-mcp:
+        tool: giaban_create_backup_upload_intent
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [backups:import]
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "201":
+          description: Upload grant
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ArtifactGrant" }
+        default: { $ref: "#/components/responses/Error" }
+  /backups/uploads/{uploadId}/finalize:
+    post:
+      operationId: finalizeBackupUpload
+      tags: [backups]
+      x-giaban-mcp:
+        tool: giaban_finalize_backup_upload
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [backups:import]
+      parameters:
+        - { name: uploadId, in: path, required: true, schema: { type: string } }
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Validated artifact handle
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BackupManifest" }
+        default: { $ref: "#/components/responses/Error" }
+  /restores/preview:
+    post:
+      operationId: previewRestore
+      tags: [backups]
+      x-giaban-mcp:
+        tool: giaban_preview_restore
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [backups:restore]
+      x-giaban-confirmation: preview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RestoreRequest" }
+      responses:
+        "200":
+          description: Restore preview into inactive generation
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConfirmationPreview" }
+        default: { $ref: "#/components/responses/Error" }
+  /restores/confirm:
+    post:
+      operationId: confirmRestore
+      tags: [backups]
+      x-giaban-mcp:
+        tool: giaban_confirm_restore
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [backups:restore]
+      x-giaban-confirmation: confirm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConfirmationExecute" }
+      responses:
+        "200":
+          description: Active generation switched
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RestoreResult" }
+        default: { $ref: "#/components/responses/Error" }
+  /audit-events:
+    get:
+      operationId: searchAuditEvents
+      tags: [audit]
+      x-giaban-mcp:
+        tool: giaban_search_audit_events
+        annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-giaban-scopes: [audit:read]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: operationId, in: query, schema: { type: string } }
+        - { name: targetId, in: query, schema: { type: string } }
+        - { name: fromDate, in: query, schema: { type: string, format: date } }
+        - { name: toDate, in: query, schema: { type: string, format: date } }
+      responses:
+        "200":
+          description: Redacted audit page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditEventPage" }
+        default: { $ref: "#/components/responses/Error" }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: GiabanSessionOrMcpToken
+  parameters:
+    Cursor:
+      name: cursor
+      in: query
+      schema: { type: string, maxLength: 500 }
+    Limit:
+      name: limit
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      schema: { type: string, minLength: 8, maxLength: 128 }
+    ExpectedRevision:
+      name: If-Match-Revision
+      in: header
+      schema: { type: integer, minimum: 1 }
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      schema: { type: string }
+    CategoryId:
+      name: categoryId
+      in: path
+      required: true
+      schema: { type: string }
+    CustomerId:
+      name: customerId
+      in: path
+      required: true
+      schema: { type: string }
+    OrderId:
+      name: orderId
+      in: path
+      required: true
+      schema: { type: string }
+    PaymentId:
+      name: paymentId
+      in: path
+      required: true
+      schema: { type: string }
+    TransactionId:
+      name: transactionId
+      in: path
+      required: true
+      schema: { type: string }
+    TemplateId:
+      name: templateId
+      in: path
+      required: true
+      schema: { type: string }
+    BackupId:
+      name: backupId
+      in: path
+      required: true
+      schema: { type: string }
+    FromDate:
+      name: fromDate
+      in: query
+      required: true
+      schema: { type: string, format: date }
+    ToDate:
+      name: toDate
+      in: query
+      required: true
+      schema: { type: string, format: date }
+    AsOfDate:
+      name: asOfDate
+      in: query
+      schema: { type: string, format: date }
+  responses:
+    Error:
+      description: Domain error
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+  schemas:
+    ErrorCode:
+      type: string
+      enum:
+        - VALIDATION_ERROR
+        - UNAUTHENTICATED
+        - FORBIDDEN
+        - NOT_FOUND
+        - REVISION_CONFLICT
+        - IDEMPOTENCY_CONFLICT
+        - INVALID_TRANSITION
+        - CONFIRMATION_REQUIRED
+        - CONFIRMATION_EXPIRED
+        - CONFIRMATION_STALE
+        - RATE_LIMITED
+        - MIGRATION_READ_ONLY
+        - INTERNAL_ERROR
+    Error:
+      type: object
+      additionalProperties: false
+      required: [code, message, retryable]
+      properties:
+        code: { $ref: "#/components/schemas/ErrorCode" }
+        message: { type: string }
+        retryable: { type: boolean }
+        nextAction: { type: string }
+        details:
+          type: object
+          additionalProperties: true
+    MoneyVnd:
+      type: integer
+      minimum: 0
+      maximum: 9007199254740991
+    Scope:
+      type: string
+      enum:
+        - catalog:read
+        - catalog:write
+        - customers:read
+        - customers:pii:read
+        - customers:write
+        - customers:merge
+        - orders:read
+        - orders:write
+        - orders:lifecycle
+        - orders:cancel
+        - payments:read
+        - payments:write
+        - payments:reverse
+        - payments:refund
+        - transactions:read
+        - transactions:write
+        - transactions:reverse
+        - reports:read
+        - settings:read
+        - settings:write
+        - backups:export
+        - backups:import
+        - backups:restore
+        - audit:read
+    OrderStatus:
+      type: string
+      enum: [draft, confirmed, shipping, completed, cancelled, discarded]
+    CashType:
+      type: string
+      enum: [income, expense]
+    PageMeta:
+      type: object
+      additionalProperties: false
+      required: [hasMore, limit]
+      properties:
+        hasMore: { type: boolean }
+        nextCursor:
+          type: ["string", "null"]
+        limit: { type: integer, minimum: 1, maximum: 100 }
+    StatusView:
+      type: object
+      additionalProperties: false
+      required: [ok, contractVersion, authoritativeStore, datasetGenerationId, writeFence, migrationReady, migrationBlockerCount]
+      properties:
+        ok: { type: boolean }
+        contractVersion: { type: string }
+        authoritativeStore: { type: string, enum: [kv, d1] }
+        datasetGenerationId: { type: string }
+        writeFence: { type: boolean }
+        migrationReady: { type: boolean }
+        migrationBlockerCount: { type: integer, minimum: 0 }
+        mcpMutationsEnabled: { type: boolean }
+    CapabilitiesView:
+      type: object
+      additionalProperties: false
+      required: [contractVersion, operations, mcpTools, killSwitches]
+      properties:
+        contractVersion: { type: string }
+        operations:
+          type: array
+          items: { type: string }
+        mcpTools:
+          type: array
+          items: { type: string }
+        killSwitches:
+          type: object
+          additionalProperties: false
+          required: [mcpRead, mcpWrite, mcpChannel]
+          properties:
+            mcpRead: { type: boolean }
+            mcpWrite: { type: boolean }
+            mcpChannel: { type: boolean }
+    PublicProductVariant:
+      type: object
+      additionalProperties: false
+      required: [size, unit, price]
+      properties:
+        size: { type: string }
+        unit: { type: string }
+        price: { $ref: "#/components/schemas/MoneyVnd" }
+    PublicProduct:
+      type: object
+      additionalProperties: false
+      required: [id, name, categoryId, description, image, variants, revision]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        categoryId: { type: string }
+        description: { type: string }
+        image: { type: string }
+        isHot: { type: boolean }
+        variants:
+          type: array
+          items: { $ref: "#/components/schemas/PublicProductVariant" }
+        revision: { type: integer, minimum: 1 }
+    PublicProductPage:
+      type: object
+      additionalProperties: false
+      required: [items, page]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/PublicProduct" }
+        page: { $ref: "#/components/schemas/PageMeta" }
+    PublicCategory:
+      type: object
+      additionalProperties: false
+      required: [id, label, value]
+      properties:
+        id: { type: string }
+        label: { type: string }
+        value: { type: string }
+    PublicCategoryPage:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/PublicCategory" }
+    PublicSettings:
+      type: object
+      additionalProperties: false
+      required: [phoneNumber, revision]
+      properties:
+        phoneNumber: { type: string }
+        revision: { type: integer, minimum: 1 }
+    AdminProductVariant:
+      type: object
+      additionalProperties: false
+      required: [size, unit, price, costPrice]
+      properties:
+        size: { type: string }
+        unit: { type: string }
+        price: { $ref: "#/components/schemas/MoneyVnd" }
+        costPrice: { $ref: "#/components/schemas/MoneyVnd" }
+    AdminProduct:
+      type: object
+      additionalProperties: false
+      required: [id, name, categoryId, description, image, variants, archived, revision]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        categoryId: { type: string }
+        description: { type: string }
+        image: { type: string }
+        isHot: { type: boolean }
+        variants:
+          type: array
+          items: { $ref: "#/components/schemas/AdminProductVariant" }
+        archived: { type: boolean }
+        revision: { type: integer, minimum: 1 }
+    AdminProductPage:
+      type: object
+      additionalProperties: false
+      required: [items, page]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/AdminProduct" }
+        page: { $ref: "#/components/schemas/PageMeta" }
+    ProductWrite:
+      type: object
+      additionalProperties: false
+      required: [name, categoryId, description, image, variants]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 200 }
+        categoryId: { type: string }
+        description: { type: string, maxLength: 4000 }
+        image: { type: string, maxLength: 2000 }
+        isHot: { type: boolean }
+        variants:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/AdminProductVariant" }
+    Category:
+      type: object
+      additionalProperties: false
+      required: [id, label, value, archived, revision]
+      properties:
+        id: { type: string }
+        label: { type: string }
+        value: { type: string }
+        archived: { type: boolean }
+        revision: { type: integer, minimum: 1 }
+    CategoryPage:
+      type: object
+      additionalProperties: false
+      required: [items, page]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Category" }
+        page: { $ref: "#/components/schemas/PageMeta" }
+    CategoryWrite:
+      type: object
+      additionalProperties: false
+      required: [label]
+      properties:
+        label: { type: string, minLength: 1, maxLength: 120 }
+        value: { type: string, maxLength: 120 }
+    MaskedCustomer:
+      type: object
+      additionalProperties: false
+      required: [id, displayName, phoneMasked, archived, revision, duplicatePhoneWarning]
+      properties:
+        id: { type: string }
+        displayName: { type: string }
+        phoneMasked: { type: string }
+        archived: { type: boolean }
+        revision: { type: integer, minimum: 1 }
+        duplicatePhoneWarning: { type: boolean }
+    MaskedCustomerPage:
+      type: object
+      additionalProperties: false
+      required: [items, page]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/MaskedCustomer" }
+        page: { $ref: "#/components/schemas/PageMeta" }
+    CustomerDetail:
+      type: object
+      additionalProperties: false
+      required: [id, name, phone, address, archived, revision, duplicatePhoneWarning]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        phone: { type: string }
+        address: { type: string }
+        archived: { type: boolean }
+        revision: { type: integer, minimum: 1 }
+        duplicatePhoneWarning: { type: boolean }
+        mergedIntoId:
+          type: ["string", "null"]
+    CustomerWrite:
+      type: object
+      additionalProperties: false
+      required: [name, phone, address]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 200 }
+        phone: { type: string, maxLength: 32 }
+        address: { type: string, maxLength: 500 }
+    CustomerMergeRequest:
+      type: object
+      additionalProperties: false
+      required: [canonicalCustomerId, sourceCustomerId]
+      properties:
+        canonicalCustomerId: { type: string }
+        sourceCustomerId: { type: string }
+    CustomerUnmergeRequest:
+      type: object
+      additionalProperties: false
+      required: [mergeEventId]
+      properties:
+        mergeEventId: { type: string }
+    OrderLineWrite:
+      type: object
+      additionalProperties: false
+      required: [name, unit, quantity, unitPrice, costPrice]
+      properties:
+        productId:
+          type: ["string", "null"]
+        name: { type: string }
+        unit: { type: string }
+        quantity: { type: integer, minimum: 1 }
+        soCuon:
+          type: ["integer", "null"]
+          minimum: 0
+        soKi:
+          type: ["integer", "null"]
+          minimum: 0
+        unitPrice: { $ref: "#/components/schemas/MoneyVnd" }
+        costPrice: { $ref: "#/components/schemas/MoneyVnd" }
+        isManual: { type: boolean }
+    OrderLine:
+      type: object
+      additionalProperties: false
+      required: [id, name, unit, quantity, unitPrice, costPrice, effectiveQuantity, saleSubtotal, cogs]
+      properties:
+        id: { type: string }
+        productId:
+          type: ["string", "null"]
+        name: { type: string }
+        unit: { type: string }
+        quantity: { type: integer, minimum: 1 }
+        soCuon:
+          type: ["integer", "null"]
+        soKi:
+          type: ["integer", "null"]
+        unitPrice: { $ref: "#/components/schemas/MoneyVnd" }
+        costPrice: { $ref: "#/components/schemas/MoneyVnd" }
+        effectiveQuantity: { type: integer, minimum: 1 }
+        saleSubtotal: { $ref: "#/components/schemas/MoneyVnd" }
+        cogs: { $ref: "#/components/schemas/MoneyVnd" }
+        isManual: { type: boolean }
+    ContactSnapshot:
+      type: object
+      additionalProperties: false
+      required: [name, phone, address]
+      properties:
+        name: { type: string }
+        phone: { type: string }
+        address: { type: string }
+    MaskedContactSnapshot:
+      type: object
+      additionalProperties: false
+      required: [displayName, phoneMasked]
+      properties:
+        displayName: { type: string }
+        phoneMasked: { type: string }
+    DraftOrderWrite:
+      type: object
+      additionalProperties: false
+      required: [customerId, items]
+      properties:
+        customerId: { type: string }
+        contactSnapshot: { $ref: "#/components/schemas/ContactSnapshot" }
+        items:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/OrderLineWrite" }
+        shippingFee: { $ref: "#/components/schemas/MoneyVnd" }
+        discount: { $ref: "#/components/schemas/MoneyVnd" }
+        note: { type: string, maxLength: 2000 }
+        shopTemplateId: { type: string }
+        totalAmountInWords: { type: string, maxLength: 500 }
+        paymentMethod: { type: string, enum: [cod, banking] }
+    MaskedOrder:
+      type: object
+      additionalProperties: false
+      required: [id, customerId, contact, status, total, outstanding, netCollected, revision, createdAt]
+      properties:
+        id: { type: string }
+        customerId: { type: string }
+        contact: { $ref: "#/components/schemas/MaskedContactSnapshot" }
+        status: { $ref: "#/components/schemas/OrderStatus" }
+        total: { $ref: "#/components/schemas/MoneyVnd" }
+        outstanding: { $ref: "#/components/schemas/MoneyVnd" }
+        netCollected: { $ref: "#/components/schemas/MoneyVnd" }
+        revision: { type: integer, minimum: 1 }
+        createdAt: { type: string, format: date-time }
+    MaskedOrderPage:
+      type: object
+      additionalProperties: false
+      required: [items, page]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/MaskedOrder" }
+        page: { $ref: "#/components/schemas/PageMeta" }
+    OrderDetail:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - customerId
+        - contact
+        - items
+        - status
+        - lineSubtotal
+        - discount
+        - shippingFee
+        - total
+        - outstanding
+        - netCollected
+        - revision
+        - createdAt
+      properties:
+        id: { type: string }
+        customerId: { type: string }
+        contact: { $ref: "#/components/schemas/ContactSnapshot" }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/OrderLine" }
+        status: { $ref: "#/components/schemas/OrderStatus" }
+        lineSubtotal: { $ref: "#/components/schemas/MoneyVnd" }
+        discount: { $ref: "#/components/schemas/MoneyVnd" }
+        shippingFee: { $ref: "#/components/schemas/MoneyVnd" }
+        total: { $ref: "#/components/schemas/MoneyVnd" }
+        outstanding: { $ref: "#/components/schemas/MoneyVnd" }
+        netCollected: { $ref: "#/components/schemas/MoneyVnd" }
+        note: { type: string }
+        shopTemplateId: { type: string }
+        sellerSnapshot:
+          type: object
+          additionalProperties: true
+        paymentMethod: { type: string, enum: [cod, banking] }
+        revision: { type: integer, minimum: 1 }
+        createdAt: { type: string, format: date-time }
+        discarded: { type: boolean }
+    CancelOrderRequest:
+      type: object
+      additionalProperties: false
+      required: [reason]
+      properties:
+        reason: { type: string, minLength: 1, maxLength: 500 }
+    PaymentWrite:
+      type: object
+      additionalProperties: false
+      required: [amount]
+      properties:
+        amount: { $ref: "#/components/schemas/MoneyVnd" }
+        method: { type: string, enum: [cod, banking, cash, other] }
+        note: { type: string, maxLength: 500 }
+    Payment:
+      type: object
+      additionalProperties: false
+      required: [id, orderId, amount, reversedAmount, refundedAmount, remaining, createdAt]
+      properties:
+        id: { type: string }
+        orderId: { type: string }
+        amount: { $ref: "#/components/schemas/MoneyVnd" }
+        reversedAmount: { $ref: "#/components/schemas/MoneyVnd" }
+        refundedAmount: { $ref: "#/components/schemas/MoneyVnd" }
+        remaining: { $ref: "#/components/schemas/MoneyVnd" }
+        method: { type: string }
+        note: { type: string }
+        createdAt: { type: string, format: date-time }
+    PaymentPage:
+      type: object
+      additionalProperties: false
+      required: [items, page]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Payment" }
+        page: { $ref: "#/components/schemas/PageMeta" }
+    Receivable:
+      type: object
+      additionalProperties: false
+      required: [orderId, customerId, orderTotal, netCollected, outstanding]
+      properties:
+        orderId: { type: string }
+        customerId: { type: string }
+        orderTotal: { $ref: "#/components/schemas/MoneyVnd" }
+        netCollected: { $ref: "#/components/schemas/MoneyVnd" }
+        outstanding: { $ref: "#/components/schemas/MoneyVnd" }
+    ReceivablePage:
+      type: object
+      additionalProperties: false
+      required: [items, page]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Receivable" }
+        page: { $ref: "#/components/schemas/PageMeta" }
+    PaymentAdjustmentRequest:
+      type: object
+      additionalProperties: false
+      required: [amount, reason]
+      properties:
+        amount: { $ref: "#/components/schemas/MoneyVnd" }
+        reason: { type: string, minLength: 1, maxLength: 500 }
+    CashTransactionWrite:
+      type: object
+      additionalProperties: false
+      required: [type, amount, description]
+      properties:
+        type: { $ref: "#/components/schemas/CashType" }
+        amount: { $ref: "#/components/schemas/MoneyVnd" }
+        description: { type: string, minLength: 1, maxLength: 500 }
+        category: { type: string, maxLength: 120 }
+        date: { type: string, format: date }
+    CashTransaction:
+      type: object
+      additionalProperties: false
+      required: [id, type, amount, reversedAmount, description, createdAt]
+      properties:
+        id: { type: string }
+        type: { $ref: "#/components/schemas/CashType" }
+        amount: { $ref: "#/components/schemas/MoneyVnd" }
+        reversedAmount: { $ref: "#/components/schemas/MoneyVnd" }
+        description: { type: string }
+        category: { type: string }
+        date: { type: string, format: date }
+        createdAt: { type: string, format: date-time }
+    CashTransactionPage:
+      type: object
+      additionalProperties: false
+      required: [items, page]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/CashTransaction" }
+        page: { $ref: "#/components/schemas/PageMeta" }
+    CashReversalRequest:
+      type: object
+      additionalProperties: false
+      required: [reason]
+      properties:
+        reason: { type: string, minLength: 1, maxLength: 500 }
+        amount: { $ref: "#/components/schemas/MoneyVnd" }
+    ReportSummary:
+      type: object
+      additionalProperties: false
+      required:
+        - fromDate
+        - toDate
+        - timezone
+        - confirmedSales
+        - grossReceipts
+        - refunds
+        - netReceipts
+        - receivables
+        - discounts
+        - shippingFees
+        - cogs
+        - profit
+      properties:
+        fromDate: { type: string, format: date }
+        toDate: { type: string, format: date }
+        timezone: { type: string }
+        confirmedSales: { $ref: "#/components/schemas/MoneyVnd" }
+        grossReceipts: { $ref: "#/components/schemas/MoneyVnd" }
+        refunds: { $ref: "#/components/schemas/MoneyVnd" }
+        netReceipts: { $ref: "#/components/schemas/MoneyVnd" }
+        receivables: { $ref: "#/components/schemas/MoneyVnd" }
+        discounts: { $ref: "#/components/schemas/MoneyVnd" }
+        shippingFees: { $ref: "#/components/schemas/MoneyVnd" }
+        cogs: { $ref: "#/components/schemas/MoneyVnd" }
+        profit: { $ref: "#/components/schemas/MoneyVnd" }
+    MoneyReport:
+      type: object
+      additionalProperties: false
+      required: [amount, fromDate, toDate, timezone]
+      properties:
+        amount: { $ref: "#/components/schemas/MoneyVnd" }
+        fromDate: { type: string, format: date }
+        toDate: { type: string, format: date }
+        timezone: { type: string }
+    ReceiptsReport:
+      type: object
+      additionalProperties: false
+      required: [grossReceipts, refunds, netReceipts, fromDate, toDate, timezone]
+      properties:
+        grossReceipts: { $ref: "#/components/schemas/MoneyVnd" }
+        refunds: { $ref: "#/components/schemas/MoneyVnd" }
+        netReceipts: { $ref: "#/components/schemas/MoneyVnd" }
+        fromDate: { type: string, format: date }
+        toDate: { type: string, format: date }
+        timezone: { type: string }
+    DiscountShippingReport:
+      type: object
+      additionalProperties: false
+      required: [discounts, shippingFees, fromDate, toDate, timezone]
+      properties:
+        discounts: { $ref: "#/components/schemas/MoneyVnd" }
+        shippingFees: { $ref: "#/components/schemas/MoneyVnd" }
+        fromDate: { type: string, format: date }
+        toDate: { type: string, format: date }
+        timezone: { type: string }
+    CogsProfitReport:
+      type: object
+      additionalProperties: false
+      required: [confirmedSales, cogs, profit, fromDate, toDate, timezone]
+      properties:
+        confirmedSales: { $ref: "#/components/schemas/MoneyVnd" }
+        cogs: { $ref: "#/components/schemas/MoneyVnd" }
+        profit: { $ref: "#/components/schemas/MoneyVnd" }
+        fromDate: { type: string, format: date }
+        toDate: { type: string, format: date }
+        timezone: { type: string }
+    PhoneSettings:
+      type: object
+      additionalProperties: false
+      required: [phoneNumber, revision]
+      properties:
+        phoneNumber: { type: string }
+        revision: { type: integer, minimum: 1 }
+    PhoneSettingsWrite:
+      type: object
+      additionalProperties: false
+      required: [phoneNumber]
+      properties:
+        phoneNumber: { type: string, minLength: 6, maxLength: 32 }
+    ShopSettings:
+      type: object
+      additionalProperties: false
+      required: [revision]
+      properties:
+        name: { type: string }
+        address: { type: string }
+        revision: { type: integer, minimum: 1 }
+    ShopSettingsWrite:
+      type: object
+      additionalProperties: false
+      properties:
+        name: { type: string, maxLength: 200 }
+        address: { type: string, maxLength: 500 }
+    BankSettings:
+      type: object
+      additionalProperties: false
+      required: [bankName, accountNumber, accountName, revision]
+      properties:
+        bankName: { type: string }
+        accountNumber: { type: string }
+        accountName: { type: string }
+        qrCodeUrl: { type: string }
+        revision: { type: integer, minimum: 1 }
+    BankSettingsWrite:
+      type: object
+      additionalProperties: false
+      required: [bankName, accountNumber, accountName]
+      properties:
+        bankName: { type: string }
+        accountNumber: { type: string }
+        accountName: { type: string }
+        qrCodeUrl: { type: string }
+    TaxSettings:
+      type: object
+      additionalProperties: false
+      required: [rate, revision]
+      properties:
+        rate: { type: integer, minimum: 0, maximum: 100 }
+        revision: { type: integer, minimum: 1 }
+    TaxSettingsWrite:
+      type: object
+      additionalProperties: false
+      required: [rate]
+      properties:
+        rate: { type: integer, minimum: 0, maximum: 100 }
+    ShopTemplate:
+      type: object
+      additionalProperties: false
+      required: [id, name, address, phone, isDefault, archived, revision]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        address: { type: string }
+        phone: { type: string }
+        isDefault: { type: boolean }
+        archived: { type: boolean }
+        revision: { type: integer, minimum: 1 }
+    ShopTemplatePage:
+      type: object
+      additionalProperties: false
+      required: [items, page]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/ShopTemplate" }
+        page: { $ref: "#/components/schemas/PageMeta" }
+    ShopTemplateWrite:
+      type: object
+      additionalProperties: false
+      required: [name, address, phone]
+      properties:
+        name: { type: string }
+        address: { type: string }
+        phone: { type: string }
+        isDefault: { type: boolean }
+    ConfirmationPreview:
+      type: object
+      additionalProperties: false
+      required: [confirmationToken, operationId, expiresAt, impactSummary, blockers]
+      properties:
+        confirmationToken: { type: string }
+        operationId: { type: string }
+        expiresAt: { type: string, format: date-time }
+        impactSummary: { type: string }
+        blockers:
+          type: array
+          items: { type: string }
+        details:
+          type: object
+          additionalProperties: true
+    ConfirmationExecute:
+      type: object
+      additionalProperties: false
+      required: [confirmationToken]
+      properties:
+        confirmationToken: { type: string, minLength: 16 }
+    BackupManifest:
+      type: object
+      additionalProperties: false
+      required: [id, status, schemaVersion, createdAt]
+      properties:
+        id: { type: string }
+        status:
+          type: string
+          enum: [building, ready, expired, deleted, failed, aborted, uploading, uploaded, validating, approved, rejected]
+        schemaVersion: { type: string }
+        createdAt: { type: string, format: date-time }
+        byteLength: { type: integer, minimum: 0 }
+        checksumSha256: { type: string }
+        sectionCounts:
+          type: object
+          additionalProperties:
+            type: integer
+    ArtifactGrant:
+      type: object
+      additionalProperties: false
+      required: [grantId, artifactId, direction, expiresAt]
+      properties:
+        grantId: { type: string }
+        artifactId: { type: string }
+        direction: { type: string, enum: [upload, download] }
+        expiresAt: { type: string, format: date-time }
+        path: { type: string }
+    RestoreRequest:
+      type: object
+      additionalProperties: false
+      required: [artifactId]
+      properties:
+        artifactId: { type: string }
+    RestoreResult:
+      type: object
+      additionalProperties: false
+      required: [datasetGenerationId, active]
+      properties:
+        datasetGenerationId: { type: string }
+        active: { type: boolean }
+    AuditEvent:
+      type: object
+      additionalProperties: false
+      required: [id, at, actor, channel, operationId, outcome]
+      properties:
+        id: { type: string }
+        at: { type: string, format: date-time }
+        actor: { type: string }
+        channel: { type: string }
+        operationId: { type: string }
+        targetIds:
+          type: array
+          items: { type: string }
+        outcome: { type: string }
+        requestId: { type: string }
+    AuditEventPage:
+      type: object
+      additionalProperties: false
+      required: [items, page]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/AuditEvent" }
+        page: { $ref: "#/components/schemas/PageMeta" }
+    InvokeEnvelope:
+      type: object
+      additionalProperties: false
+      required: [operationId, context]
+      properties:
+        operationId: { type: string }
+        input:
+          type: object
+          additionalProperties: true
+        context:
+          type: object
+          additionalProperties: false
+          required: [channel, requestId]
+          properties:
+            channel: { type: string, enum: [rest, mcp, rpc] }
+            requestId: { type: string }
+            assertion: { type: string }
+            idempotencyKey: { type: string }
+            expectedRevision: { type: integer }
+            confirmationToken: { type: string }

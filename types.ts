@@ -15,4 +15,5 @@ export interface Product {
   image: string;
   variants: ProductVariant[];
   isHot?: boolean;
+  revision?: number;
 }

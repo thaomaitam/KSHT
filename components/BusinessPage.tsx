@@ -32,8 +32,7 @@ export const BusinessPage: React.FC = () => {
         getSubtotal,
         getTotal,
         handleSaveOrder,
-        resetOrderForm,
-        updateCustomer
+        resetOrderForm
     } = useBusinessData();
 
     const tabs = [
@@ -166,8 +165,6 @@ export const BusinessPage: React.FC = () => {
                         shopTemplates={shopTemplates}
                         orderCount={orders.length}
                         resetOrderForm={resetOrderForm}
-                        updateCustomer={updateCustomer}
-                        setOrders={setOrders}
                         productDropdownRef={productDropdownRef}
                     />
                 )}

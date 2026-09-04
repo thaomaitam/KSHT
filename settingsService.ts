@@ -1,5 +1,6 @@
 import { PHONE_NUMBER as DEFAULT_PHONE, CATEGORIES as DEFAULT_CATEGORIES } from './constants';
 import { apiService } from './apiService';
+import { giabanClient, newIdempotencyKey } from './client/giabanClient';
 
 const SETTINGS_KEY = 'giaban_settings';
 const CATEGORIES_KEY = 'giaban_categories';
@@ -8,45 +9,65 @@ export interface CategoryItem {
     id: string;
     label: string;
     value: string;
+    revision?: number;
 }
 
 export interface AppSettings {
     phoneNumber: string;
+    revision?: number;
 }
 
 const defaultSettings: AppSettings = {
     phoneNumber: DEFAULT_PHONE,
 };
 
+const ALL_CATEGORY: CategoryItem = { id: 'ALL', label: 'Tất cả', value: 'ALL' };
+
+const withAll = (categories: CategoryItem[]): CategoryItem[] => {
+    if (categories.some((category) => category.value === 'ALL')) return categories;
+    return [ALL_CATEGORY, ...categories];
+};
+
+const cacheJson = (key: string, value: unknown) => {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+        // quota
+    }
+};
+
 export const settingsService = {
-    // Get settings - always try Cloud API first (default data source)
     async getSettings(): Promise<AppSettings> {
-        // Try Cloud API first
-        const remote = await apiService.get<AppSettings>('settings');
-        if (remote) {
-            localStorage.setItem(SETTINGS_KEY, JSON.stringify(remote));
-            return remote;
-        }
-
-        // Fallback to local
-        const stored = localStorage.getItem(SETTINGS_KEY);
-        if (stored) {
-            try {
-                return { ...defaultSettings, ...JSON.parse(stored) };
-            } catch {
-                return defaultSettings;
+        try {
+            const remote = apiService.getSessionToken()
+                ? await giabanClient.getPhoneSettings()
+                : await giabanClient.getPublicSettings();
+            const settings = { phoneNumber: String(remote.phoneNumber || DEFAULT_PHONE), revision: Number(remote.revision) || 1 };
+            cacheJson(SETTINGS_KEY, settings);
+            return settings;
+        } catch {
+            const stored = localStorage.getItem(SETTINGS_KEY);
+            if (stored) {
+                try {
+                    return { ...defaultSettings, ...JSON.parse(stored) };
+                } catch {
+                    return defaultSettings;
+                }
             }
+            return defaultSettings;
         }
-        return defaultSettings;
     },
 
-    // Save settings
     async saveSettings(settings: AppSettings): Promise<void> {
-        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-        await apiService.save('settings', settings);
+        const current = await this.getSettings();
+        const saved = await giabanClient.updatePhoneSettings(
+            { phoneNumber: settings.phoneNumber },
+            current.revision || 1,
+            newIdempotencyKey(),
+        );
+        cacheJson(SETTINGS_KEY, { phoneNumber: saved.phoneNumber, revision: saved.revision });
     },
 
-    // Get phone number (helper, might need to be async or just return local cached)
     getPhoneNumber(): string {
         const stored = localStorage.getItem(SETTINGS_KEY);
         if (stored) {
@@ -59,86 +80,57 @@ export const settingsService = {
         return DEFAULT_PHONE;
     },
 
-    // Get Zalo link
     getZaloLink(): string {
         return `https://zalo.me/${this.getPhoneNumber()}`;
     },
 
-    // Get categories - always try Cloud API first (default data source)
     async getCategories(): Promise<CategoryItem[]> {
-        // Try Cloud API first
-        const remote = await apiService.get<CategoryItem[]>('categories');
-        if (remote && remote.length > 0) {
-            localStorage.setItem(CATEGORIES_KEY, JSON.stringify(remote));
-            return remote;
-        }
-
-        // Fallback to localStorage
-        const stored = localStorage.getItem(CATEGORIES_KEY);
-        if (stored) {
-            try {
-                return JSON.parse(stored);
-            } catch {
-                return DEFAULT_CATEGORIES.map(c => ({ id: c.id, label: c.label, value: c.value }));
+        try {
+            const page = apiService.getSessionToken()
+                ? await giabanClient.listCategories()
+                : await giabanClient.getPublicCategories();
+            const categories = giabanClient.itemsOf(page).map((row: any) => ({
+                id: String(row.id),
+                label: String(row.label),
+                value: String(row.value),
+                revision: Number(row.revision) || 1,
+            }));
+            const withSentinel = withAll(categories);
+            cacheJson(CATEGORIES_KEY, withSentinel);
+            return withSentinel;
+        } catch {
+            const stored = localStorage.getItem(CATEGORIES_KEY);
+            if (stored) {
+                try {
+                    return withAll(JSON.parse(stored));
+                } catch {
+                    return DEFAULT_CATEGORIES.map((category) => ({ id: category.id, label: category.label, value: category.value }));
+                }
             }
+            return DEFAULT_CATEGORIES.map((category) => ({ id: category.id, label: category.label, value: category.value }));
         }
-        // Initialize with defaults
-        const categories = DEFAULT_CATEGORIES.map(c => ({ id: c.id, label: c.label, value: c.value }));
-        localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
-        return categories;
     },
 
-    // Save categories
-    async saveCategories(categories: CategoryItem[]): Promise<void> {
-        localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
-        await apiService.save('categories', categories);
-    },
-
-    // Add category
     async addCategory(label: string): Promise<CategoryItem[]> {
-        const categories = await this.getCategories();
-        const value = label.toUpperCase().replace(/\s+/g, '_').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        const newCategory: CategoryItem = {
-            id: 'cat_' + Date.now(),
-            label,
-            value,
-        };
-        const newCategories = [...categories, newCategory];
-        await this.saveCategories(newCategories);
-        return newCategories;
+        await giabanClient.createCategory({ label }, newIdempotencyKey());
+        return this.getCategories();
     },
 
-    // Update category
     async updateCategory(id: string, label: string): Promise<CategoryItem[]> {
         const categories = await this.getCategories();
-        const index = categories.findIndex(c => c.id === id);
-        if (index !== -1) {
-            categories[index].label = label;
-            await this.saveCategories(categories);
-        }
-        return categories;
+        const current = categories.find((category) => category.id === id);
+        if (!current || current.value === 'ALL') return categories;
+        await giabanClient.updateCategory(id, { label, value: current.value }, current.revision || 1, newIdempotencyKey());
+        return this.getCategories();
     },
 
-    // Delete category (except ALL)
     async deleteCategory(id: string): Promise<CategoryItem[]> {
-        const categories = await this.getCategories();
-        const filtered = categories.filter(c => c.id !== id && c.value !== 'ALL');
-
-        // Always keep ALL at the beginning
-        const allCategory = categories.find(c => c.value === 'ALL');
-        let finalCategories;
-
-        if (allCategory && !filtered.find(c => c.value === 'ALL')) {
-            finalCategories = [allCategory, ...filtered];
-        } else {
-            finalCategories = filtered;
-        }
-
-        await this.saveCategories(finalCategories);
-        return finalCategories;
+        const current = (await this.getCategories()).find((category) => category.id === id);
+        if (!current || current.value === 'ALL') return this.getCategories();
+        await giabanClient.archiveCategory(id, newIdempotencyKey());
+        return this.getCategories();
     },
 
-    // Reset to defaults
     resetToDefaults(): void {
         localStorage.removeItem(SETTINGS_KEY);
         localStorage.removeItem(CATEGORIES_KEY);

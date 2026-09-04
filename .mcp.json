@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "KSHT": {
+      "url": "https://ksht-mcp.ngthanhhuy951.workers.dev/mcp",
+      "protocolVersion": "2026-07-28",
+      "headers": {
+        "KSHT_API_KEY": "${KSHT_API_KEY}"
+      }
+    }
+  }
+}

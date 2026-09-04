@@ -44,7 +44,7 @@ export const useAppData = () => {
                 }
             } else {
                 setCurrentPage('main');
-                const prods = await storageService.getProducts();
+                const prods = await storageService.getStorefrontProducts();
                 const cats = await settingsService.getCategories();
                 setProducts(prods);
                 setCategories(cats);
@@ -68,7 +68,7 @@ export const useAppData = () => {
     useEffect(() => {
         const loadProducts = async () => {
             if (currentPage === 'main') {
-                const prods = await storageService.getProducts();
+                const prods = await storageService.getStorefrontProducts();
                 setProducts(prods);
             }
         };

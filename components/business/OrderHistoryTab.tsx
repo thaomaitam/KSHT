@@ -41,44 +41,24 @@ export const OrderHistoryTab: React.FC<OrderHistoryTabProps> = ({
     );
 
     const handleDeleteOrder = async (orderId: string) => {
-        if (window.confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
-            const updatedOrders = await businessService.deleteOrder(orderId);
-            setOrders(updatedOrders);
+        if (!window.confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) return;
+        try {
+            setOrders(await businessService.deleteOrder(orderId));
+            setCustomers(await businessService.getCustomers());
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không xóa được đơn.');
         }
     };
 
     const togglePaymentStatus = async (order: Order) => {
-        const newStatus = order.paymentStatus === 'paid' ? 'unpaid' : 'paid';
-        const oldDebt = order.debt || 0;
-        let newDebt = oldDebt;
-
-        if (newStatus === 'paid') {
-            newDebt = 0;
-        } else {
-            // Revert to full debt if marking as unpaid
-            newDebt = order.total;
-        }
-
-        const updatedOrder: Order = {
-            ...order,
-            paymentStatus: newStatus,
-            debt: newDebt
-        };
-
-        // Update Order
-        const updatedOrders = await businessService.updateOrder(updatedOrder);
-        setOrders(updatedOrders);
-
-        // Update Customer
-        const customer = customers.find(c => c.phone === order.phone || c.name === order.customerName);
-        if (customer) {
-            const debtDifference = newDebt - oldDebt;
-            const updatedCustomer = {
-                ...customer,
-                debt: (customer.debt || 0) + debtDifference
-            };
-            await businessService.updateCustomer(updatedCustomer);
-            setCustomers(prev => prev.map(c => c.id === updatedCustomer.id ? updatedCustomer : c));
+        try {
+            const updated = order.paymentStatus === 'paid'
+                ? await businessService.markOrderUnpaid(order)
+                : await businessService.markOrderPaid(order);
+            setOrders(updated);
+            setCustomers(await businessService.getCustomers());
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không cập nhật được thanh toán.');
         }
     };
 

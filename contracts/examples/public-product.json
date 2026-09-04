@@ -1,0 +1,16 @@
+{
+  "id": "p_example_1",
+  "name": "Cọ sơn mẫu",
+  "categoryId": "cat_paint_brush",
+  "description": "Synthetic public catalog example. Not live data.",
+  "image": "https://example.invalid/brush.png",
+  "isHot": false,
+  "variants": [
+    {
+      "size": "1 inch",
+      "unit": "Cây",
+      "price": 5500
+    }
+  ],
+  "revision": 1
+}

@@ -1,0 +1,6 @@
+{
+  "code": "REVISION_CONFLICT",
+  "message": "The record was updated by another request.",
+  "retryable": false,
+  "nextAction": "Reload the record and retry with the current revision."
+}
