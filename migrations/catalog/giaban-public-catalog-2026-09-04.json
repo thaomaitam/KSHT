@@ -1,0 +1,3164 @@
+{
+  "version": 1,
+  "sourceFingerprint": "ac0d1649b83c84cd1510cea79c1270d76e210b302186aaab32135e45dbe1b785",
+  "sourceSnapshotHash": "af6850d1f29525c76b5f6fd737708e851a05fb81f68f08d5895279ad362bc0ca",
+  "sourceProductCount": 293,
+  "targetCategories": [
+    {
+      "id": "cat_norm_paint_application_v1",
+      "value": "PAINT_COATINGS_APPLICATION",
+      "label": "Sơn, cọ & rulo"
+    },
+    {
+      "id": "cat_norm_tiling_masonry_v1",
+      "value": "TILING_MASONRY_TOOLS",
+      "label": "Dụng cụ xây tô & ốp lát"
+    },
+    {
+      "id": "cat_norm_cutting_scraping_v1",
+      "value": "CUTTING_SCRAPING",
+      "label": "Cắt, cưa & cạo"
+    },
+    {
+      "id": "cat_norm_abrasives_v1",
+      "value": "ABRASIVES_GRINDING_POLISHING",
+      "label": "Nhám, mài & đánh bóng"
+    },
+    {
+      "id": "cat_norm_adhesives_v1",
+      "value": "ADHESIVES_SEALANTS",
+      "label": "Keo, ron & chất trám kín"
+    },
+    {
+      "id": "cat_norm_tapes_v1",
+      "value": "TAPES_MASKING_SIGNAGE",
+      "label": "Băng keo, che chắn & cảnh báo"
+    },
+    {
+      "id": "cat_norm_fasteners_locks_v1",
+      "value": "FASTENERS_LOCKS_FIXINGS",
+      "label": "Liên kết, cố định & khoá"
+    },
+    {
+      "id": "cat_norm_hand_tools_v1",
+      "value": "HAND_TOOLS_MEASURING_SAFETY",
+      "label": "Dụng cụ cầm tay, đo lường & bảo hộ"
+    },
+    {
+      "id": "cat_norm_power_accessories_v1",
+      "value": "POWER_TOOL_ACCESSORIES",
+      "label": "Mũi khoan & phụ kiện máy"
+    },
+    {
+      "id": "cat_norm_ropes_tarps_v1",
+      "value": "ROPES_TARPS",
+      "label": "Dây, nhợ & bạt"
+    },
+    {
+      "id": "cat_norm_plumbing_v1",
+      "value": "PLUMBING_WATERING_DRAINAGE",
+      "label": "Ống, tưới & thoát nước"
+    },
+    {
+      "id": "cat_norm_agriculture_v1",
+      "value": "AGRICULTURE_GARDEN_TOOLS",
+      "label": "Nông nghiệp & làm vườn"
+    },
+    {
+      "id": "cat_norm_chemicals_v1",
+      "value": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "label": "Tẩy rửa & hoá chất bảo trì"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "p_1765293174827_ldjgmignd",
+      "sourceName": "CỌ SƠN MINH THUẬN LOẠI 1",
+      "sourceCategoryKey": "PAINT_BRUSH",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "CỌ SƠN MINH THUẬN LOẠI 1",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765293574947_ox3lqrri3",
+      "sourceName": "Cọ SƠN MINH THUẬN LOẠI 2",
+      "sourceCategoryKey": "PAINT_BRUSH",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ SƠN MINH THUẬN LOẠI 2",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765293709415_2j8rng6cd",
+      "sourceName": "Cọ Lông Thỏ - Cán Gỗ",
+      "sourceCategoryKey": "PAINT_BRUSH",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ Lông Thỏ - Cán Gỗ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765293844041_g5132loyj",
+      "sourceName": "Cọ Lông Thỏ - Cán Nhựa",
+      "sourceCategoryKey": "PAINT_BRUSH",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ Lông Thỏ - Cán Nhựa",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765293951420_xg8wsjszf",
+      "sourceName": "Cọ Nhựa Rẻ",
+      "sourceCategoryKey": "PAINT_BRUSH",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ Nhựa Rẻ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765294065886_2vzp474h2",
+      "sourceName": "Cọ Nâu Việt Mỹ",
+      "sourceCategoryKey": "PAINT_BRUSH",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ Nâu Việt Mỹ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765294164948_86zzk86lm",
+      "sourceName": "Cọ Xanh Việt Mỹ",
+      "sourceCategoryKey": "PAINT_BRUSH",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ Xanh Việt Mỹ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765294251844_gk5hvu8q2",
+      "sourceName": "Cọ Hồng Việt Mỹ",
+      "sourceCategoryKey": "PAINT_BRUSH",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ Hồng Việt Mỹ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765294385818_u7s8d4wyg",
+      "sourceName": "Cọ Thăng Long ",
+      "sourceCategoryKey": "PAINT_BRUSH",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ Thăng Long",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765294472366_f7zeyqz8d",
+      "sourceName": "Cọ Đũa bó 10 cây",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ Đũa bó 10 cây",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là sơn hoặc dụng cụ thi công sơn."
+    },
+    {
+      "id": "p_1765294576857_ogj4wz5ht",
+      "sourceName": "Cọ Vẻ Vỉ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ Vẻ Vỉ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là sơn hoặc dụng cụ thi công sơn."
+    },
+    {
+      "id": "p_1765294634808_2bn0mdkkx",
+      "sourceName": "Cọ Bút bó 10 cây",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ Bút bó 10 cây",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là sơn hoặc dụng cụ thi công sơn."
+    },
+    {
+      "id": "p_1765294687804_fphfck3gt",
+      "sourceName": "Cọ Bút Bộ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Cọ Bút Bộ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là sơn hoặc dụng cụ thi công sơn."
+    },
+    {
+      "id": "p_1765294751374_43onr2kvv",
+      "sourceName": "Lăn Eco Đỏ",
+      "sourceCategoryKey": "ROLLER",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Lăn Eco Đỏ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765294816804_aab8540rj",
+      "sourceName": "Lăn Eco Xanh",
+      "sourceCategoryKey": "ROLLER",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Lăn Eco Xanh",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765294875978_g8a2w0po1",
+      "sourceName": "Lăn VM ASIA - CÁN ĐỎ ( bó 10 cây)",
+      "sourceCategoryKey": "ROLLER",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Lăn VM ASIA - CÁN ĐỎ ( bó 10 cây)",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765294927129_jjipw5la3",
+      "sourceName": "VM Xám",
+      "sourceCategoryKey": "ROLLER",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "VM Xám",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là sơn hoặc dụng cụ thi công sơn."
+    },
+    {
+      "id": "p_1765294966893_ewiyda1de",
+      "sourceName": "VM 21",
+      "sourceCategoryKey": "ROLLER",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "VM 21",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là sơn hoặc dụng cụ thi công sơn."
+    },
+    {
+      "id": "p_1765295008653_nrbziuw36",
+      "sourceName": "VM 15",
+      "sourceCategoryKey": "ROLLER",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "VM 15",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là sơn hoặc dụng cụ thi công sơn."
+    },
+    {
+      "id": "p_1765295046836_i88nhuf0g",
+      "sourceName": "VM 11",
+      "sourceCategoryKey": "ROLLER",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "VM 11",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là sơn hoặc dụng cụ thi công sơn."
+    },
+    {
+      "id": "p_1765295099197_p7fb4ociq",
+      "sourceName": "Lăn Mini VM",
+      "sourceCategoryKey": "ROLLER",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Lăn Mini VM",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765295183338_yxmcgi6z6",
+      "sourceName": "Lăn Mini VA( Thùng 100 cây)",
+      "sourceCategoryKey": "ROLLER",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Lăn Mini VA( Thùng 100 cây)",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765295379508_r71xm9olg",
+      "sourceName": "Lăn Mini NT( thùng 100 cây)",
+      "sourceCategoryKey": "ROLLER",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Lăn Mini NT( thùng 100 cây)",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765295467792_97dih3hcy",
+      "sourceName": "Cây Quậy Đánh Bột",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "POWER_TOOL_ACCESSORIES",
+      "proposedName": "Cây Quậy Đánh Bột",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-taxonomy-rule"
+      ],
+      "classificationNote": "Đuôi gài lục giác xác định đây là phụ kiện dùng với máy để khuấy bột."
+    },
+    {
+      "id": "p_1765295603353_uvwysgeti",
+      "sourceName": "Thước Nhôm Trắng ( bó 10 cây)",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Thước Nhôm Trắng ( bó 10 cây)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-evidence-review"
+      ],
+      "classificationNote": "Thước nhôm dài 2 m, phân hạng theo trọng lượng, là thước cán hồ/xây tô hơn là dụng cụ đo."
+    },
+    {
+      "id": "p_1765295712131_fci5ekk44",
+      "sourceName": "Thước Hồ Nhôm TRẮNG 1M5 ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Thước Hồ Nhôm TRẮNG 1M5",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-evidence-review"
+      ],
+      "classificationNote": "Tên ghi rõ thước hồ; công dụng chính là cán/phẳng hồ trong xây tô, không phải đo lường."
+    },
+    {
+      "id": "p_1765295768127_lca8g5ulu",
+      "sourceName": "Thước Hồ Nhôm VÀNG",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Thước Hồ Nhôm VÀNG",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-evidence-review"
+      ],
+      "classificationNote": "Tên thước hồ và các mức trọng lượng cho thấy đây là dụng cụ xây tô, không phải thước đo."
+    },
+    {
+      "id": "p_1765295917773_rhz2q2ulm",
+      "sourceName": "Sơn Win",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Sơn Win",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là sơn hoặc dụng cụ thi công sơn."
+    },
+    {
+      "id": "p_1765296064586_146uy80vy",
+      "sourceName": "Ke Chữ Thập",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Ke Chữ Thập",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765296138885_apc8xe2hn",
+      "sourceName": "Ke Cân Bằng / Đai Gạch ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Ke Cân Bằng / Đai Gạch",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765296191002_ys2gqc0d7",
+      "sourceName": "Nêm Gạch",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Nêm Gạch",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765296234468_j2mtbi8lo",
+      "sourceName": "Ke Chữ T Xoay",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Ke Chữ T Xoay",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765296278179_srr1c0p1p",
+      "sourceName": "Kích Nâng Gạch",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Kích Nâng Gạch",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765296319116_5bewvrjbl",
+      "sourceName": "Kìm Rút Nêm Gạch \\",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Kìm Rút Nêm Gạch \\",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765296365561_wx1smg7fx",
+      "sourceName": "Gạt Decal",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "Gạt Decal",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-taxonomy-rule"
+      ],
+      "classificationNote": "Gạt decal là dụng cụ cầm tay; không có bằng chứng để xếp vào xây tô hoặc hóa chất."
+    },
+    {
+      "id": "p_1765296413154_nyu3pm9tp",
+      "sourceName": "BỘ Dao Cạo Ron Gạch + 5 lưỡi dao",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "BỘ Dao Cạo Ron Gạch + 5 lưỡi dao",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765296467996_0ou65ri0x",
+      "sourceName": "Bàn Chà Hồ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Bàn Chà Hồ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765300033208_yl2ebhk06",
+      "sourceName": "Bàn Chà PVC",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Bàn Chà PVC",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765300083623_ulgh9xs5m",
+      "sourceName": "Bàn Chà Gỗ CĂM SE ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Bàn Chà Gỗ CĂM SE",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765300133520_3b3d4naqs",
+      "sourceName": "Bàn Chà Mít",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Bàn Chà Mít",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765300169264_d2ctnbmm1",
+      "sourceName": "Bàn Chà Sắt",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Bàn Chà Sắt",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765300245719_egr9n3kbd",
+      "sourceName": "BAY TRÉT THÉP ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "BAY TRÉT THÉP",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765300285119_6u6euqka0",
+      "sourceName": "Bàn Chà Nhám ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Bàn Chà Nhám",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên hoặc mô tả thể hiện vật tư mài, nhám, chà hay đánh bóng."
+    },
+    {
+      "id": "p_1765300317482_ghbehu6p2",
+      "sourceName": ")Bàn Kéo Hồ ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": ")Bàn Kéo Hồ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765300362224_thhx4xx24",
+      "sourceName": "Súng Silicon Nhựa ABS",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "Súng Silicon Nhựa ABS",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc keo, ron, trám kín hoặc dụng cụ bơm keo."
+    },
+    {
+      "id": "p_1765300385898_pkcai3kda",
+      "sourceName": "Súng Silicon Rẻ ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "Súng Silicon Rẻ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc keo, ron, trám kín hoặc dụng cụ bơm keo."
+    },
+    {
+      "id": "p_1765300459516_yqofgtzzi",
+      "sourceName": "Súng Inox",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "Súng Inox",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc keo, ron, trám kín hoặc dụng cụ bơm keo."
+    },
+    {
+      "id": "p_1765300504849_p3cp1leci",
+      "sourceName": "Súng Silicon Loại Tốt",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "Súng Silicon Loại Tốt",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc keo, ron, trám kín hoặc dụng cụ bơm keo."
+    },
+    {
+      "id": "p_1765300548955_crgemh2f7",
+      "sourceName": "SÚNG BẮN KEO 2 THÀNH PHẦN CAM",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "SÚNG BẮN KEO 2 THÀNH PHẦN CAM",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc keo, ron, trám kín hoặc dụng cụ bơm keo."
+    },
+    {
+      "id": "p_1765300617151_nsqlkjo0h",
+      "sourceName": "Keo Ron 2 Thành Phần TMAX",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "Keo Ron 2 Thành Phần TMAX",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc keo, ron, trám kín hoặc dụng cụ bơm keo."
+    },
+    {
+      "id": "p_1765300657184_d77qdctjv",
+      "sourceName": "Keo Ron 2 Thành Phần QMAX",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "Keo Ron 2 Thành Phần QMAX",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc keo, ron, trám kín hoặc dụng cụ bơm keo."
+    },
+    {
+      "id": "p_1765300735272_73u9ivw70",
+      "sourceName": "Keo Chà Ron Cá Sấu USA",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "Keo Chà Ron Cá Sấu USA",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc keo, ron, trám kín hoặc dụng cụ bơm keo."
+    },
+    {
+      "id": "p_1765300826960_agt2vy5ij",
+      "sourceName": "Tắc Ke Nhựa",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "FASTENERS_LOCKS_FIXINGS",
+      "proposedName": "Tắc Ke Nhựa",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc liên kết, cố định, khóa hoặc móc."
+    },
+    {
+      "id": "p_1765300894904_hm2lwja3h",
+      "sourceName": "Lược Rác Inox 201 - 4zem",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PLUMBING_WATERING_DRAINAGE",
+      "proposedName": "Lược Rác Inox 201 - 4zem",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc ống, tưới hoặc thoát nước."
+    },
+    {
+      "id": "p_1765300949216_hos92bswb",
+      "sourceName": "Lược Rác Inox Tự Động - Chống Hôi",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PLUMBING_WATERING_DRAINAGE",
+      "proposedName": "Lược Rác Inox Tự Động - Chống Hôi",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc ống, tưới hoặc thoát nước."
+    },
+    {
+      "id": "p_1765301011796_o7523t8ss",
+      "sourceName": "Lược Rác Inox 304 - 1.6li",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PLUMBING_WATERING_DRAINAGE",
+      "proposedName": "Lược Rác Inox 304 - 1.6li",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc ống, tưới hoặc thoát nước."
+    },
+    {
+      "id": "p_1765301155989_tc9mdkmcg",
+      "sourceName": "Đế Gù Nhựa",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Đế Gù Nhựa",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên hoặc mô tả thể hiện vật tư mài, nhám, chà hay đánh bóng."
+    },
+    {
+      "id": "p_1765301236239_xystigd4k",
+      "sourceName": "Đế Gù Nhôm",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Đế Gù Nhôm",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên hoặc mô tả thể hiện vật tư mài, nhám, chà hay đánh bóng."
+    },
+    {
+      "id": "p_1765328847899_bpjp9z0r8",
+      "sourceName": "Thước Thuỷ Bosi",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "Thước Thuỷ Bosi",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765328964285_u9y2p42t1",
+      "sourceName": "LƯỠI CƯA TOP",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "LƯỠI CƯA TOP",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765329060425_b6ttopka5",
+      "sourceName": "CÂY CƯA TOP",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "CÂY CƯA TOP",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765329109325_4pifapk7u",
+      "sourceName": "Cưa Thạch Cao GF",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Cưa Thạch Cao GF",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765329154454_89e0ro13n",
+      "sourceName": "Cưa Cán Gỗ 320mm",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Cưa Cán Gỗ 320mm",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765329210823_ub79stjgx",
+      "sourceName": "Lưỡi Cưa Tiệp 2M",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Lưỡi Cưa Tiệp 2M",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765329284495_poz8qmeth",
+      "sourceName": "Lưỡi Cưa Xanh 1M",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Lưỡi Cưa Xanh 1M",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765329328381_p3tnws5gf",
+      "sourceName": "Sủi Nhựa",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Sủi Nhựa",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765329524547_dwkwr8kod",
+      "sourceName": "Sủi Minh Thuận L3",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Sủi Minh Thuận L3",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765329570808_mmkzq89u9",
+      "sourceName": "Sủi MT L2",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Sủi MT L2",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765329667208_iarxlno0l",
+      "sourceName": "Sủi INOX GF(20cái/hộp)",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Sủi INOX GF(20cái/hộp)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765332679078_q8nya5r0g",
+      "sourceName": "Sủi Gỗ Thường",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Sủi Gỗ Thường",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765332725257_wantntsqh",
+      "sourceName": "Sủi Gỗ Tốt",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Sủi Gỗ Tốt",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765332887331_tzj3kmyvz",
+      "sourceName": "Đục Ốm (Dẹp/Nhọn)",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Đục Ốm (Dẹp/Nhọn)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765332985036_56zku7ome",
+      "sourceName": "Đục Mập (Dẹp/Nhọn)",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Đục Mập (Dẹp/Nhọn)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765333052757_ezdur74zg",
+      "sourceName": "Càng Cua",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "Càng Cua",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765333143733_ks2rnp9rj",
+      "sourceName": "Miếng Trét Thép",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Miếng Trét Thép",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-evidence-review"
+      ],
+      "classificationNote": "Miếng trét thép dùng để trét bột/mastic; chức năng là thi công lớp phủ, không phải cắt hay cạo."
+    },
+    {
+      "id": "p_1765333274689_8vgqq51bp",
+      "sourceName": "Miếng Trét Nhựa",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "Miếng Trét Nhựa",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-evidence-review"
+      ],
+      "classificationNote": "Miếng trét nhựa dùng để trét bột/mastic; chức năng ứng dụng vật liệu phủ rõ hơn nhóm cắt/cạo."
+    },
+    {
+      "id": "p_1765333335972_8g1ny290h",
+      "sourceName": "Bàn Chải Gỗ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Bàn Chải Gỗ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-evidence-review"
+      ],
+      "classificationNote": "Quy cách bàn chải gỗ 5/7 hàng là dạng bàn chải dây dùng chà bề mặt, phù hợp nhóm mài/chà."
+    },
+    {
+      "id": "p_1765333409734_ct9nimpmr",
+      "sourceName": "Bàn Chải Gỗ Thau",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Bàn Chải Gỗ Thau",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-evidence-review"
+      ],
+      "classificationNote": "Từ Thau và quy cách 5/7 hàng xác định đây là bàn chải dây kim loại để chà bề mặt."
+    },
+    {
+      "id": "p_1765333462143_1nl8zmt1r",
+      "sourceName": "Bàn Chải Nhựa Đen",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Bàn Chải Nhựa Đen",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-evidence-review"
+      ],
+      "classificationNote": "Các dáng nhỏ/bầu/vuông của bàn chải nhựa đen phù hợp bàn chải dây chà bề mặt hơn nhóm dụng cụ đo/bảo hộ."
+    },
+    {
+      "id": "p_1765333500293_p2h3clpv2",
+      "sourceName": "Bàn Chải Cán Đỏ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Bàn Chải Cán Đỏ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-evidence-review"
+      ],
+      "classificationNote": "Bàn chải cán đỏ trong cùng cụm bàn chải chà bề mặt nên thuộc nhóm mài/chà, không phải đo lường/bảo hộ."
+    },
+    {
+      "id": "p_1765333538831_rj8qtn7of",
+      "sourceName": "Dao Rọc Giấy Thường",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Dao Rọc Giấy Thường",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765333574499_e148yjq4b",
+      "sourceName": "Dao Rọc Giấy 3 MÀU CAO CẤP",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Dao Rọc Giấy 3 MÀU CAO CẤP",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765333625760_6usknpbyx",
+      "sourceName": "Lưỡi Dao Sư Tử",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "Lưỡi Dao Sư Tử",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765333682644_u19k7zrou",
+      "sourceName": "Đá Mài TQ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Đá Mài TQ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên hoặc mô tả thể hiện vật tư mài, nhám, chà hay đánh bóng."
+    },
+    {
+      "id": "p_1765333779382_aqvwnktbw",
+      "sourceName": "Đá Mài Mọi ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Đá Mài Mọi",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên hoặc mô tả thể hiện vật tư mài, nhám, chà hay đánh bóng."
+    },
+    {
+      "id": "p_1765333837241_mgsin0kvn",
+      "sourceName": "Đá Mài KODO",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Đá Mài KODO",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên hoặc mô tả thể hiện vật tư mài, nhám, chà hay đánh bóng."
+    },
+    {
+      "id": "p_1765334158372_bv91pvvek",
+      "sourceName": "Bay tốt Thái mỹ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Bay tốt Thái mỹ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765334552619_xvwtetymx",
+      "sourceName": "Bay CD",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "TILING_MASONRY_TOOLS",
+      "proposedName": "Bay CD",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thuộc dụng cụ/phụ kiện xây tô hoặc ốp lát."
+    },
+    {
+      "id": "p_1765334610025_jn4evj2p3",
+      "sourceName": "Búa Cao Su",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "Búa Cao Su",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765334695940_jz8jpyy7t",
+      "sourceName": "Búa Cao Su Cán Sắt",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "Búa Cao Su Cán Sắt",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765334815510_aax78x2jv",
+      "sourceName": "Thước GF 2Mặt( hộp 12 cái)",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "Thước GF 2Mặt( hộp 12 cái)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765334914437_4bnzwun29",
+      "sourceName": "Eke Thanh Khiết Thường",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "Eke Thanh Khiết Thường",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765335037755_qqs8wuesy",
+      "sourceName": "EKE DÀY",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "EKE DÀY",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765335140930_qfw78emia",
+      "sourceName": "EKE MÁY LẠNH",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "EKE MÁY LẠNH",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765335255613_1pp8sup8z",
+      "sourceName": "Móc Quần Áo",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "FASTENERS_LOCKS_FIXINGS",
+      "proposedName": "Móc Quần Áo",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc liên kết, cố định, khóa hoặc móc."
+    },
+    {
+      "id": "p_1765335612135_85p6ujwxy",
+      "sourceName": "Chén Cước Tốt ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Chén Cước Tốt",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên hoặc mô tả thể hiện vật tư mài, nhám, chà hay đánh bóng."
+    },
+    {
+      "id": "p_1765335698444_ailwz0ehs",
+      "sourceName": "Nhợ Cá 100g ",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Nhợ Cá 100g",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765335741846_ff3irktpu",
+      "sourceName": "Nhợ Cá 200g ",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Nhợ Cá 200g",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765335780377_15ilitt9d",
+      "sourceName": "Nhợ Cá 500g ",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Nhợ Cá 500g",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765335817651_lyhkh2442",
+      "sourceName": "Chỉ May Bao giá sỉ bao 57,5/kg",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Chỉ May Bao giá sỉ bao 57,5/kg",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765335916200_ic9jqutl9",
+      "sourceName": "DÙ VÕNG ",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "DÙ VÕNG",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765335965814_2q4o1rrxw",
+      "sourceName": "DÂY THỪNG LOẠI 1",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "DÂY THỪNG LOẠI 1",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765336027619_pscrtz29v",
+      "sourceName": "DÂY MÈ ",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "DÂY MÈ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765336096207_icx749ze7",
+      "sourceName": "DÂY TRÒN XANH",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "DÂY TRÒN XANH",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765336179743_wo9f5c7w5",
+      "sourceName": "Dây Rít",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Dây Rít",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765336242024_0xj0hrsh3",
+      "sourceName": "Nilong - 7Màu",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Nilong - 7Màu",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765336320226_dmy7y3zhy",
+      "sourceName": "Nilong - Cây",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Nilong - Cây",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765336574031_3nys71zar",
+      "sourceName": "Bành Cam",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Bành Cam",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên cùng quy cách cuộn/khổ phù hợp nhóm dây, nhợ hoặc bạt."
+    },
+    {
+      "id": "p_1765336894681_al9ocluvv",
+      "sourceName": "Dây Bô Hải Âu",
+      "sourceCategoryKey": "DAY_BO",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Dây Bô Hải Âu",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765336973137_knzq9n2ug",
+      "sourceName": "Dây Ruột Gà Trắng",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Dây Ruột Gà Trắng",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765337017988_af5mahz8y",
+      "sourceName": "Dây Ruột Gà Vàng",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Dây Ruột Gà Vàng",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765337096909_dbe4uhfut",
+      "sourceName": "Dây Ràng Dẹp 1,8M",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Dây Ràng Dẹp 1,8M",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765337145589_xrs4iqmww",
+      "sourceName": "Dây Ràng Sọc Rẻ",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Dây Ràng Sọc Rẻ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765337206653_1aj9jwc0z",
+      "sourceName": "Dây Ràng Sọc Tốt - 1.6m",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Dây Ràng Sọc Tốt - 1.6m",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765337268880_ahgqoweyc",
+      "sourceName": "Dây Ràng Dẹp Thái Thường 1.6m",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Dây Ràng Dẹp Thái Thường 1.6m",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765337322590_4d7ra1a0k",
+      "sourceName": "Dây Ràng Dẹp Thái Xịn 1.8m",
+      "sourceCategoryKey": "DAY_DU",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "Dây Ràng Dẹp Thái Xịn 1.8m",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765337440075_8jz9m5wzc",
+      "sourceName": "NHÁM JB5",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NHÁM JB5",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765337633734_xmr3l2quu",
+      "sourceName": "Nhám Con Ó",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Nhám Con Ó",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765337835260_whdu1a5ze",
+      "sourceName": "Nhám K51",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Nhám K51",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765337980715_c6tc3p7bp",
+      "sourceName": "Nhám Tròn",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Nhám Tròn",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765338101143_dh7lu177w",
+      "sourceName": "Nhám Nhật Kovax Đen",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Nhám Nhật Kovax Đen",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765344330102_t13bzw42y",
+      "sourceName": "NHÁM ĐEN EAGLE MAX",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NHÁM ĐEN EAGLE MAX",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765344510434_8ffx2zrjw",
+      "sourceName": "Nhám TQ",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Nhám TQ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765344719449_be2wyedjf",
+      "sourceName": "NHÁM KOVAX TRẮNG",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NHÁM KOVAX TRẮNG",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765344845234_ar8b98gts",
+      "sourceName": "NHÁM TRẮNG CAPTAIN",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NHÁM TRẮNG CAPTAIN",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765344904401_ilppgjwip",
+      "sourceName": "NHÁM NHẬT SANKYO L1 ",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NHÁM NHẬT SANKYO L1",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765344950750_l9p6x3hpr",
+      "sourceName": "NHÁM FM",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NHÁM FM",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765345262462_jh597d4c3",
+      "sourceName": "NHÁM SMS  ",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NHÁM SMS",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765345321736_m3pf08bo4",
+      "sourceName": "CAPTION ĐỎ ",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "CAPTION ĐỎ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên hoặc mô tả thể hiện vật tư mài, nhám, chà hay đánh bóng."
+    },
+    {
+      "id": "p_1765345390848_8fqfm1184",
+      "sourceName": "ĐÁ CẮT 1T COROLLA HÀNG CTY",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "ĐÁ CẮT 1T COROLLA HÀNG CTY",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765345500928_refcrkhn8",
+      "sourceName": "NHÁM XẾP",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NHÁM XẾP",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765345611437_go8si85sj",
+      "sourceName": "NHÁM VẢI",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NHÁM VẢI",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765345736799_15ey32387",
+      "sourceName": "NHÁM TĂNG",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NHÁM TĂNG",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765345811895_1fhmye65i",
+      "sourceName": "BĂNG KEO ĐIỆN NANO NAI",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO ĐIỆN NANO NAI",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765345872364_2wc7bzgvh",
+      "sourceName": "BĂNG KEO LƯỚI",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO LƯỚI",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765345950845_h0v9q84mh",
+      "sourceName": "BĂNG KEO ĐỤC",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO ĐỤC",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346014503_lgj1f2ss4",
+      "sourceName": "BĂNG KEO TRONG",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO TRONG",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346135694_995x91y6p",
+      "sourceName": "BĂNG KEO TRONG 2MẶT",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO TRONG 2MẶT",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346254748_jtd1fx8s1",
+      "sourceName": "BĂNG KEO GIẤY",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO GIẤY",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346371741_enn9lrjdy",
+      "sourceName": "BĂNG KEO XỐP ",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO XỐP",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346435631_zu4xumbm9",
+      "sourceName": "BĂNG KEO XỐP TRẮNG",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO XỐP TRẮNG",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346659483_qgr3lbpy1",
+      "sourceName": "BĂNG KEO CHỐNG DỘT - X2000",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO CHỐNG DỘT - X2000",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346734545_vjc9i9557",
+      "sourceName": "BĂNG KEO CHỐNG DỘT - NANO",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO CHỐNG DỘT - NANO",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346780081_bqaxpdzcc",
+      "sourceName": "BĂNG KEO SIÊU DÍNH",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO SIÊU DÍNH",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346813787_64ox40e1r",
+      "sourceName": "DÂY CẢNH BÁO (bao 25 cuộn giá 22.500/cuon) ( có hd)",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "DÂY CẢNH BÁO (bao 25 cuộn giá 22.500/cuon) ( có hd)",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346851880_9ta7up9pa",
+      "sourceName": "BĂNG KEO CHỐNG TRƯỢT",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO CHỐNG TRƯỢT",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346895589_gghos5sut",
+      "sourceName": "BĂNG KEO PHẢN QUANG",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO PHẢN QUANG",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346943829_t4mhtkqs7",
+      "sourceName": "BĂNG KEO DÁN BẠT",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO DÁN BẠT",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765346994880_k6kyia1bk",
+      "sourceName": "DỤNG CỤ CẮT KEO",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "DỤNG CỤ CẮT KEO",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765347171842_5hww3u6jm",
+      "sourceName": "ỐNG TIO ( nguyên liệu nhựa nguyên sinh )",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PLUMBING_WATERING_DRAINAGE",
+      "proposedName": "ỐNG TIO ( nguyên liệu nhựa nguyên sinh )",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc ống, tưới hoặc thoát nước."
+    },
+    {
+      "id": "p_1765347241705_ooidv8na4",
+      "sourceName": "ỐNG TIO ĐEN",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PLUMBING_WATERING_DRAINAGE",
+      "proposedName": "ỐNG TIO ĐEN",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc ống, tưới hoặc thoát nước."
+    },
+    {
+      "id": "p_1765347312202_btp1tnxfd",
+      "sourceName": "ỐNG LDPE",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PLUMBING_WATERING_DRAINAGE",
+      "proposedName": "ỐNG LDPE",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc ống, tưới hoặc thoát nước."
+    },
+    {
+      "id": "p_1765347567321_jex8xb0bc",
+      "sourceName": "BẠT ỐNG BƠM NƯỚC(GIA LỢI TỐT)",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "PLUMBING_WATERING_DRAINAGE",
+      "proposedName": "BẠT ỐNG BƠM NƯỚC(GIA LỢI TỐT)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-evidence-review"
+      ],
+      "classificationNote": "Dù tên có chữ bạt, đây là ống bơm nước bán theo cuộn 100 m; chức năng dẫn nước quyết định phân loại."
+    },
+    {
+      "id": "p_1765347655060_hg534qd5k",
+      "sourceName": "XANH CAM THƯỜNG",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "XANH CAM THƯỜNG",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên cùng quy cách cuộn/khổ phù hợp nhóm dây, nhợ hoặc bạt."
+    },
+    {
+      "id": "p_1765347710986_gmpspznwj",
+      "sourceName": "XANH CAM XỊNH HÀN QUỐC",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "XANH CAM XỊNH HÀN QUỐC",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên cùng quy cách cuộn/khổ phù hợp nhóm dây, nhợ hoặc bạt."
+    },
+    {
+      "id": "p_1765347771204_1y8poi67o",
+      "sourceName": "BẠT SỌC",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "BẠT SỌC",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên cùng quy cách cuộn/khổ phù hợp nhóm dây, nhợ hoặc bạt."
+    },
+    {
+      "id": "p_1765348024582_34sds7r71",
+      "sourceName": "KÉO CÁ",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "KÉO CÁ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765348100969_p6aoosn4v",
+      "sourceName": "KÉO VĂN PHÒNG PHẨM",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "KÉO VĂN PHÒNG PHẨM",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765348140523_vz7i0barr",
+      "sourceName": "KÉO NHÀ BẾP",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "KÉO NHÀ BẾP",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765348198963_gm6t0pq0x",
+      "sourceName": "KÉO CẮT VẢI",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "KÉO CẮT VẢI",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765348261693_mpo89999b",
+      "sourceName": "KÉO VÀNG",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "KÉO VÀNG",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765348304274_obimgqjg5",
+      "sourceName": "KÉO INOX SK5 ",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "KÉO INOX SK5",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765348363632_etu9lwdvu",
+      "sourceName": "KÉO RỒNG",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "KÉO RỒNG",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765348425319_ps96jo96m",
+      "sourceName": "KÉO TỈA CÀNH LOẠI 1",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "KÉO TỈA CÀNH LOẠI 1",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765348469426_8v95n0a2f",
+      "sourceName": "CÀNH BÓP",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "CÀNH BÓP",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên, nhóm hiện tại hoặc công dụng phù hợp nông nghiệp và làm vườn."
+    },
+    {
+      "id": "p_1765348533966_ijalt8ys2",
+      "sourceName": "LƯỠI CẮT GẠCH ĐA NĂNG GF",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "LƯỠI CẮT GẠCH ĐA NĂNG GF",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765348575530_ujkfqynz4",
+      "sourceName": "LƯỠI CẮT CỎ KATANA 255MM",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "LƯỠI CẮT CỎ KATANA 255MM",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-taxonomy-rule"
+      ],
+      "classificationNote": "Phân loại theo chức năng chính: lưỡi cắt; kích thước 255 mm được giữ nguyên."
+    },
+    {
+      "id": "p_1765351299502_r4frpji32",
+      "sourceName": "KHOÁ BẤM THÉP SƠN TĨNH ĐIỆN",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "FASTENERS_LOCKS_FIXINGS",
+      "proposedName": "KHOÁ BẤM THÉP SƠN TĨNH ĐIỆN",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765351367585_ade64jp3z",
+      "sourceName": "KHOÁ BẤM THÉP RÚT CHÌA",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "FASTENERS_LOCKS_FIXINGS",
+      "proposedName": "KHOÁ BẤM THÉP RÚT CHÌA",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765351404184_xehnzrk60",
+      "sourceName": "KHOÁ VALI",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "FASTENERS_LOCKS_FIXINGS",
+      "proposedName": "KHOÁ VALI",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765351441538_fffxgp43x",
+      "sourceName": "KHOÁ DÂY CÁP CHỐNG TRỘM",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "FASTENERS_LOCKS_FIXINGS",
+      "proposedName": "KHOÁ DÂY CÁP CHỐNG TRỘM",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765351479589_hydl87j0l",
+      "sourceName": "KHOÁ DÂY 4 SỐ",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "FASTENERS_LOCKS_FIXINGS",
+      "proposedName": "KHOÁ DÂY 4 SỐ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765351520393_01iuuaupq",
+      "sourceName": "KHOÁ GF VÒNG 4 SỐ",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "FASTENERS_LOCKS_FIXINGS",
+      "proposedName": "KHOÁ GF VÒNG 4 SỐ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765351556788_1hr5v6qk7",
+      "sourceName": "KHOÁ ZANI - DOLOCK",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "FASTENERS_LOCKS_FIXINGS",
+      "proposedName": "KHOÁ ZANI - DOLOCK",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765351593017_ox90olol9",
+      "sourceName": "KHOÁ TAY CẦM GF",
+      "sourceCategoryKey": "KEO,_LUOI_CAT_&_KHOA",
+      "targetCategoryKey": "FASTENERS_LOCKS_FIXINGS",
+      "proposedName": "KHOÁ TAY CẦM GF",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765351672039_3znvi81fc",
+      "sourceName": "BÚA GF (CHỐNG TRƯỢT + NAM CHÂM)",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "BÚA GF (CHỐNG TRƯỢT + NAM CHÂM)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765351773721_6xkxgql1m",
+      "sourceName": "MŨI KHOAN THÁP",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "POWER_TOOL_ACCESSORIES",
+      "proposedName": "MŨI KHOAN THÁP",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là mũi, đầu hoặc phụ kiện dùng với máy."
+    },
+    {
+      "id": "p_1765351855644_ow2mqjt3g",
+      "sourceName": "MŨI BẮN VÍT CÓ NẮP CHỤP",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "POWER_TOOL_ACCESSORIES",
+      "proposedName": "MŨI BẮN VÍT CÓ NẮP CHỤP",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là mũi, đầu hoặc phụ kiện dùng với máy."
+    },
+    {
+      "id": "p_1765351955051_vvud420aq",
+      "sourceName": "MŨI KHOAN 4 CẠNH ĐA NĂNG",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "POWER_TOOL_ACCESSORIES",
+      "proposedName": "MŨI KHOAN 4 CẠNH ĐA NĂNG",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là mũi, đầu hoặc phụ kiện dùng với máy."
+    },
+    {
+      "id": "p_1765351991785_413vyxgxz",
+      "sourceName": "BẤM GHIM",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "BẤM GHIM",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352027357_zcwh1hkeu",
+      "sourceName": "VÍT ĐEN GF",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "POWER_TOOL_ACCESSORIES",
+      "proposedName": "VÍT ĐEN GF",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-evidence-review"
+      ],
+      "classificationNote": "Mô tả 10 mũi/vỉ cho thấy VÍT ĐEN GF là mũi bắt vít dùng với máy, không phải dụng cụ cầm tay độc lập."
+    },
+    {
+      "id": "p_1765352063606_amdsh3dbl",
+      "sourceName": "CHỤP GF (ĐẦU BẮN TÔN)",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "POWER_TOOL_ACCESSORIES",
+      "proposedName": "CHỤP GF (ĐẦU BẮN TÔN)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là mũi, đầu hoặc phụ kiện dùng với máy."
+    },
+    {
+      "id": "p_1765352117937_3124qsh0z",
+      "sourceName": "XÌ KHÔ GF",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "XÌ KHÔ GF",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352160269_h28b2hsem",
+      "sourceName": "CHÉN MÀI UNIK XANH-VÀNG",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "CHÉN MÀI UNIK XANH-VÀNG",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên hoặc mô tả thể hiện vật tư mài, nhám, chà hay đánh bóng."
+    },
+    {
+      "id": "p_1765352210635_6jrav70t0",
+      "sourceName": "KÌM ĐIỆN GF",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "KÌM ĐIỆN GF",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352243545_2s7ujlws4",
+      "sourceName": "BỘ KHẨU TỰ ĐỘNG",
+      "sourceCategoryKey": "PAINT_BRUSH",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "BỘ KHẨU TỰ ĐỘNG",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352278802_w33s0pdtp",
+      "sourceName": "CẮT ỐNG NƯỚC 42GF",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "CẮT ỐNG NƯỚC 42GF",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765352314292_42hxiv6m5",
+      "sourceName": "KHÒ GA THƯỜNG",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "KHÒ GA THƯỜNG",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352346067_oz40bapvs",
+      "sourceName": "KHÒ GA TỐT",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "KHÒ GA TỐT",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352388977_wpauqzjrm",
+      "sourceName": "KÌM HÀN CÁN GỖ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "KÌM HÀN CÁN GỖ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352432711_cd337fbsj",
+      "sourceName": "ĐẦU BẮN VÍT CAO CẤP TMT",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "POWER_TOOL_ACCESSORIES",
+      "proposedName": "ĐẦU BẮN VÍT CAO CẤP TMT",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là mũi, đầu hoặc phụ kiện dùng với máy."
+    },
+    {
+      "id": "p_1765352475504_4p80hbavq",
+      "sourceName": "ĐẦU BẮN TÔN TMT",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "POWER_TOOL_ACCESSORIES",
+      "proposedName": "ĐẦU BẮN TÔN TMT",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là mũi, đầu hoặc phụ kiện dùng với máy."
+    },
+    {
+      "id": "p_1765352509073_z9b5p1yiy",
+      "sourceName": "BƠM XE MINI FOOT PUMP",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "BƠM XE MINI FOOT PUMP",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352543513_ru0mwg30b",
+      "sourceName": "BƠM BÌNH XÁM GF",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "BƠM BÌNH XÁM GF",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352598961_17fdbl9my",
+      "sourceName": "BƠM BÌNH ĐỒNG HỒ ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "BƠM BÌNH ĐỒNG HỒ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352676150_lcsxn2zvp",
+      "sourceName": "BÚA NHỔ ĐINH - ĐỎ ( có hd)",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "BÚA NHỔ ĐINH - ĐỎ ( có hd)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352726010_i08bp0mrx",
+      "sourceName": "BÚA VUÔNG ( có hd)",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "BÚA VUÔNG ( có hd)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765352817757_3ej044vqh",
+      "sourceName": "MÁNG SẮT",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "MÁNG SẮT",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765352892726_ldlh535vv",
+      "sourceName": "MÁNG NHỰA",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "MÁNG NHỰA",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765352939038_bef5vyi0g",
+      "sourceName": "LIỀM DÀI",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "LIỀM DÀI",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765352980018_rfzw6w05m",
+      "sourceName": "LIỀM THÉP ",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "LIỀM THÉP",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765353015868_zfw0ou4z2",
+      "sourceName": "LIỀM ĐỎ",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "LIỀM ĐỎ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765353050533_x2ezfie8z",
+      "sourceName": "LIỀM XANH",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "LIỀM XANH",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765353070419_atjwhpvpw",
+      "sourceName": "LIỀM 7 THÉP",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "LIỀM 7 THÉP",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765353203953_ltmf7qgpg",
+      "sourceName": "RỰA CÁN DÀI",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "RỰA CÁN DÀI",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765353292527_3goozk26f",
+      "sourceName": "LENG CHẤP THÉP ",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "LENG CHẤP THÉP",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765353328332_z2orgkze4",
+      "sourceName": "TRANG 1T5 CÁN SẮT (1M2)",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "TRANG 1T5 CÁN SẮT (1M2)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên, nhóm hiện tại hoặc công dụng phù hợp nông nghiệp và làm vườn."
+    },
+    {
+      "id": "p_1765353365009_k9iwnmz0l",
+      "sourceName": "CUỐC NHÍP CÁN SẮT ( có hd)",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "CUỐC NHÍP CÁN SẮT ( có hd)",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765353445992_or7rx2dgf",
+      "sourceName": "CUỐC CHIM LỚN CÁN SẮT ( cb)",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "CUỐC CHIM LỚN CÁN SẮT ( cb)",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765353524576_oc48msbqi",
+      "sourceName": "CHÉP KHÔNG CÓ TAI",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "CHÉP KHÔNG CÓ TAI",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên, nhóm hiện tại hoặc công dụng phù hợp nông nghiệp và làm vườn."
+    },
+    {
+      "id": "p_1765353563996_5ueh8riaz",
+      "sourceName": "CUỐC SECLAY 25F CÁN SẮT (1M2)( có hd)",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "CUỐC SECLAY 25F CÁN SẮT (1M2)( có hd)",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765353782934_gdaf1663j",
+      "sourceName": "XẺNG NGỰA XỊN CÁN SẮT ( có hd)",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "XẺNG NGỰA XỊN CÁN SẮT ( có hd)",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765353819789_68w86kbi8",
+      "sourceName": "XẺNG XÁM LỚN CÁN SẮT ",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "XẺNG XÁM LỚN CÁN SẮT",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765353864872_sg7kty6xi",
+      "sourceName": "LƯỠI XẺNG XÁM  LỚN",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "LƯỠI XẺNG XÁM LỚN",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765354060189_1vu9aaqm9",
+      "sourceName": "BA GA",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "BA GA",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên, nhóm hiện tại hoặc công dụng phù hợp nông nghiệp và làm vườn."
+    },
+    {
+      "id": "p_1765354136066_afh94k1yx",
+      "sourceName": "CÁN CUỐC ( có hd)",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "CÁN CUỐC ( có hd)",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765354230323_qm736cx9h",
+      "sourceName": "MÓC DÁN",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "FASTENERS_LOCKS_FIXINGS",
+      "proposedName": "MÓC DÁN",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc liên kết, cố định, khóa hoặc móc."
+    },
+    {
+      "id": "p_1765354307818_z4fedeaan",
+      "sourceName": "TẨY OK ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "TẨY OK",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765354387985_jf7rmhwwj",
+      "sourceName": "LAU KÍNH",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "LAU KÍNH",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765354439633_9j5ofvix4",
+      "sourceName": "TẨY LỒNG GIẶT",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "TẨY LỒNG GIẶT",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765354486895_stvd384ho",
+      "sourceName": "TẨY RONG RÊU",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "TẨY RONG RÊU",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765354641750_fc0poij9z",
+      "sourceName": "CHỔI CHÀ RONG RÊU (CÓ KÈM CÁN GỖ) ",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "CHỔI CHÀ RONG RÊU (CÓ KÈM CÁN GỖ)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765354686015_6n5b2wb47",
+      "sourceName": "SỦ BÀO",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "SỦ BÀO",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-taxonomy-rule"
+      ],
+      "classificationNote": "Quy cách 20 chai/thùng và nguồn sản phẩm công khai xác nhận Sủ Bào là nước tẩy rửa."
+    },
+    {
+      "id": "p_1765354731533_hwroq3xii",
+      "sourceName": "BƠM THỤT THÔNG TẮC",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "PLUMBING_WATERING_DRAINAGE",
+      "proposedName": "BƠM THỤT THÔNG TẮC",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc ống, tưới hoặc thoát nước."
+    },
+    {
+      "id": "p_1765354771072_uifnx5007",
+      "sourceName": "THÔNG CẦU CỐNG 1,600gr  ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "THÔNG CẦU CỐNG 1,600gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765354828147_1jnzi5qfc",
+      "sourceName": "THÔNG CẦU CỐNG 1,000gr     ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "THÔNG CẦU CỐNG 1,000gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765354868069_75xuewr9n",
+      "sourceName": "THÔNG CỐNG THƯỜNG 1.200gr               ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "THÔNG CỐNG THƯỜNG 1.200gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765354945409_5jhvfmpqz",
+      "sourceName": "THÔNG CỐNG ĐB 1.400gr     ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "THÔNG CỐNG ĐB 1.400gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765354993850_29rl4hhoe",
+      "sourceName": "THÔNG CẦU ĐB 1.400gr ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "THÔNG CẦU ĐB 1.400gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355048375_wmzzi67jw",
+      "sourceName": "THÔNG CỐNG  ĐB 1,000gr ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "THÔNG CỐNG ĐB 1,000gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355088477_ibwni0l94",
+      "sourceName": "KHỬ MÙI 1,000gr",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "KHỬ MÙI 1,000gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355127860_az1ggxg0b",
+      "sourceName": "BỘT CẦU + CỐNG 200gr  ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "BỘT CẦU + CỐNG 200gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355203421_083f6yuca",
+      "sourceName": "KEM TẨY ĐA NĂNG 750gr ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "KEM TẨY ĐA NĂNG 750gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355244258_5y6r5w6ht",
+      "sourceName": "NƯỚC TẨY ĐA NĂNG 750gr ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "NƯỚC TẨY ĐA NĂNG 750gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355290400_wzg12nae0",
+      "sourceName": "TẨY GẠCH 1,200ml ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "TẨY GẠCH 1,200ml",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355324967_1hywg34gm",
+      "sourceName": "MEN VI SINH ĐB  1,200ml",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "MEN VI SINH ĐB 1,200ml",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355360900_5g6tj4ae3",
+      "sourceName": "BỘT MEN VI SINH ĐB 300gr    ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "BỘT MEN VI SINH ĐB 300gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355405885_1m7px9toy",
+      "sourceName": "MEN VI SINH 500ml + 100gr   ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "MEN VI SINH 500ml + 100gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355454874_0az2h7zao",
+      "sourceName": "BỘT MEN VI SINH 300gr ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "BỘT MEN VI SINH 300gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355496866_nfzp82c51",
+      "sourceName": "BỘT THÔNG CỐNG 100gr ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "BỘT THÔNG CỐNG 100gr",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355582960_lzk0vufan",
+      "sourceName": "TẨY ĐA NĂNG SUMO ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "TẨY ĐA NĂNG SUMO",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355620624_wxxq2wco8",
+      "sourceName": "XỊT MUỖI ARS THÁI LAN ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "XỊT MUỖI ARS THÁI LAN",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355650834_vmb40kjvr",
+      "sourceName": "XỊT MUỖI ĐỎ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "XỊT MUỖI ĐỎ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355697918_s4mij9tyc",
+      "sourceName": "XỊT MUỖI JUMBO",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "XỊT MUỖI JUMBO",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355733288_d1k5uykzh",
+      "sourceName": "XỊT MUỖI ARS PRO",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "XỊT MUỖI ARS PRO",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355789936_o4l93c2us",
+      "sourceName": "NƯỚC LAU SÀN MEO",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "NƯỚC LAU SÀN MEO",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355889445_s82a9bc5q",
+      "sourceName": "NƯỚC RỬA CHÉN ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "NƯỚC RỬA CHÉN",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765355965542_lcq0usone",
+      "sourceName": "NƯỚC RỬA XE BỌT TUYẾT ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "NƯỚC RỬA XE BỌT TUYẾT",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765356032970_93plndu7o",
+      "sourceName": "TẨY RỈ SÉT 5M",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "TẨY RỈ SÉT 5M",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765356114189_jzp59uh0c",
+      "sourceName": "TẨY 909",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "TẨY 909",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765356153421_z2nopfwp6",
+      "sourceName": "CHAI TẨY SƠN CON BƯỚM",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "CHAI TẨY SƠN CON BƯỚM",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765356191552_gr3myxfhg",
+      "sourceName": "XỊT TẨY SƠN 3M ĐỎ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "XỊT TẨY SƠN 3M ĐỎ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765356233205_hiiy1pyxh",
+      "sourceName": "XỊT TẨY KEO // XOÁ DẤU VẾT KEO",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "XỊT TẨY KEO // XOÁ DẤU VẾT KEO",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765356319996_a6iulzsdh",
+      "sourceName": "NỈ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NỈ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên hoặc mô tả thể hiện vật tư mài, nhám, chà hay đánh bóng."
+    },
+    {
+      "id": "p_1765356371730_b9z9b6b0g",
+      "sourceName": "CAO SU NON TOMBO MALAYSIA (mua thùng900,000)",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "CAO SU NON TOMBO MALAYSIA (mua thùng900,000)",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc keo, ron, trám kín hoặc dụng cụ bơm keo."
+    },
+    {
+      "id": "p_1765356425828_s2eaativn",
+      "sourceName": "XỊT WD40",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "XỊT WD40",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765356471307_8dh8tc6c4",
+      "sourceName": "Chai xịt chống rỉ sét RP7C",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "Chai xịt chống rỉ sét RP7C",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765356750117_u34aar4k5",
+      "sourceName": "SÚNG BẮN KEO NẾN VÂN SƠN",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "SÚNG BẮN KEO NẾN VÂN SƠN",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc keo, ron, trám kín hoặc dụng cụ bơm keo."
+    },
+    {
+      "id": "p_1765356882439_2p0i3li3d",
+      "sourceName": "KEO DÁN GẠCH ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "KEO DÁN GẠCH",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765356932280_n6p6zbmcv",
+      "sourceName": "TITEBOND",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "TITEBOND",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765356989121_dynnbar99",
+      "sourceName": "BÚT XOÁ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "BÚT XOÁ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-taxonomy-rule"
+      ],
+      "classificationNote": "Nhóm tổng hợp dụng cụ cầm tay/đánh dấu là vị trí gần nhất; không tạo danh mục văn phòng phẩm chỉ cho một mặt hàng."
+    },
+    {
+      "id": "p_1765357038770_kaf7qxoln",
+      "sourceName": "BÚT LÔNG DẦU",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "BÚT LÔNG DẦU",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-taxonomy-rule"
+      ],
+      "classificationNote": "Bút lông dầu phục vụ đánh dấu và nằm trong nhóm dụng cụ đo/đánh dấu."
+    },
+    {
+      "id": "p_1765357074073_1r4av2mz4",
+      "sourceName": "BÚT LÔNG KIM",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "BÚT LÔNG KIM",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-taxonomy-rule"
+      ],
+      "classificationNote": "Bút lông kim phục vụ đánh dấu và nằm trong nhóm dụng cụ đo/đánh dấu."
+    },
+    {
+      "id": "p_1765357161169_m4c4wgilj",
+      "sourceName": "KEO CHỐNG THẤM DS910",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "KEO CHỐNG THẤM DS910",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765357207879_11yacdi86",
+      "sourceName": "KÍNH  805",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "KÍNH 805",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765357269513_w5v1kuhwo",
+      "sourceName": "KÍNH  KINT\"S",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "KÍNH KINT\"S",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765357312399_zvggdr376",
+      "sourceName": "KÍNH HÀN",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "KÍNH HÀN",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765357412014_fj2vpqu6v",
+      "sourceName": "DÂY RÚT TRẮNG - ĐEN( có hd )",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "DÂY RÚT TRẮNG - ĐEN( có hd )",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765357480916_xu8jep7go",
+      "sourceName": "VÒI TƯỚI VƯỜN GF",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "PLUMBING_WATERING_DRAINAGE",
+      "proposedName": "VÒI TƯỚI VƯỜN GF",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc ống, tưới hoặc thoát nước."
+    },
+    {
+      "id": "p_1765357546518_ys2igv6jd",
+      "sourceName": "KE HÍT GÓC MÀU ĐỎ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "KE HÍT GÓC MÀU ĐỎ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765357617018_gakbhl9hf",
+      "sourceName": "RUỘT XE RÙA",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "RUỘT XE RÙA",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-taxonomy-rule"
+      ],
+      "classificationNote": "Ruột xe rùa là phụ tùng của xe rùa dùng trong xây dựng/nông nghiệp; nhóm nông nghiệp/làm vườn gần nhất."
+    },
+    {
+      "id": "p_1765357719274_qznc4rda3",
+      "sourceName": "MÓC DẶM  LÚA ",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "MÓC DẶM LÚA",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765455273588_04ya9v069",
+      "sourceName": "Thước Kéo Cao Cấp",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "Thước Kéo Cao Cấp",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765455477483_saaluxi6k",
+      "sourceName": "Mũi Khoan Đa Năng 2 Cạnh GF",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "POWER_TOOL_ACCESSORIES",
+      "proposedName": "Mũi Khoan Đa Năng 2 Cạnh GF",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là mũi, đầu hoặc phụ kiện dùng với máy."
+    },
+    {
+      "id": "p_1765455652238_eb5y1aqt3",
+      "sourceName": "Keo AB",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "Keo AB",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và công dụng thuộc keo, ron, trám kín hoặc dụng cụ bơm keo."
+    },
+    {
+      "id": "p_1765460962746_vhbdp6n56",
+      "sourceName": "Băng Keo Dán Nhôm",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "Băng Keo Dán Nhôm",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1765631281888_k2k7e65nx",
+      "sourceName": "Bút Lấy Dấu",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "Bút Lấy Dấu",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765631355276_q8daa01zj",
+      "sourceName": "SỦI NAI KÌ NIKE",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "CUTTING_SCRAPING",
+      "proposedName": "SỦI NAI KÌ NIKE",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách thể hiện chức năng cắt, cưa, cạo hoặc lưỡi cắt."
+    },
+    {
+      "id": "p_1765632012650_wh9j6a0cb",
+      "sourceName": "Búa Cao Su Trong",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "Búa Cao Su Trong",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1765885570941_8makc74ky",
+      "sourceName": "Trục Nhám",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "Trục Nhám",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1767607494144_xsjx6af2l",
+      "sourceName": "CHE SƠN",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "PAINT_COATINGS_APPLICATION",
+      "proposedName": "CHE SƠN",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1767708547365_vyyrwt0ws",
+      "sourceName": "XỊT CHUỘT",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "XỊT CHUỘT",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review",
+        "adjudicated-taxonomy-rule"
+      ],
+      "classificationNote": "Quy cách 24 chai/thùng và nguồn sản phẩm công khai xác nhận đây là xịt xua/đuổi chuột."
+    },
+    {
+      "id": "p_1767709718329_66p3ncw9e",
+      "sourceName": "KEO SỮA ATM",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "ADHESIVES_SEALANTS",
+      "proposedName": "KEO SỮA ATM",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1769086279090_f9awyllv3",
+      "sourceName": "NHÁM XANH TRẮNG FC",
+      "sourceCategoryKey": "NHAM",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "NHÁM XANH TRẮNG FC",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1771845387013_ddo60tkmg",
+      "sourceName": "XỊT BÓNG GỖ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "XỊT BÓNG GỖ",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1778670850077_4qy3szcud",
+      "sourceName": "XẺNG VÀNG BẦU 1LY2( có hd)",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "XẺNG VÀNG BẦU 1LY2( có hd)",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1780285221697_poktxln4h",
+      "sourceName": "CUỐC VUÔNG VN CÁN SẮT 1M2",
+      "sourceCategoryKey": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "targetCategoryKey": "AGRICULTURE_GARDEN_TOOLS",
+      "proposedName": "CUỐC VUÔNG VN CÁN SẮT 1M2",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1784006780318_ibey7l7xw",
+      "sourceName": "Chai xịt chống rỉ sét RF7 ",
+      "sourceCategoryKey": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "targetCategoryKey": "CLEANING_DRAIN_MAINTENANCE_CHEMICALS",
+      "proposedName": "Chai xịt chống rỉ sét RF7",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1786089797703_p7wpe45fl",
+      "sourceName": "BĂNG KEO ĐIỆN ĐEN NANO JAPAN",
+      "sourceCategoryKey": "BANG_KEO",
+      "targetCategoryKey": "TAPES_MASKING_SIGNAGE",
+      "proposedName": "BĂNG KEO ĐIỆN ĐEN NANO JAPAN",
+      "confidence": "high"
+    },
+    {
+      "id": "p_1786350635015_201bjdmg4",
+      "sourceName": "BẠT XANH CAM THƯỜNG ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ROPES_TARPS",
+      "proposedName": "BẠT XANH CAM THƯỜNG",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên cùng quy cách cuộn/khổ phù hợp nhóm dây, nhợ hoặc bạt."
+    },
+    {
+      "id": "p_1786526449310_lqsvwxgdn",
+      "sourceName": "BÁNH CƯỚC SẮT",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "ABRASIVES_GRINDING_POLISHING",
+      "proposedName": "BÁNH CƯỚC SẮT",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên hoặc mô tả thể hiện vật tư mài, nhám, chà hay đánh bóng."
+    },
+    {
+      "id": "p_1787309337378_ouj0yam5j",
+      "sourceName": "LỤC GIÁC",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "HAND_TOOLS_MEASURING_SAFETY",
+      "proposedName": "LỤC GIÁC",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách phù hợp dụng cụ cầm tay, đo lường hoặc bảo hộ."
+    },
+    {
+      "id": "p_1787309623831_gd1r4ne5h",
+      "sourceName": "MŨI KHOAN BẮN VÍT KHÔNG TẮT KẼ",
+      "sourceCategoryKey": "ACCESSORY",
+      "targetCategoryKey": "POWER_TOOL_ACCESSORIES",
+      "proposedName": "MŨI KHOAN BẮN VÍT KHÔNG TẮT KẼ",
+      "confidence": "high",
+      "classificationEvidence": [
+        "initial-catalog-audit",
+        "independent-category-review"
+      ],
+      "classificationNote": "Tên và quy cách cho thấy đây là mũi, đầu hoặc phụ kiện dùng với máy."
+    }
+  ]
+}

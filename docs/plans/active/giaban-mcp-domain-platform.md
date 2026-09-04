@@ -437,7 +437,29 @@ These links record planning evidence, not pinned implementation authority. Phase
 6. **R6 — Verify before enablement.** Require `migrationReady: true`, blocker count zero, unchanged product/category/settings hashes, expected order/customer counts, reconciled monetary aggregates, storefront read success, and no secret/PII in diagnostics or logs. Keep the write kill switch on through an observation window. Removing `MCP_WRITE_DISABLED` is a separate deploy and requires explicit authorization; enable one low-risk real workflow before financial operations.
 
 **Recovery:** before the first reconciliation write, abort by leaving the kill switch active. During a partial publish, use the DO journal to roll forward to the previewed plan hash. After a completed repair, do not blindly restore stale whole documents; freeze writes, compare the encrypted snapshot and audit evidence, then apply an explicitly reviewed compensating plan.
+
+### Catalog normalization dry-run — 2026-09-04
+
+**Authorized implementation boundary:** implement repository-owned, offline-only normalization mapping and validation for the 293 active public catalog products. Do not deploy, call a write endpoint, change live KV, bypass `MCP_WRITE_DISABLED=1`, or mix this catalog change into order/customer reconciliation.
+
+- C1 — Define 13 balanced flat target categories covering all 293 products: paint/application; masonry/tiling; cutting/scraping; abrasives; adhesives/sealants; tape/masking; fasteners/locks; hand tools/measurement/safety; power-tool accessories; rope/tarps; plumbing/watering; agriculture/garden; cleaning/maintenance chemicals.
+- C2 — Persist an exact-ID mapping manifest bound to a deterministic source fingerprint. Every source product ID must map exactly once; reject missing, extra, duplicate, invalid-target, blank-name, source-name/category drift, and invalid-confidence rows.
+- C3 — Keep normalization fail-closed. Only whitespace cleanup is mechanically safe; brand/model/size remain unchanged. Medium/low-confidence semantic names and category assignments require explicit review, and the preview must report `ready: false` while any review item remains.
+- C4 — Build a pure preview transform that preserves product IDs, prices, variants, images, descriptions, unknown fields, and source order while proposing only category/name changes. The tool accepts an explicit local snapshot path and never fetches or writes Cloudflare.
+- C5 — Validate with synthetic tests, the captured PII-free public snapshot, typecheck, platform tests, and `git diff --check`. Applying the manifest live requires a new source hash, backup/write freeze, resolved migration blockers, and separate exact authorization.
 - Final local evidence for this slice: `npm run test:platform -- --test-concurrency=1 --test-reporter=dot` passed 66/66; `npm run test:worker -- --test-reporter=dot` passed 13/13; `npm run test:frontend -- --test-reporter=dot` passed 1/1; `./node_modules/.bin/tsc --noEmit --pretty false`, `npm run build -- --mode production`, `git diff --check`, and Wrangler MCP dry-run passed. Build retains the existing >500 kB chunk warning.
+
+**Offline catalog artifacts (no live write):**
+- Source snapshot: `migrations/catalog/giaban-public-catalog-source-2026-09-04.json` (293 active products; classification-only public projection, no variant prices).
+- Mapping manifest: `migrations/catalog/giaban-public-catalog-2026-09-04.json`.
+- Classification fingerprint: `ac0d1649b83c84cd1510cea79c1270d76e210b302186aaab32135e45dbe1b785`.
+- Apply-bound snapshot hash: `af6850d1f29525c76b5f6fd737708e851a05fb81f68f08d5895279ad362bc0ca`.
+- Preview counts: Sơn, cọ & rulo 27; xây tô & ốp lát 19; cắt/cưa/cạo 29; nhám/mài 33; keo/ron 16; băng keo 17; liên kết/khoá 11; cầm tay/đo/bảo hộ 34; mũi khoan 10; dây/bạt 25; ống/tưới 9; nông nghiệp 25; tẩy rửa 38.
+- Latest dry-run evidence: catalog-normalization 13/13; platform 80/80; `npx tsc --noEmit` and `git diff --check` passed. Render of the captured public snapshot fail-closed on 694 missing variant prices. No live KV write or deploy.
+- Mapping is `ready: true` with 0 review items. Preview reports `liveApplySupported: false` because the captured snapshot has no prices and live MCP writes remain blocked.
+- Price/image/unknown-field drift keeps classification valid but flips `applyBound` to false. Name/category/description/variant-label drift invalidates the fingerprint.
+- Render requires mapping ready, apply-bound hash match, and integer variant prices; it writes a new file and never overwrites the source snapshot or manifest.
+
 ## Decisions
 
 - Business scope is comprehensive for existing Giaban capabilities; infrastructure administration and unrelated new product domains remain out of scope.

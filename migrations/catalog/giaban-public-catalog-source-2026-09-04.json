@@ -1,0 +1,5186 @@
+{
+  "categories": [
+    {
+      "id": "1",
+      "value": "ALL",
+      "label": "Tất cả"
+    },
+    {
+      "id": "2",
+      "value": "PAINT_BRUSH",
+      "label": "CỌ SƠN - CHỔI SƠN"
+    },
+    {
+      "id": "3",
+      "value": "ROLLER",
+      "label": "RULO - LĂN SƠN"
+    },
+    {
+      "id": "4",
+      "value": "ACCESSORY",
+      "label": "PHỤ KIỆN XÂY DỰNG"
+    },
+    {
+      "id": "cat_1765335282356",
+      "value": "DAY_DU",
+      "label": "DÂY DÙ - NHỢ CÁ"
+    },
+    {
+      "id": "cat_1765337355159",
+      "value": "NHAM",
+      "label": "NHÁM"
+    },
+    {
+      "id": "cat_1765337361099",
+      "value": "BANG_KEO",
+      "label": "BĂNG KEO"
+    },
+    {
+      "id": "cat_1765347801885",
+      "value": "KEO,_LUOI_CAT_&_KHOA",
+      "label": "KÉO, LƯỠI CẮT & KHOÁ"
+    },
+    {
+      "id": "cat_1765352607112",
+      "value": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "label": "DỤNG CỤ NÔNG NGHIỆP & VƯỜN"
+    },
+    {
+      "id": "cat_1765354147958",
+      "value": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "label": "CHẤT TẨY RỬA & HOÁ CHẤT"
+    },
+    {
+      "id": "cat_1769065034867",
+      "value": "DAY_BO",
+      "label": "Dây Bô"
+    },
+    {
+      "id": "cat_1786526257084",
+      "value": "CHEN_CUOC",
+      "label": "CHÉN CƯỚC"
+    }
+  ],
+  "products": [
+    {
+      "id": "p_1765293174827_ldjgmignd",
+      "name": "CỌ SƠN MINH THUẬN LOẠI 1",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố"
+        }
+      ]
+    },
+    {
+      "id": "p_1765293574947_ox3lqrri3",
+      "name": "Cọ SƠN MINH THUẬN LOẠI 2",
+      "category": "PAINT_BRUSH",
+      "description": "Lông Cọ Dài 51mm",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố"
+        }
+      ]
+    },
+    {
+      "id": "p_1765293709415_2j8rng6cd",
+      "name": "Cọ Lông Thỏ - Cán Gỗ",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố"
+        }
+      ]
+    },
+    {
+      "id": "p_1765293844041_g5132loyj",
+      "name": "Cọ Lông Thỏ - Cán Nhựa",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố"
+        }
+      ]
+    },
+    {
+      "id": "p_1765293951420_xg8wsjszf",
+      "name": "Cọ Nhựa Rẻ",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "variants": [
+        {
+          "size": "0.5\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "1\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294065886_2vzp474h2",
+      "name": "Cọ Nâu Việt Mỹ",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294164948_86zzk86lm",
+      "name": "Cọ Xanh Việt Mỹ",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294251844_gk5hvu8q2",
+      "name": "Cọ Hồng Việt Mỹ",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "variants": [
+        {
+          "size": "1\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294385818_u7s8d4wyg",
+      "name": "Cọ Thăng Long ",
+      "category": "PAINT_BRUSH",
+      "description": "Loại đắt tiền.\nMua 10 lố tặng 3.5 lố",
+      "variants": [
+        {
+          "size": "0.5\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "1\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "1\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "2\"5",
+          "unit": "Lố"
+        },
+        {
+          "size": "3\"",
+          "unit": "Lố"
+        },
+        {
+          "size": "4\"",
+          "unit": "Lố"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294472366_f7zeyqz8d",
+      "name": "Cọ Đũa bó 10 cây",
+      "category": "ACCESSORY",
+      "description": "Bó 10 cây",
+      "variants": [
+        {
+          "size": "CĐ",
+          "unit": "CÂY"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294576857_ogj4wz5ht",
+      "name": "Cọ Vẻ Vỉ",
+      "category": "ACCESSORY",
+      "description": "Vỉ 12 cây cọ",
+      "variants": [
+        {
+          "size": "CVV",
+          "unit": "Vỉ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294634808_2bn0mdkkx",
+      "name": "Cọ Bút bó 10 cây",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "Cây"
+        },
+        {
+          "size": "Trung",
+          "unit": "Cây"
+        },
+        {
+          "size": "Lớn",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294687804_fphfck3gt",
+      "name": "Cọ Bút Bộ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "CBB",
+          "unit": "Vỉ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294751374_43onr2kvv",
+      "name": "Lăn Eco Đỏ",
+      "category": "ROLLER",
+      "description": "",
+      "variants": [
+        {
+          "size": "10cm",
+          "unit": "XÂU/10Cây"
+        },
+        {
+          "size": "15cm",
+          "unit": "XÂU/10Cây"
+        },
+        {
+          "size": "23cm",
+          "unit": "XÂU/10Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294816804_aab8540rj",
+      "name": "Lăn Eco Xanh",
+      "category": "ROLLER",
+      "description": "",
+      "variants": [
+        {
+          "size": "10cm",
+          "unit": "XÂU/10Cây"
+        },
+        {
+          "size": "15cm",
+          "unit": "XÂU/10Cây"
+        },
+        {
+          "size": "23cm",
+          "unit": "XÂU/10Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294875978_g8a2w0po1",
+      "name": "Lăn VM ASIA - CÁN ĐỎ ( bó 10 cây)",
+      "category": "ROLLER",
+      "description": "",
+      "variants": [
+        {
+          "size": "23CM",
+          "unit": "XÂU/10Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294927129_jjipw5la3",
+      "name": "VM Xám",
+      "category": "ROLLER",
+      "description": "",
+      "variants": [
+        {
+          "size": "23cm",
+          "unit": "cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765294966893_ewiyda1de",
+      "name": "VM 21",
+      "category": "ROLLER",
+      "description": "",
+      "variants": [
+        {
+          "size": "21cm",
+          "unit": "cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765295008653_nrbziuw36",
+      "name": "VM 15",
+      "category": "ROLLER",
+      "description": "",
+      "variants": [
+        {
+          "size": "15cm",
+          "unit": "cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765295046836_i88nhuf0g",
+      "name": "VM 11",
+      "category": "ROLLER",
+      "description": "",
+      "variants": [
+        {
+          "size": "11cm",
+          "unit": "cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765295099197_p7fb4ociq",
+      "name": "Lăn Mini VM",
+      "category": "ROLLER",
+      "description": "",
+      "variants": [
+        {
+          "size": "3cm",
+          "unit": "XÂU/10Cây"
+        },
+        {
+          "size": "6cm",
+          "unit": "XÂU/10Cây"
+        },
+        {
+          "size": "10cm",
+          "unit": "XÂU/10Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765295183338_yxmcgi6z6",
+      "name": "Lăn Mini VA( Thùng 100 cây)",
+      "category": "ROLLER",
+      "description": "Miễn Ship Toàn Quốc khi mua từ 2 Thùng",
+      "variants": [
+        {
+          "size": "3cm",
+          "unit": "Thùng"
+        },
+        {
+          "size": "6cm",
+          "unit": "Thùng"
+        },
+        {
+          "size": "10cm",
+          "unit": "Thùng"
+        }
+      ]
+    },
+    {
+      "id": "p_1765295379508_r71xm9olg",
+      "name": "Lăn Mini NT( thùng 100 cây)",
+      "category": "ROLLER",
+      "description": "Miễn Ship Toàn Quốc Khi Mua Từ 2 Thùng",
+      "variants": [
+        {
+          "size": "3cm - Cán Đen ",
+          "unit": "Thùng"
+        },
+        {
+          "size": "6cm - Cán Đen",
+          "unit": "Thùng"
+        },
+        {
+          "size": "10cm - Cán Đen",
+          "unit": "Thùng"
+        },
+        {
+          "size": "3cm - Cán Đỏ",
+          "unit": "Thùng"
+        },
+        {
+          "size": "6cm - Cán Đỏ",
+          "unit": "Thùng"
+        },
+        {
+          "size": "10cm - Cán Đỏ",
+          "unit": "Thùng"
+        }
+      ]
+    },
+    {
+      "id": "p_1765295467792_97dih3hcy",
+      "name": "Cây Quậy Đánh Bột",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Lục Giác Đuôi Gài",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765295603353_uvwysgeti",
+      "name": "Thước Nhôm Trắng ( bó 10 cây)",
+      "category": "ACCESSORY",
+      "description": "Bó 10 cây - Chiều Dài 2m\n",
+      "variants": [
+        {
+          "size": "500g",
+          "unit": "Cây"
+        },
+        {
+          "size": "600g",
+          "unit": "Cây"
+        },
+        {
+          "size": "700g",
+          "unit": "Cây"
+        },
+        {
+          "size": "800g",
+          "unit": "Cây"
+        },
+        {
+          "size": "900g",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765295712131_fci5ekk44",
+      "name": "Thước Hồ Nhôm TRẮNG 1M5 ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "THƯỚC NHÔM TRẮNG 1M5",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765295768127_lca8g5ulu",
+      "name": "Thước Hồ Nhôm VÀNG",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "700g",
+          "unit": "Cây"
+        },
+        {
+          "size": "800g",
+          "unit": "Câ0y"
+        },
+        {
+          "size": "900G ",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765295917773_rhz2q2ulm",
+      "name": "Sơn Win",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Mã Thường",
+          "unit": "Thùng"
+        },
+        {
+          "size": "Mã BẠC A300-A226",
+          "unit": "Thùng"
+        },
+        {
+          "size": "Mã Đặc Biệt A100-A228",
+          "unit": "Thùng"
+        }
+      ]
+    },
+    {
+      "id": "p_1765296064586_146uy80vy",
+      "name": "Ke Chữ Thập",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "1 li",
+          "unit": "Bịch"
+        },
+        {
+          "size": "1.5 li",
+          "unit": "Bịch"
+        },
+        {
+          "size": "2 li",
+          "unit": "Bịch"
+        }
+      ]
+    },
+    {
+      "id": "p_1765296138885_apc8xe2hn",
+      "name": "Ke Cân Bằng / Đai Gạch ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "1 li",
+          "unit": "Bịch"
+        },
+        {
+          "size": "1.5 li",
+          "unit": "Bịch "
+        },
+        {
+          "size": "2 li",
+          "unit": "Bịch"
+        }
+      ]
+    },
+    {
+      "id": "p_1765296191002_ys2gqc0d7",
+      "name": "Nêm Gạch",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "NG",
+          "unit": "Bịch"
+        }
+      ]
+    },
+    {
+      "id": "p_1765296234468_j2mtbi8lo",
+      "name": "Ke Chữ T Xoay",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "1.5 li",
+          "unit": "Bịch"
+        }
+      ]
+    },
+    {
+      "id": "p_1765296278179_srr1c0p1p",
+      "name": "Kích Nâng Gạch",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "KNG",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765296319116_5bewvrjbl",
+      "name": "Kìm Rút Nêm Gạch \\",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "KRN",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765296365561_wx1smg7fx",
+      "name": "Gạt Decal",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "Cây"
+        },
+        {
+          "size": "Lớn",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765296413154_nyu3pm9tp",
+      "name": "BỘ Dao Cạo Ron Gạch + 5 lưỡi dao",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "CRG",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765296467996_0ou65ri0x",
+      "name": "Bàn Chà Hồ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Vàng",
+          "unit": "Cái"
+        },
+        {
+          "size": "Đen",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300033208_yl2ebhk06",
+      "name": "Bàn Chà PVC",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "PVC ",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300083623_ulgh9xs5m",
+      "name": "Bàn Chà Gỗ CĂM SE ",
+      "category": "ACCESSORY",
+      "description": "BÓ 10 CÁI",
+      "variants": [
+        {
+          "size": "BCG",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300133520_3b3d4naqs",
+      "name": "Bàn Chà Mít",
+      "category": "ACCESSORY",
+      "description": "Bó 10 cái",
+      "variants": [
+        {
+          "size": "BCM",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300169264_d2ctnbmm1",
+      "name": "Bàn Chà Sắt",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "BCS",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300245719_egr9n3kbd",
+      "name": "BAY TRÉT THÉP ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Không Răng",
+          "unit": "Cái"
+        },
+        {
+          "size": "Có Răng",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300285119_6u6euqka0",
+      "name": "Bàn Chà Nhám ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "BCN",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300317482_ghbehu6p2",
+      "name": ")Bàn Kéo Hồ ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "BKH",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300362224_thhx4xx24",
+      "name": "Súng Silicon Nhựa ABS",
+      "category": "ACCESSORY",
+      "description": "Thùng 30 Cái",
+      "variants": [
+        {
+          "size": "ABS",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300385898_pkcai3kda",
+      "name": "Súng Silicon Rẻ ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Súng",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300459516_yqofgtzzi",
+      "name": "Súng Inox",
+      "category": "ACCESSORY",
+      "description": "Có Dao Cắt Keo",
+      "variants": [
+        {
+          "size": "Súng",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300504849_p3cp1leci",
+      "name": "Súng Silicon Loại Tốt",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Súng",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300548955_crgemh2f7",
+      "name": "SÚNG BẮN KEO 2 THÀNH PHẦN CAM",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Súng",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300617151_nsqlkjo0h",
+      "name": "Keo Ron 2 Thành Phần TMAX",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Tmax",
+          "unit": "Bộ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300657184_d77qdctjv",
+      "name": "Keo Ron 2 Thành Phần QMAX",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Qmax",
+          "unit": "Bộ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300735272_73u9ivw70",
+      "name": "Keo Chà Ron Cá Sấu USA",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "CÁ SẤU",
+          "unit": "Thùng/20GÓI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300826960_agt2vy5ij",
+      "name": "Tắc Ke Nhựa",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "3P",
+          "unit": "Bịch"
+        },
+        {
+          "size": "4P",
+          "unit": "Bịch"
+        },
+        {
+          "size": "5P",
+          "unit": "Bịch"
+        },
+        {
+          "size": "6P",
+          "unit": "Bịch"
+        },
+        {
+          "size": "7P",
+          "unit": "Bịch"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300894904_hm2lwja3h",
+      "name": "Lược Rác Inox 201 - 4zem",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "#60",
+          "unit": "Cái"
+        },
+        {
+          "size": "#90",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765300949216_hos92bswb",
+      "name": "Lược Rác Inox Tự Động - Chống Hôi",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "TĐ",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765301011796_o7523t8ss",
+      "name": "Lược Rác Inox 304 - 1.6li",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "#60",
+          "unit": "Cái"
+        },
+        {
+          "size": "#90",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765301155989_tc9mdkmcg",
+      "name": "Đế Gù Nhựa",
+      "category": "ACCESSORY",
+      "description": "Dán Nhám ",
+      "variants": [
+        {
+          "size": "1T Lỗ Nhỏ",
+          "unit": "Cái"
+        },
+        {
+          "size": "1T Lỗ Lớn",
+          "unit": "Cấi"
+        },
+        {
+          "size": "1T2 Lỗ Nhỏ",
+          "unit": "Cái"
+        },
+        {
+          "size": "1T2 Lỗ Lớn",
+          "unit": "Cái"
+        },
+        {
+          "size": "1T5 Lỗ Lớn ",
+          "unit": "Cái"
+        },
+        {
+          "size": "1T8 Lỗ Nhỏ",
+          "unit": "Cái"
+        },
+        {
+          "size": "1T8 Lỗ Lớn",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765301236239_xystigd4k",
+      "name": "Đế Gù Nhôm",
+      "category": "ACCESSORY",
+      "description": "Dán Nhám",
+      "variants": [
+        {
+          "size": "1T Lỗ Nhỏ",
+          "unit": "Cái"
+        },
+        {
+          "size": "1T Lỗ Lớn",
+          "unit": "Cái"
+        },
+        {
+          "size": "1T2 Lỗ Nhỏ",
+          "unit": "Cái"
+        },
+        {
+          "size": "1T2 Lỗ Lớn",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765328847899_bpjp9z0r8",
+      "name": "Thước Thuỷ Bosi",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "2T",
+          "unit": "5Cây"
+        },
+        {
+          "size": "3T",
+          "unit": "5Cây"
+        },
+        {
+          "size": "4T",
+          "unit": "5Cây"
+        },
+        {
+          "size": "5T",
+          "unit": "5Cây"
+        },
+        {
+          "size": "6T",
+          "unit": "5Cây"
+        },
+        {
+          "size": "8T",
+          "unit": "5Cây"
+        },
+        {
+          "size": "10T",
+          "unit": "5Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765328964285_u9y2p42t1",
+      "name": "LƯỠI CƯA TOP",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Loại Rẻ (10 Cái/H)",
+          "unit": "10Cây"
+        },
+        {
+          "size": "Loại Tốt  (15 Cái/H)",
+          "unit": "15Cây"
+        },
+        {
+          "size": "Loại Sịnh(15 Cái/H)",
+          "unit": "15Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765329060425_b6ttopka5",
+      "name": "CÂY CƯA TOP",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "CT",
+          "unit": "5Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765329109325_4pifapk7u",
+      "name": "Cưa Thạch Cao GF",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Pcs",
+          "unit": "10Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765329154454_89e0ro13n",
+      "name": "Cưa Cán Gỗ 320mm",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Pcs",
+          "unit": "10 Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765329210823_ub79stjgx",
+      "name": "Lưỡi Cưa Tiệp 2M",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "LCT2M",
+          "unit": "HỘP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765329284495_poz8qmeth",
+      "name": "Lưỡi Cưa Xanh 1M",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "LCX",
+          "unit": "HỘP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765329328381_p3tnws5gf",
+      "name": "Sủi Nhựa",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "SN",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765329524547_dwkwr8kod",
+      "name": "Sủi Minh Thuận L3",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Ngắn (thùng 50 cây 11,500/cai)",
+          "unit": "Cây"
+        },
+        {
+          "size": "Dài(thùng 50 cái 12,500/cái)",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765329570808_mmkzq89u9",
+      "name": "Sủi MT L2",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Ngắn (thùng 50 cây giá 12.5)",
+          "unit": "Cây"
+        },
+        {
+          "size": "Dài (thùng 50 cây giá 13.5)",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765329667208_iarxlno0l",
+      "name": "Sủi INOX GF(20cái/hộp)",
+      "category": "ACCESSORY",
+      "description": "20 Cái/H",
+      "variants": [
+        {
+          "size": "Nhỏ ",
+          "unit": "HỘP"
+        },
+        {
+          "size": "Trung ",
+          "unit": "HỘP"
+        },
+        {
+          "size": "Lớn",
+          "unit": "HỘP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765332679078_q8nya5r0g",
+      "name": "Sủi Gỗ Thường",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cây",
+      "variants": [
+        {
+          "size": "Nhỏ ",
+          "unit": "Cây"
+        },
+        {
+          "size": "Trung ",
+          "unit": "Cây"
+        },
+        {
+          "size": "Lớn",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765332725257_wantntsqh",
+      "name": "Sủi Gỗ Tốt",
+      "category": "ACCESSORY",
+      "description": "Bó 10 cây",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "10Cây"
+        },
+        {
+          "size": "Trung",
+          "unit": "10Cây"
+        },
+        {
+          "size": "Lớn",
+          "unit": "10Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765332887331_tzj3kmyvz",
+      "name": "Đục Ốm (Dẹp/Nhọn)",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cây",
+      "variants": [
+        {
+          "size": "Nhọn - 2T",
+          "unit": "CÂY"
+        },
+        {
+          "size": "Nhọn - 2T5",
+          "unit": "CÂY"
+        },
+        {
+          "size": "Nhọn - 3T",
+          "unit": "CÂY"
+        },
+        {
+          "size": "Dẹp - 2T",
+          "unit": "CÂY"
+        },
+        {
+          "size": "Dẹp - 2T5",
+          "unit": "CÂY"
+        },
+        {
+          "size": "Dẹp - 3T",
+          "unit": "CÂY"
+        }
+      ]
+    },
+    {
+      "id": "p_1765332985036_56zku7ome",
+      "name": "Đục Mập (Dẹp/Nhọn)",
+      "category": "ACCESSORY",
+      "description": "BÓ 10 CÂY",
+      "variants": [
+        {
+          "size": "Nhọn - 2T",
+          "unit": "CÂY"
+        },
+        {
+          "size": "Nhọn - 2T5",
+          "unit": "CÂY"
+        },
+        {
+          "size": "Nhọn - 3T",
+          "unit": "CÂY"
+        },
+        {
+          "size": "Dẹp - 2T",
+          "unit": "CÂY"
+        },
+        {
+          "size": "Dẹp - 2T5",
+          "unit": "CÂY"
+        },
+        {
+          "size": "Dẹp - 3T",
+          "unit": "CÂY"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333052757_ezdur74zg",
+      "name": "Càng Cua",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cây",
+      "variants": [
+        {
+          "size": "6-8",
+          "unit": "10Cây"
+        },
+        {
+          "size": "8-10",
+          "unit": "10Cây"
+        },
+        {
+          "size": "10-12",
+          "unit": "10Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333143733_ks2rnp9rj",
+      "name": "Miếng Trét Thép",
+      "category": "ACCESSORY",
+      "description": "Bịch 10 Cái",
+      "variants": [
+        {
+          "size": "Số 1",
+          "unit": "Bịch"
+        },
+        {
+          "size": "Số 2",
+          "unit": "Bịch"
+        },
+        {
+          "size": "Số 3",
+          "unit": "Bịch"
+        },
+        {
+          "size": "Số 4",
+          "unit": "Bịch"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333274689_8vgqq51bp",
+      "name": "Miếng Trét Nhựa",
+      "category": "ACCESSORY",
+      "description": "Hộp 100 Cái",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "Hộp"
+        },
+        {
+          "size": "Lớn",
+          "unit": "Hộp"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333335972_8g1ny290h",
+      "name": "Bàn Chải Gỗ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "5 Hàng",
+          "unit": "Cây"
+        },
+        {
+          "size": "7 Hàng",
+          "unit": "Cây"
+        },
+        {
+          "size": "Vuông",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333409734_ct9nimpmr",
+      "name": "Bàn Chải Gỗ Thau",
+      "category": "ACCESSORY",
+      "description": "Hộp 12 Cái",
+      "variants": [
+        {
+          "size": "5 Hàng",
+          "unit": "Hộp"
+        },
+        {
+          "size": "7 Hàng",
+          "unit": "Hộp"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333462143_1nl8zmt1r",
+      "name": "Bàn Chải Nhựa Đen",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "Cây"
+        },
+        {
+          "size": "Bầu",
+          "unit": "Cây"
+        },
+        {
+          "size": "Vuông",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333500293_p2h3clpv2",
+      "name": "Bàn Chải Cán Đỏ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "BCĐ",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333538831_rj8qtn7of",
+      "name": "Dao Rọc Giấy Thường",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "DRG",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333574499_e148yjq4b",
+      "name": "Dao Rọc Giấy 3 MÀU CAO CẤP",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "DRG",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333625760_6usknpbyx",
+      "name": "Lưỡi Dao Sư Tử",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "ST",
+          "unit": "Hộp"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333682644_u19k7zrou",
+      "name": "Đá Mài TQ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "ĐM",
+          "unit": "Viên"
+        }
+      ]
+    },
+    {
+      "id": "p_1765333779382_aqvwnktbw",
+      "name": "Đá Mài Mọi ",
+      "category": "ACCESSORY",
+      "description": "Hộp 10 Viên",
+      "variants": [
+        {
+          "size": "MỌI 1",
+          "unit": " Viên"
+        },
+        {
+          "size": "MỌI 2",
+          "unit": " Viên "
+        }
+      ]
+    },
+    {
+      "id": "p_1765333837241_mgsin0kvn",
+      "name": "Đá Mài KODO",
+      "category": "ACCESSORY",
+      "description": "Hộp 10 Viên",
+      "variants": [
+        {
+          "size": "KODO",
+          "unit": "Viên"
+        }
+      ]
+    },
+    {
+      "id": "p_1765334158372_bv91pvvek",
+      "name": "Bay tốt Thái mỹ",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cây",
+      "variants": [
+        {
+          "size": "Bầu Nhọn",
+          "unit": "Bó"
+        },
+        {
+          "size": "Lá Đề",
+          "unit": "Bó"
+        },
+        {
+          "size": "Răng Cưa",
+          "unit": "Bó"
+        },
+        {
+          "size": "Vuông",
+          "unit": "Bó"
+        },
+        {
+          "size": "Bay Tô",
+          "unit": "Bó"
+        }
+      ]
+    },
+    {
+      "id": "p_1765334552619_xvwtetymx",
+      "name": "Bay CD",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cái",
+      "variants": [
+        {
+          "size": "4P",
+          "unit": "CÁI"
+        },
+        {
+          "size": "6P",
+          "unit": "CÁI"
+        },
+        {
+          "size": "8P",
+          "unit": "CÁI"
+        },
+        {
+          "size": "10P",
+          "unit": "CÁI"
+        },
+        {
+          "size": "Vuông",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765334610025_jn4evj2p3",
+      "name": "Búa Cao Su",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Trung",
+          "unit": "Cây"
+        },
+        {
+          "size": "Lớn",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765334695940_jz8jpyy7t",
+      "name": "Búa Cao Su Cán Sắt",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "Nhỏ Ø25",
+          "unit": "Cây"
+        },
+        {
+          "size": "Trung Ø30",
+          "unit": "Cây"
+        },
+        {
+          "size": "Lớn Ø35",
+          "unit": "Cây"
+        },
+        {
+          "size": "Đại Ø40",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765334815510_aax78x2jv",
+      "name": "Thước GF 2Mặt( hộp 12 cái)",
+      "category": "ACCESSORY",
+      "description": "Hộp 12 Cái",
+      "variants": [
+        {
+          "size": "5m",
+          "unit": "Cái "
+        },
+        {
+          "size": "7m5",
+          "unit": "Cái"
+        },
+        {
+          "size": "10m",
+          "unit": "Cái "
+        }
+      ]
+    },
+    {
+      "id": "p_1765334914437_4bnzwun29",
+      "name": "Eke Thanh Khiết Thường",
+      "category": "ACCESSORY",
+      "description": "XÂU 10 CẶP",
+      "variants": [
+        {
+          "size": "2T",
+          "unit": "CẶP"
+        },
+        {
+          "size": "2T5",
+          "unit": "CẶP"
+        },
+        {
+          "size": "3T",
+          "unit": "CẶP"
+        },
+        {
+          "size": "3T5",
+          "unit": "CẶP"
+        },
+        {
+          "size": "4T",
+          "unit": "CẶP"
+        },
+        {
+          "size": "4T5",
+          "unit": "CẶP"
+        },
+        {
+          "size": "5T",
+          "unit": "CẶP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765335037755_qqs8wuesy",
+      "name": "EKE DÀY",
+      "category": "ACCESSORY",
+      "description": "XÂU 10 CẶP",
+      "variants": [
+        {
+          "size": "2T",
+          "unit": "CẶP"
+        },
+        {
+          "size": "2T5",
+          "unit": "CẶP"
+        },
+        {
+          "size": "3T",
+          "unit": "CẶP"
+        },
+        {
+          "size": "3T5",
+          "unit": "CẶP"
+        },
+        {
+          "size": "4T",
+          "unit": "CẶP"
+        },
+        {
+          "size": "4T5",
+          "unit": "CẶP"
+        },
+        {
+          "size": "5T ",
+          "unit": "CẶP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765335140930_qfw78emia",
+      "name": "EKE MÁY LẠNH",
+      "category": "ACCESSORY",
+      "description": "Xâu 10 Cặp - CÓ ỐC\n",
+      "variants": [
+        {
+          "size": "4T ",
+          "unit": "CẶP"
+        },
+        {
+          "size": "4T5 - 1N5",
+          "unit": "CẶP"
+        },
+        {
+          "size": "5T",
+          "unit": "CẶP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765335255613_1pp8sup8z",
+      "name": "Móc Quần Áo",
+      "category": "ACCESSORY",
+      "description": "Bó 10 Cái",
+      "variants": [
+        {
+          "size": "6 Móc",
+          "unit": "Cái"
+        },
+        {
+          "size": "7 Móc",
+          "unit": "Cái"
+        },
+        {
+          "size": "8 Móc",
+          "unit": "Cái"
+        },
+        {
+          "size": "9 Móc",
+          "unit": "Cái"
+        },
+        {
+          "size": "10 Móc",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765335612135_85p6ujwxy",
+      "name": "Chén Cước Tốt ",
+      "category": "ACCESSORY",
+      "description": "Cái",
+      "variants": [
+        {
+          "size": "CCT",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765335698444_ailwz0ehs",
+      "name": "Nhợ Cá 100g ",
+      "category": "DAY_DU",
+      "description": "Vỉ 5 Cuộn",
+      "variants": [
+        {
+          "size": "100g",
+          "unit": "Vỉ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765335741846_ff3irktpu",
+      "name": "Nhợ Cá 200g ",
+      "category": "DAY_DU",
+      "description": "Vỉ 5 Cuộn",
+      "variants": [
+        {
+          "size": "200g",
+          "unit": "Vỉ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765335780377_15ilitt9d",
+      "name": "Nhợ Cá 500g ",
+      "category": "DAY_DU",
+      "description": "Vỉ 5 Cuộn",
+      "variants": [
+        {
+          "size": "500g",
+          "unit": "Vỉ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765335817651_lyhkh2442",
+      "name": "Chỉ May Bao giá sỉ bao 57,5/kg",
+      "category": "DAY_DU",
+      "description": "",
+      "variants": [
+        {
+          "size": "CMB",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765335916200_ic9jqutl9",
+      "name": "DÙ VÕNG ",
+      "category": "DAY_DU",
+      "description": "",
+      "variants": [
+        {
+          "size": "1Kg - Bảng 1.5cm",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "1.5Kg - Bảng 2cm",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "2Kg -Bảng 2.5cm",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765335965814_2q4o1rrxw",
+      "name": "DÂY THỪNG LOẠI 1",
+      "category": "DAY_DU",
+      "description": "",
+      "variants": [
+        {
+          "size": "Xanh 8li",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765336027619_pscrtz29v",
+      "name": "DÂY MÈ ",
+      "category": "DAY_DU",
+      "description": "",
+      "variants": [
+        {
+          "size": "Mè Nhỏ - 24m",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "Mè Lớn - 21m",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765336096207_icx749ze7",
+      "name": "DÂY TRÒN XANH",
+      "category": "DAY_DU",
+      "description": "",
+      "variants": [
+        {
+          "size": "NHỎ - 21m",
+          "unit": "Cuộn "
+        },
+        {
+          "size": "LỚN - 18m",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765336179743_wo9f5c7w5",
+      "name": "Dây Rít",
+      "category": "DAY_DU",
+      "description": "Dây rít từ 4li->30li",
+      "variants": [
+        {
+          "size": "Dưới 6li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "Trên 6li",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765336242024_0xj0hrsh3",
+      "name": "Nilong - 7Màu",
+      "category": "DAY_DU",
+      "description": "10 Cuộn 1 Cây",
+      "variants": [
+        {
+          "size": "NL 25g",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765336320226_dmy7y3zhy",
+      "name": "Nilong - Cây",
+      "category": "DAY_DU",
+      "description": "10 Cuộn 1 Cây",
+      "variants": [
+        {
+          "size": "NL",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765336574031_3nys71zar",
+      "name": "Bành Cam",
+      "category": "DAY_DU",
+      "description": "Số kí nhân số tiền ra giá cuộn",
+      "variants": [
+        {
+          "size": "3P - 7.5KG (100m)",
+          "unit": "KG"
+        },
+        {
+          "size": "4P - 10KG (100m)",
+          "unit": "KG"
+        },
+        {
+          "size": "5P - 12.5KG (100m)",
+          "unit": "KG"
+        },
+        {
+          "size": "6P - 15KG (100m)",
+          "unit": "KG"
+        },
+        {
+          "size": "3P - 15KG (200m)",
+          "unit": "KG"
+        },
+        {
+          "size": "4P - 20KG (200m)",
+          "unit": "KG"
+        },
+        {
+          "size": "5P - 25KG 200m)",
+          "unit": "KG"
+        },
+        {
+          "size": "6P -30KG (200m)",
+          "unit": "KG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765336894681_al9ocluvv",
+      "name": "Dây Bô Hải Âu",
+      "category": "DAY_BO",
+      "description": "Số kí tương đối, cân trọng lượng thực tế tính tiền",
+      "variants": [
+        {
+          "size": "3li - 1KG",
+          "unit": "KG"
+        },
+        {
+          "size": "4li - 2KG",
+          "unit": "KG"
+        },
+        {
+          "size": "5li - 3KG",
+          "unit": "KG"
+        },
+        {
+          "size": "6li - 4KG",
+          "unit": "KG"
+        },
+        {
+          "size": "7li - 6.3KG",
+          "unit": "KG"
+        },
+        {
+          "size": "8li - 8KG",
+          "unit": "KG"
+        },
+        {
+          "size": "10li - 12.3KG",
+          "unit": "KG"
+        },
+        {
+          "size": "12li - 18KG",
+          "unit": "KG"
+        },
+        {
+          "size": "18li - 40KG",
+          "unit": "KG"
+        },
+        {
+          "size": "20li - 42KG",
+          "unit": "KG"
+        },
+        {
+          "size": "22li - 52KG",
+          "unit": "KG"
+        },
+        {
+          "size": "24li -62KG",
+          "unit": "KG"
+        },
+        {
+          "size": "26li - 72KG",
+          "unit": "KG"
+        },
+        {
+          "size": "30LI -  100KG",
+          "unit": "KG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765336973137_knzq9n2ug",
+      "name": "Dây Ruột Gà Trắng",
+      "category": "DAY_DU",
+      "description": "100M",
+      "variants": [
+        {
+          "size": "RGT",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765337017988_af5mahz8y",
+      "name": "Dây Ruột Gà Vàng",
+      "category": "DAY_DU",
+      "description": "100M",
+      "variants": [
+        {
+          "size": "RGV",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765337096909_dbe4uhfut",
+      "name": "Dây Ràng Dẹp 1,8M",
+      "category": "DAY_DU",
+      "description": "50 SỢI / BÓ",
+      "variants": [
+        {
+          "size": "DRD",
+          "unit": "Bó"
+        }
+      ]
+    },
+    {
+      "id": "p_1765337145589_xrs4iqmww",
+      "name": "Dây Ràng Sọc Rẻ",
+      "category": "DAY_DU",
+      "description": "50 SỢI/BÓ",
+      "variants": [
+        {
+          "size": "DRDR",
+          "unit": "Bó"
+        }
+      ]
+    },
+    {
+      "id": "p_1765337206653_1aj9jwc0z",
+      "name": "Dây Ràng Sọc Tốt - 1.6m",
+      "category": "DAY_DU",
+      "description": "50 Sợi/Bó",
+      "variants": [
+        {
+          "size": "DRST",
+          "unit": "Bó"
+        }
+      ]
+    },
+    {
+      "id": "p_1765337268880_ahgqoweyc",
+      "name": "Dây Ràng Dẹp Thái Thường 1.6m",
+      "category": "DAY_DU",
+      "description": "50 Sợi/Bó",
+      "variants": [
+        {
+          "size": "DRDT",
+          "unit": "Bó"
+        }
+      ]
+    },
+    {
+      "id": "p_1765337322590_4d7ra1a0k",
+      "name": "Dây Ràng Dẹp Thái Xịn 1.8m",
+      "category": "DAY_DU",
+      "description": "50 Sợi/Bó",
+      "variants": [
+        {
+          "size": "DRDT",
+          "unit": "Bó"
+        }
+      ]
+    },
+    {
+      "id": "p_1765337440075_8jz9m5wzc",
+      "name": "NHÁM JB5",
+      "category": "NHAM",
+      "description": "Nhám cuộn JB5\n(A60, 80, 100,\n120, 150, 180, 240, 320,\n400, 600, 800, ...)",
+      "variants": [
+        {
+          "size": "10CM - 40m",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "15CM - 45m",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "20CM - 45m",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "#40 - 10CM (ĐB) - 40m",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765337633734_xmr3l2quu",
+      "name": "Nhám Con Ó",
+      "category": "NHAM",
+      "description": "Nhám cuộn Ó Số                 (AA36, 40, 60, 80, 100,\n120, 150, 180, 240, 320,\n400)",
+      "variants": [
+        {
+          "size": "10CM - 45m",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "15CM - 45m",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "20CM - 45m",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765337835260_whdu1a5ze",
+      "name": "Nhám K51",
+      "category": "NHAM",
+      "description": "Nhám cuộn K51                 (AA36, 40, 60, 80, 100,\n120, 150, 180, 240, 320)",
+      "variants": [
+        {
+          "size": "10CM (AA36)",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "10CM (AA40)",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "10CM (AA60)",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "10CM (AA80 TRỞ LÊN)",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "15CM (AA36)",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "15CM (AA40)",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "15CM (AA60)",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "15CM (AA80 TRỞ LÊN)",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "20CM(AA36)",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "20CM(AA40)",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "20CM(AA60)",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "20CM(AA80 TRỞ LÊN)",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765337980715_c6tc3p7bp",
+      "name": "Nhám Tròn",
+      "category": "NHAM",
+      "description": "(AA40, 60, 80,\n100, 120,\n150, 180, 240, 320, , ...)",
+      "variants": [
+        {
+          "size": "1T",
+          "unit": "Hộp"
+        },
+        {
+          "size": "1T2",
+          "unit": "Hộp"
+        },
+        {
+          "size": "1T8",
+          "unit": "Hộp"
+        },
+        {
+          "size": "2T3",
+          "unit": "Hộp"
+        }
+      ]
+    },
+    {
+      "id": "p_1765338101143_dh7lu177w",
+      "name": "Nhám Nhật Kovax Đen",
+      "category": "NHAM",
+      "description": "",
+      "variants": [
+        {
+          "size": "100",
+          "unit": "Xấp"
+        },
+        {
+          "size": "120",
+          "unit": "Xấp"
+        },
+        {
+          "size": "150",
+          "unit": "Xấp"
+        },
+        {
+          "size": "180-800",
+          "unit": "Xấp"
+        },
+        {
+          "size": "1000",
+          "unit": "Xấp"
+        },
+        {
+          "size": "1200",
+          "unit": "Xấp"
+        },
+        {
+          "size": "1500",
+          "unit": "Xấp"
+        },
+        {
+          "size": "2000",
+          "unit": "Xấp"
+        }
+      ]
+    },
+    {
+      "id": "p_1765344330102_t13bzw42y",
+      "name": "NHÁM ĐEN EAGLE MAX",
+      "category": "NHAM",
+      "description": "",
+      "variants": [
+        {
+          "size": "80",
+          "unit": "Xấp"
+        },
+        {
+          "size": "100",
+          "unit": "Xấp"
+        },
+        {
+          "size": "120",
+          "unit": "Xấp"
+        },
+        {
+          "size": "150",
+          "unit": "Xấp"
+        },
+        {
+          "size": "180-800",
+          "unit": "Xấp"
+        },
+        {
+          "size": "1000",
+          "unit": "Xấp"
+        },
+        {
+          "size": "1200",
+          "unit": "Xấp"
+        },
+        {
+          "size": "2000",
+          "unit": "Xấp"
+        }
+      ]
+    },
+    {
+      "id": "p_1765344510434_8ffx2zrjw",
+      "name": "Nhám TQ",
+      "category": "NHAM",
+      "description": "NHÁM TRUNG QUỐC      (AA80, 100, 120.150,180,240,320)",
+      "variants": [
+        {
+          "size": "NHÁM TQ",
+          "unit": "XẤP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765344719449_be2wyedjf",
+      "name": "NHÁM KOVAX TRẮNG",
+      "category": "NHAM",
+      "description": "",
+      "variants": [
+        {
+          "size": "#180->#240",
+          "unit": "XẤP"
+        },
+        {
+          "size": "#320.#400.#600",
+          "unit": "XẤP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765344845234_ar8b98gts",
+      "name": "NHÁM TRẮNG CAPTAIN",
+      "category": "NHAM",
+      "description": "",
+      "variants": [
+        {
+          "size": "NCP",
+          "unit": "XẤP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765344904401_ilppgjwip",
+      "name": "NHÁM NHẬT SANKYO L1 ",
+      "category": "NHAM",
+      "description": "(AA120,150,180,220,240,280,320,400,600,800)",
+      "variants": [
+        {
+          "size": "SANKYO",
+          "unit": "XẤP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765344950750_l9p6x3hpr",
+      "name": "NHÁM FM",
+      "category": "NHAM",
+      "description": "(AA120, 150,180,220,240,...)",
+      "variants": [
+        {
+          "size": "FM( 120)",
+          "unit": "XẤP"
+        },
+        {
+          "size": "FM TỪ 180",
+          "unit": "XÂP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765345262462_jh597d4c3",
+      "name": "NHÁM SMS  ",
+      "category": "NHAM",
+      "description": "(AA120,150,180,220,240,280,320,400,600,800)",
+      "variants": [
+        {
+          "size": "SMS",
+          "unit": "Xấp"
+        }
+      ]
+    },
+    {
+      "id": "p_1765345321736_m3pf08bo4",
+      "name": "CAPTION ĐỎ ",
+      "category": "NHAM",
+      "description": "(AA100, 120, 150, 180,\n240, …) Xấp 50 TỜ",
+      "variants": [
+        {
+          "size": "CPD",
+          "unit": "Xấp"
+        }
+      ]
+    },
+    {
+      "id": "p_1765345390848_8fqfm1184",
+      "name": "ĐÁ CẮT 1T COROLLA HÀNG CTY",
+      "category": "NHAM",
+      "description": "100 LƯỠI / HỘP - HÀNG CHUẨN CTY",
+      "variants": [
+        {
+          "size": "COROLLA ",
+          "unit": "HỘP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765345500928_refcrkhn8",
+      "name": "NHÁM XẾP",
+      "category": "NHAM",
+      "description": "(AA40, 60, 80, 100, 120,\n150, 180, 240, 320, …)",
+      "variants": [
+        {
+          "size": "RẺ",
+          "unit": "CÂY"
+        },
+        {
+          "size": "TỐT",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765345611437_go8si85sj",
+      "name": "NHÁM VẢI",
+      "category": "NHAM",
+      "description": "",
+      "variants": [
+        {
+          "size": "No.0",
+          "unit": "Xấp"
+        },
+        {
+          "size": "No.1",
+          "unit": "Xấp"
+        },
+        {
+          "size": "No.2",
+          "unit": "Xấp"
+        },
+        {
+          "size": "No.3",
+          "unit": "Xấp"
+        }
+      ]
+    },
+    {
+      "id": "p_1765345736799_15ey32387",
+      "name": "NHÁM TĂNG",
+      "category": "NHAM",
+      "description": "HỘP 10 DÂY",
+      "variants": [
+        {
+          "size": "NHÁM TĂNG TQ",
+          "unit": "HỘP"
+        },
+        {
+          "size": "NHÁM TĂNG NAI CAM",
+          "unit": "HỘP"
+        },
+        {
+          "size": "NHÁM TĂNG NAI XANH ",
+          "unit": "HỘP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765345811895_1fhmye65i",
+      "name": "BĂNG KEO ĐIỆN NANO NAI",
+      "category": "BANG_KEO",
+      "description": "ĐI NGUYÊN THÙNG 50 CÂY",
+      "variants": [
+        {
+          "size": "10yard THÙNG 50 CÂY",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "20yard THÙNG 50 CÂY",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "30yard/ THÙNG 40 CÂY",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765345872364_2wc7bzgvh",
+      "name": "BĂNG KEO LƯỚI",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "NHỎ",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "TRUNG",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "LỚN",
+          "unit": "CUỘN"
+        }
+      ]
+    },
+    {
+      "id": "p_1765345950845_h0v9q84mh",
+      "name": "BĂNG KEO ĐỤC",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "100yard -1kg",
+          "unit": "Cây"
+        },
+        {
+          "size": "200yard - 1.7kg",
+          "unit": "Cây"
+        },
+        {
+          "size": "300yard - 2kg ",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346014503_lgj1f2ss4",
+      "name": "BĂNG KEO TRONG",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "100yard - 1kg ",
+          "unit": "Cây"
+        },
+        {
+          "size": "200yard - 1.7kg",
+          "unit": "Cây"
+        },
+        {
+          "size": "300yard - 2kg",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346135694_995x91y6p",
+      "name": "BĂNG KEO TRONG 2MẶT",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "1F2 - 10YARD",
+          "unit": "Cây"
+        },
+        {
+          "size": "2F4 - 10YARD",
+          "unit": "Cây"
+        },
+        {
+          "size": "5F - 10YARD",
+          "unit": "Cây"
+        },
+        {
+          "size": "1F2 - 20YARD",
+          "unit": "Cây"
+        },
+        {
+          "size": "2F4 - 20YARD",
+          "unit": "Cây"
+        },
+        {
+          "size": "5F - 20YARD",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346254748_jtd1fx8s1",
+      "name": "BĂNG KEO GIẤY",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "2F4 - 10YARD",
+          "unit": "Cây"
+        },
+        {
+          "size": "5F - 10YARD",
+          "unit": "Cây"
+        },
+        {
+          "size": "2F4 - 20YARD",
+          "unit": "Cây"
+        },
+        {
+          "size": "5F - 20YARD",
+          "unit": "Cây"
+        },
+        {
+          "size": "2F4 - 30YARD 25M",
+          "unit": "Cây"
+        },
+        {
+          "size": "5F - 30YARD 25M",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346371741_enn9lrjdy",
+      "name": "BĂNG KEO XỐP ",
+      "category": "BANG_KEO",
+      "description": "CÓ 2 MÀU XANH VÀ ĐỎ",
+      "variants": [
+        {
+          "size": "1F2",
+          "unit": "Cây"
+        },
+        {
+          "size": "1F5",
+          "unit": "Cây"
+        },
+        {
+          "size": "2F",
+          "unit": "Cây"
+        },
+        {
+          "size": "2F4",
+          "unit": "Cây"
+        },
+        {
+          "size": "5F",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346435631_zu4xumbm9",
+      "name": "BĂNG KEO XỐP TRẮNG",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "1F2",
+          "unit": "Cây"
+        },
+        {
+          "size": "2F4",
+          "unit": "Cây"
+        },
+        {
+          "size": "5F",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346659483_qgr3lbpy1",
+      "name": "BĂNG KEO CHỐNG DỘT - X2000",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "5P - 36 CUỘN",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "10P - 18 CUỘN",
+          "unit": "THÙNG "
+        },
+        {
+          "size": "15P - 12CUỘN",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "20P - 9 CUỘN",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346734545_vjc9i9557",
+      "name": "BĂNG KEO CHỐNG DỘT - NANO",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "5P - 36 CUỘN",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "10P - 18 CUỘN",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "15P - 12 CUỘN",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "20P - 9 CUỘN",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346780081_bqaxpdzcc",
+      "name": "BĂNG KEO SIÊU DÍNH",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "2F",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "2F4",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "1F2",
+          "unit": "Cây"
+        },
+        {
+          "size": "3F",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346813787_64ox40e1r",
+      "name": "DÂY CẢNH BÁO (bao 25 cuộn giá 22.500/cuon) ( có hd)",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "DCB",
+          "unit": "CUỘN"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346851880_9ta7up9pa",
+      "name": "BĂNG KEO CHỐNG TRƯỢT",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "BKCT",
+          "unit": "CUỘN"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346895589_gghos5sut",
+      "name": "BĂNG KEO PHẢN QUANG",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "BKPQ",
+          "unit": "CUỘN"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346943829_t4mhtkqs7",
+      "name": "BĂNG KEO DÁN BẠT",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "5F 7M ",
+          "unit": "Cây"
+        },
+        {
+          "size": "7F 7M",
+          "unit": "Cây"
+        },
+        {
+          "size": "10F 7M ",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765346994880_k6kyia1bk",
+      "name": "DỤNG CỤ CẮT KEO",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "SẮT 5p",
+          "unit": "CÁI"
+        },
+        {
+          "size": "NHỰA 5p",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765347171842_5hww3u6jm",
+      "name": "ỐNG TIO ( nguyên liệu nhựa nguyên sinh )",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "4li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "5li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "6li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "7li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "8li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "10li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "12li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "14li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "16li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "18li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "20li",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "25li",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765347241705_ooidv8na4",
+      "name": "ỐNG TIO ĐEN",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "5li/5KI 1 CUỘN",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "6li/5KI 1 CUỘN",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "8li /5KI 1 CUỘN",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "10li/ 5KI 1 CUỘN",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765347312202_btp1tnxfd",
+      "name": "ỐNG LDPE",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "5m*7m",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "6m*8m",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "8m*10m",
+          "unit": "Cuộn"
+        },
+        {
+          "size": "10m*12m",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765347567321_jex8xb0bc",
+      "name": "BẠT ỐNG BƠM NƯỚC(GIA LỢI TỐT)",
+      "category": "ACCESSORY",
+      "description": "100M/CUỘN",
+      "variants": [
+        {
+          "size": "1T",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "1T2",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "1T3",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "1T4",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "1T5",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "1T6",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "2T",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "2T2",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "2T5",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "2T6",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "2T7",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "3T",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "3T2",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "3T5",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "4T",
+          "unit": "CUỘN "
+        },
+        {
+          "size": "4T2",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "4T5",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "4T8",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "5T",
+          "unit": "CUỘN"
+        }
+      ]
+    },
+    {
+      "id": "p_1765347655060_hg534qd5k",
+      "name": "XANH CAM THƯỜNG",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "4M-28KG",
+          "unit": "Cây"
+        },
+        {
+          "size": "4M-30KG",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765347710986_gmpspznwj",
+      "name": "XANH CAM XỊNH HÀN QUỐC",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "4M -34KG",
+          "unit": "Cây"
+        },
+        {
+          "size": "6M-51KG",
+          "unit": "Cây"
+        },
+        {
+          "size": "8M-68KG",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765347771204_1y8poi67o",
+      "name": "BẠT SỌC",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "3M8",
+          "unit": "Cây"
+        },
+        {
+          "size": "4M",
+          "unit": "Cây"
+        },
+        {
+          "size": "6M",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765348024582_34sds7r71",
+      "name": "KÉO CÁ",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "KÉO CÁ NHỎ A3 (ĐEN)",
+          "unit": "LỐC 10 CÂY"
+        },
+        {
+          "size": "KÉO CÁ TRUNG A2 (ĐEN)",
+          "unit": "LỐC 10 CÂY"
+        },
+        {
+          "size": "KÉO CÁ LỚN A1 (ĐEN)",
+          "unit": "LỐC 10 CÂY"
+        },
+        {
+          "size": "KÉO CÁ LỚN (XANH)",
+          "unit": "LỐC 10 CÂY"
+        },
+        {
+          "size": "KÉO CÁ ĐẠI (XANH)",
+          "unit": "LỐC 10 CÂY"
+        }
+      ]
+    },
+    {
+      "id": "p_1765348100969_p6aoosn4v",
+      "name": "KÉO VĂN PHÒNG PHẨM",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "KVPP",
+          "unit": "25 CÂY"
+        }
+      ]
+    },
+    {
+      "id": "p_1765348140523_vz7i0barr",
+      "name": "KÉO NHÀ BẾP",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "KNB",
+          "unit": "25 CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765348198963_gm6t0pq0x",
+      "name": "KÉO CẮT VẢI",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "KÉO CẮT VẢI 036",
+          "unit": "6 Cây"
+        },
+        {
+          "size": "KÉO CẮT VẢI 037",
+          "unit": "6 Cây"
+        },
+        {
+          "size": "KÉO CẮT VẢI 038",
+          "unit": "6 Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765348261693_mpo89999b",
+      "name": "KÉO VÀNG",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "KÉO VÀNG p1( 1T4)",
+          "unit": "12 Cây"
+        },
+        {
+          "size": "KÉO VÀNG p2( 1T2)",
+          "unit": "12 Cây"
+        },
+        {
+          "size": "KÉO VÀNG p*( 1T8)",
+          "unit": "12 Cây "
+        }
+      ]
+    },
+    {
+      "id": "p_1765348304274_obimgqjg5",
+      "name": "KÉO INOX SK5 ",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "LỚN",
+          "unit": "12 CÂY"
+        }
+      ]
+    },
+    {
+      "id": "p_1765348363632_etu9lwdvu",
+      "name": "KÉO RỒNG",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "NHỎ",
+          "unit": "12 Cây"
+        },
+        {
+          "size": "TRUNG",
+          "unit": "12 Cây"
+        },
+        {
+          "size": "LỚN",
+          "unit": "12 Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765348425319_ps96jo96m",
+      "name": "KÉO TỈA CÀNH LOẠI 1",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "KTC",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765348469426_8v95n0a2f",
+      "name": "CÀNH BÓP",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "3M",
+          "unit": "Cây"
+        },
+        {
+          "size": "4M",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765348533966_ijalt8ys2",
+      "name": "LƯỠI CẮT GẠCH ĐA NĂNG GF",
+      "category": "ACCESSORY",
+      "description": "HỘP 25 LƯỠI\n",
+      "variants": [
+        {
+          "size": "GF",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765348575530_ujkfqynz4",
+      "name": "LƯỠI CẮT CỎ KATANA 255MM",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": " 255mm",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351299502_r4frpji32",
+      "name": "KHOÁ BẤM THÉP SƠN TĨNH ĐIỆN",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "4 PHÂN",
+          "unit": "XÂU/5CÁI"
+        },
+        {
+          "size": "5 PHÂN",
+          "unit": "XÂU/5CÁI"
+        },
+        {
+          "size": "5 PHÂN CÀNG DÀI",
+          "unit": "XÂU/5CÁI"
+        },
+        {
+          "size": "6 PHÂN",
+          "unit": "XÂU/5CÁI"
+        },
+        {
+          "size": "6 PHÂN CÀNG DÀI",
+          "unit": "XÂU/5CÁI"
+        },
+        {
+          "size": "7 PHÂN",
+          "unit": "XÂU/5CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351367585_ade64jp3z",
+      "name": "KHOÁ BẤM THÉP RÚT CHÌA",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "HỘP 36 CÁI TẶNG 2 CÁI - KHÔNG LẺ",
+      "variants": [
+        {
+          "size": "4 PHÂN",
+          "unit": "CÁI"
+        },
+        {
+          "size": "5 PHÂN",
+          "unit": "CÁI"
+        },
+        {
+          "size": "6 PHÂN",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351404184_xehnzrk60",
+      "name": "KHOÁ VALI",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "KVL",
+          "unit": "XÂU/10CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351441538_fffxgp43x",
+      "name": "KHOÁ DÂY CÁP CHỐNG TRỘM",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "XÂU 5 CÁI",
+      "variants": [
+        {
+          "size": "KD",
+          "unit": "cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351479589_hydl87j0l",
+      "name": "KHOÁ DÂY 4 SỐ",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "LỐC 5 CÁI",
+      "variants": [
+        {
+          "size": "K4S",
+          "unit": "LỐC/5CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351520393_01iuuaupq",
+      "name": "KHOÁ GF VÒNG 4 SỐ",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "LỐC/5CÁI",
+      "variants": [
+        {
+          "size": "KU4",
+          "unit": "LỐC/5CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351556788_1hr5v6qk7",
+      "name": "KHOÁ ZANI - DOLOCK",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "CÒ DÀI",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351593017_ox90olol9",
+      "name": "KHOÁ TAY CẦM GF",
+      "category": "KEO,_LUOI_CAT_&_KHOA",
+      "description": "",
+      "variants": [
+        {
+          "size": "KTC",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351672039_3znvi81fc",
+      "name": "BÚA GF (CHỐNG TRƯỢT + NAM CHÂM)",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "NHỎ 0.25 (hộp 10 cái )",
+          "unit": "Cái"
+        },
+        {
+          "size": "TRUNG 0.5 ( hộp 10 cái )",
+          "unit": "Cái"
+        },
+        {
+          "size": "LỚN 0.75 ( hộp 6 cái)",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351773721_6xkxgql1m",
+      "name": "MŨI KHOAN THÁP",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "NHỎ",
+          "unit": "Cây"
+        },
+        {
+          "size": "TRUNG",
+          "unit": "Cây"
+        },
+        {
+          "size": "LỚN",
+          "unit": "Cây"
+        },
+        {
+          "size": "BỘ 3 N+T+L",
+          "unit": "BỘ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351855644_ow2mqjt3g",
+      "name": "MŨI BẮN VÍT CÓ NẮP CHỤP",
+      "category": "ACCESSORY",
+      "description": "HỘP 10 CÁI",
+      "variants": [
+        {
+          "size": "TOSAN // VÀNG",
+          "unit": "HỘP"
+        },
+        {
+          "size": "KINAT // CAM",
+          "unit": "HỘP"
+        },
+        {
+          "size": "GADEN DRAGON //XANH",
+          "unit": "HỘP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351955051_vvud420aq",
+      "name": "MŨI KHOAN 4 CẠNH ĐA NĂNG",
+      "category": "ACCESSORY",
+      "description": "10 MŨI / VỈ",
+      "variants": [
+        {
+          "size": "4 CẠNH 6MM",
+          "unit": "10mũi"
+        },
+        {
+          "size": "4 CẠNH 8MM",
+          "unit": "10 mũi "
+        },
+        {
+          "size": "4 CẠNH 10MM",
+          "unit": "10 mũi "
+        },
+        {
+          "size": "4 CẠNH 12MM",
+          "unit": "10 mũi"
+        }
+      ]
+    },
+    {
+      "id": "p_1765351991785_413vyxgxz",
+      "name": "BẤM GHIM",
+      "category": "ACCESSORY",
+      "description": "HỘP 10 CÁI",
+      "variants": [
+        {
+          "size": "BG",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352027357_zcwh1hkeu",
+      "name": "VÍT ĐEN GF",
+      "category": "ACCESSORY",
+      "description": "10 MŨI / VỈ",
+      "variants": [
+        {
+          "size": "BK",
+          "unit": "VỈ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352063606_amdsh3dbl",
+      "name": "CHỤP GF (ĐẦU BẮN TÔN)",
+      "category": "ACCESSORY",
+      "description": "10 MŨI / VỈ",
+      "variants": [
+        {
+          "size": "BT",
+          "unit": "VỈ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352117937_3124qsh0z",
+      "name": "XÌ KHÔ GF",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "NGẮN",
+          "unit": "Cây"
+        },
+        {
+          "size": "DÀI",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352160269_h28b2hsem",
+      "name": "CHÉN MÀI UNIK XANH-VÀNG",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "ĐMBT",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352210635_6jrav70t0",
+      "name": "KÌM ĐIỆN GF",
+      "category": "ACCESSORY",
+      "description": "HỘP 12 CÁI",
+      "variants": [
+        {
+          "size": "KỀM 6\"",
+          "unit": "Cây"
+        },
+        {
+          "size": "KỀM 7\"",
+          "unit": "Cây"
+        },
+        {
+          "size": "KỀM 8\"",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352243545_2s7ujlws4",
+      "name": "BỘ KHẨU TỰ ĐỘNG",
+      "category": "PAINT_BRUSH",
+      "description": "",
+      "variants": [
+        {
+          "size": "BKTĐ",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352278802_w33s0pdtp",
+      "name": "CẮT ỐNG NƯỚC 42GF",
+      "category": "ACCESSORY",
+      "description": "HỘP 10 CÁI",
+      "variants": [
+        {
+          "size": "KCO",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352314292_42hxiv6m5",
+      "name": "KHÒ GA THƯỜNG",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "KGT",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352346067_oz40bapvs",
+      "name": "KHÒ GA TỐT",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "KGT",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352388977_wpauqzjrm",
+      "name": "KÌM HÀN CÁN GỖ",
+      "category": "ACCESSORY",
+      "description": "XÂU 5 CÁI",
+      "variants": [
+        {
+          "size": "KHCG",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352432711_cd337fbsj",
+      "name": "ĐẦU BẮN VÍT CAO CẤP TMT",
+      "category": "ACCESSORY",
+      "description": "20 MŨI/HỘP",
+      "variants": [
+        {
+          "size": "DBV",
+          "unit": "20 MŨI/HỘP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352475504_4p80hbavq",
+      "name": "ĐẦU BẮN TÔN TMT",
+      "category": "ACCESSORY",
+      "description": "10MŨI/HÔP ",
+      "variants": [
+        {
+          "size": "ĐBT",
+          "unit": "10MŨI/HÔP "
+        }
+      ]
+    },
+    {
+      "id": "p_1765352509073_z9b5p1yiy",
+      "name": "BƠM XE MINI FOOT PUMP",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "BH",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352543513_ru0mwg30b",
+      "name": "BƠM BÌNH XÁM GF",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "BBX",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352598961_17fdbl9my",
+      "name": "BƠM BÌNH ĐỒNG HỒ ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "CAM",
+          "unit": "Cây"
+        },
+        {
+          "size": "FURTHER",
+          "unit": "Cây"
+        },
+        {
+          "size": "INOX",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352676150_lcsxn2zvp",
+      "name": "BÚA NHỔ ĐINH - ĐỎ ( có hd)",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 10 CÂY",
+      "variants": [
+        {
+          "size": " 3lạng",
+          "unit": "CÁI"
+        },
+        {
+          "size": "5lạng",
+          "unit": "CÁI"
+        },
+        {
+          "size": "1KG",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352726010_i08bp0mrx",
+      "name": "BÚA VUÔNG ( có hd)",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 10 CÂY",
+      "variants": [
+        {
+          "size": "1KG",
+          "unit": "CÂY"
+        },
+        {
+          "size": "2KG",
+          "unit": "CÂY"
+        },
+        {
+          "size": "3KG",
+          "unit": "CÂY"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352817757_3ej044vqh",
+      "name": "MÁNG SẮT",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "XÂU 10 CÁI",
+      "variants": [
+        {
+          "size": "TRUNG 5T",
+          "unit": "XÂU/10Cái"
+        },
+        {
+          "size": "LỚN 6T",
+          "unit": "XÂU/10Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352892726_ldlh535vv",
+      "name": "MÁNG NHỰA",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "XÂU 10 CÁI",
+      "variants": [
+        {
+          "size": "TRUNG",
+          "unit": "XÂU/10CÁI"
+        },
+        {
+          "size": "LỚN",
+          "unit": "XÂU/10CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352939038_bef5vyi0g",
+      "name": "LIỀM DÀI",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "",
+      "variants": [
+        {
+          "size": "60CM",
+          "unit": "cây"
+        },
+        {
+          "size": "80CM",
+          "unit": "cây"
+        },
+        {
+          "size": "100CM",
+          "unit": "cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765352980018_rfzw6w05m",
+      "name": "LIỀM THÉP ",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "",
+      "variants": [
+        {
+          "size": "liềm thép 2",
+          "unit": "cây"
+        },
+        {
+          "size": "liềm thép 3",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353015868_zfw0ou4z2",
+      "name": "LIỀM ĐỎ",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "",
+      "variants": [
+        {
+          "size": "LĐ",
+          "unit": "XÂU/10CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353050533_x2ezfie8z",
+      "name": "LIỀM XANH",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "",
+      "variants": [
+        {
+          "size": "LX",
+          "unit": "XÂU/10CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353070419_atjwhpvpw",
+      "name": "LIỀM 7 THÉP",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "HÀNG RẺ XÂU 10 CÁI - HÀNG CTY THÙNG 100 CÁI",
+      "variants": [
+        {
+          "size": "RẺ( BÓ 10 CÁI )",
+          "unit": "XÂU /10CÁIÁI"
+        },
+        {
+          "size": "HÀNG CTY( BÓ 10 CÁI )",
+          "unit": "XÂU/10CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353203953_ltmf7qgpg",
+      "name": "RỰA CÁN DÀI",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 5 CÂY",
+      "variants": [
+        {
+          "size": "RCD",
+          "unit": "XÂU /5Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353292527_3goozk26f",
+      "name": "LENG CHẤP THÉP ",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "",
+      "variants": [
+        {
+          "size": "LENG CÓ CÁN / BÓ 5 CÁI",
+          "unit": "Cây"
+        },
+        {
+          "size": "Leng chấp thép bầu( lưỡi)/ BÓ 10 CÁI",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353328332_z2orgkze4",
+      "name": "TRANG 1T5 CÁN SẮT (1M2)",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 5 CÂY",
+      "variants": [
+        {
+          "size": "THC",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353365009_k9iwnmz0l",
+      "name": "CUỐC NHÍP CÁN SẮT ( có hd)",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 5 CÂY",
+      "variants": [
+        {
+          "size": "CN",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353445992_or7rx2dgf",
+      "name": "CUỐC CHIM LỚN CÁN SẮT ( cb)",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 5 CÂY",
+      "variants": [
+        {
+          "size": "CC",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353524576_oc48msbqi",
+      "name": "CHÉP KHÔNG CÓ TAI",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 5 CÂY",
+      "variants": [
+        {
+          "size": "CKT",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353563996_5ueh8riaz",
+      "name": "CUỐC SECLAY 25F CÁN SẮT (1M2)( có hd)",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 5 CÂY",
+      "variants": [
+        {
+          "size": "SL",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353782934_gdaf1663j",
+      "name": "XẺNG NGỰA XỊN CÁN SẮT ( có hd)",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 5 CÂY",
+      "variants": [
+        {
+          "size": "XX",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353819789_68w86kbi8",
+      "name": "XẺNG XÁM LỚN CÁN SẮT ",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 5 CÂY",
+      "variants": [
+        {
+          "size": "XTL",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765353864872_sg7kty6xi",
+      "name": "LƯỠI XẺNG XÁM  LỚN",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": " BÓ 12 CÁI",
+      "variants": [
+        {
+          "size": "LXT",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354060189_1vu9aaqm9",
+      "name": "BA GA",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 5 CÁI",
+      "variants": [
+        {
+          "size": "0NHỎ 52*66",
+          "unit": "CÁI"
+        },
+        {
+          "size": "60x66 ",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354136066_afh94k1yx",
+      "name": "CÁN CUỐC ( có hd)",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 10 CÂY",
+      "variants": [
+        {
+          "size": "CÁN GỖ",
+          "unit": "BÓ/10Cây"
+        },
+        {
+          "size": "CÁN TRE",
+          "unit": "BÓ/10Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354230323_qm736cx9h",
+      "name": "MÓC DÁN",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "",
+      "variants": [
+        {
+          "size": "4 MÓC",
+          "unit": "VỈ"
+        },
+        {
+          "size": "6 MÓC",
+          "unit": "VỈ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354307818_z4fedeaan",
+      "name": "TẨY OK ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "12 CHAI / THÙNG",
+      "variants": [
+        {
+          "size": "HÀNG THÁI",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "HÀNG VIỆT",
+          "unit": "CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354387985_jf7rmhwwj",
+      "name": "LAU KÍNH",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "LỚN 12 CHAI/T - NHỎ 24 CHAI/T",
+      "variants": [
+        {
+          "size": "NHỎ",
+          "unit": "THÙNG /24CHAI"
+        },
+        {
+          "size": "LỚN",
+          "unit": "THÙNG/12 CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354439633_9j5ofvix4",
+      "name": "TẨY LỒNG GIẶT",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "",
+      "variants": [
+        {
+          "size": "TLG",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354486895_stvd384ho",
+      "name": "TẨY RONG RÊU",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "",
+      "variants": [
+        {
+          "size": "BTR",
+          "unit": "GÓI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354641750_fc0poij9z",
+      "name": "CHỔI CHÀ RONG RÊU (CÓ KÈM CÁN GỖ) ",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "10CÁI/KIỆN",
+      "variants": [
+        {
+          "size": "2T",
+          "unit": "Cây"
+        },
+        {
+          "size": "3T",
+          "unit": "Cây"
+        },
+        {
+          "size": "5T",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354686015_6n5b2wb47",
+      "name": "SỦ BÀO",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "20C/T",
+      "variants": [
+        {
+          "size": "SB",
+          "unit": "T/20CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354731533_hwroq3xii",
+      "name": "BƠM THỤT THÔNG TẮC",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "XÂU 10 CÁI",
+      "variants": [
+        {
+          "size": "BTTT",
+          "unit": "XÂU/10CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354771072_uifnx5007",
+      "name": "THÔNG CẦU CỐNG 1,600gr  ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "[12 CHAI TẶNG 1 CHAI]",
+      "variants": [
+        {
+          "size": "CC",
+          "unit": "T/12CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354828147_1jnzi5qfc",
+      "name": "THÔNG CẦU CỐNG 1,000gr     ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "24C/T TẶNG 2 CHAI",
+      "variants": [
+        {
+          "size": "CC",
+          "unit": "T/24CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354868069_75xuewr9n",
+      "name": "THÔNG CỐNG THƯỜNG 1.200gr               ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "[12 CHAI TẶNG 1 CHAI] ",
+      "variants": [
+        {
+          "size": "TC",
+          "unit": "T/12CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354945409_5jhvfmpqz",
+      "name": "THÔNG CỐNG ĐB 1.400gr     ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "[12 CHAI TẶNG 1 CHAI] ",
+      "variants": [
+        {
+          "size": "TC",
+          "unit": "T/12CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765354993850_29rl4hhoe",
+      "name": "THÔNG CẦU ĐB 1.400gr ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "[12 CHAI TẶNG 1 CHAI]  ",
+      "variants": [
+        {
+          "size": "TC",
+          "unit": "T/12 CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355048375_wmzzi67jw",
+      "name": "THÔNG CỐNG  ĐB 1,000gr ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "24C/T TẶNG 2 CHAI",
+      "variants": [
+        {
+          "size": "TC",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355088477_ibwni0l94",
+      "name": "KHỬ MÙI 1,000gr",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "[12 CHAI TẶNG 1 CHAI]  ",
+      "variants": [
+        {
+          "size": "KM",
+          "unit": "T/12CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355127860_az1ggxg0b",
+      "name": "BỘT CẦU + CỐNG 200gr  ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "[24HỘP TẶNG 2] ",
+      "variants": [
+        {
+          "size": "BCC",
+          "unit": "HỘP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355203421_083f6yuca",
+      "name": "KEM TẨY ĐA NĂNG 750gr ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "[24CHAI TẶNG 2] ",
+      "variants": [
+        {
+          "size": "KTĐN",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355244258_5y6r5w6ht",
+      "name": "NƯỚC TẨY ĐA NĂNG 750gr ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "[24CHAI TẶNG 2] ",
+      "variants": [
+        {
+          "size": "NTDN",
+          "unit": "T/24CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355290400_wzg12nae0",
+      "name": "TẨY GẠCH 1,200ml ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "[12CHAI TẶNG 1]",
+      "variants": [
+        {
+          "size": "TG",
+          "unit": "T/12CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355324967_1hywg34gm",
+      "name": "MEN VI SINH ĐB  1,200ml",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "[12CHAI TẶNG 1]",
+      "variants": [
+        {
+          "size": "MVS",
+          "unit": "chai"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355360900_5g6tj4ae3",
+      "name": "BỘT MEN VI SINH ĐB 300gr    ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "",
+      "variants": [
+        {
+          "size": "BMVS",
+          "unit": "hộp"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355405885_1m7px9toy",
+      "name": "MEN VI SINH 500ml + 100gr   ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "",
+      "variants": [
+        {
+          "size": "MVS",
+          "unit": "CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355454874_0az2h7zao",
+      "name": "BỘT MEN VI SINH 300gr ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "[50HỘP TẶNG 5]  ",
+      "variants": [
+        {
+          "size": "BMVS",
+          "unit": "hộp"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355496866_nfzp82c51",
+      "name": "BỘT THÔNG CỐNG 100gr ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "",
+      "variants": [
+        {
+          "size": "BTC",
+          "unit": "BỊCH"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355582960_lzk0vufan",
+      "name": "TẨY ĐA NĂNG SUMO ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "THÙNG LỚN TẶNG 2 CHAI - THÙNG NHỎ TẶNG 3 CHAI",
+      "variants": [
+        {
+          "size": "SUMO LỚN 24C",
+          "unit": "T/24CHAI"
+        },
+        {
+          "size": "SUMO NHỎ 30C",
+          "unit": "T/30CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355620624_wxxq2wco8",
+      "name": "XỊT MUỖI ARS THÁI LAN ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "12 CHAI/T",
+      "variants": [
+        {
+          "size": "XM",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355650834_vmb40kjvr",
+      "name": "XỊT MUỖI ĐỎ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "30C/T",
+      "variants": [
+        {
+          "size": "XMD",
+          "unit": "T/30CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355697918_s4mij9tyc",
+      "name": "XỊT MUỖI JUMBO",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "24 CHAI/T",
+      "variants": [
+        {
+          "size": "XMJB",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355733288_d1k5uykzh",
+      "name": "XỊT MUỖI ARS PRO",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "24 CHAI/T",
+      "variants": [
+        {
+          "size": "ARS",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355789936_o4l93c2us",
+      "name": "NƯỚC LAU SÀN MEO",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "16C/T",
+      "variants": [
+        {
+          "size": "NLS",
+          "unit": "T/16CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355889445_s82a9bc5q",
+      "name": "NƯỚC RỬA CHÉN ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "",
+      "variants": [
+        {
+          "size": "750G - 20C/T",
+          "unit": "T/20CHAI"
+        },
+        {
+          "size": "3.8KG - 4CAN/T",
+          "unit": "T/4CAN"
+        }
+      ]
+    },
+    {
+      "id": "p_1765355965542_lcq0usone",
+      "name": "NƯỚC RỬA XE BỌT TUYẾT ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "",
+      "variants": [
+        {
+          "size": "1L -  12C/T",
+          "unit": "T/12CHAI"
+        },
+        {
+          "size": "5L - 3C/T",
+          "unit": "T/3CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356032970_93plndu7o",
+      "name": "TẨY RỈ SÉT 5M",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "",
+      "variants": [
+        {
+          "size": "500ml - 25C/T",
+          "unit": "T/25CHAI"
+        },
+        {
+          "size": "1L - 16C/T",
+          "unit": "T/16CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356114189_jzp59uh0c",
+      "name": "TẨY 909",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "THÙNG/24 CHAI",
+      "variants": [
+        {
+          "size": "909",
+          "unit": "T/24CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356153421_z2nopfwp6",
+      "name": "CHAI TẨY SƠN CON BƯỚM",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "24 CHAI/T",
+      "variants": [
+        {
+          "size": "TSCB",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356191552_gr3myxfhg",
+      "name": "XỊT TẨY SƠN 3M ĐỎ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "24CHAI/T",
+      "variants": [
+        {
+          "size": "TS",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356233205_hiiy1pyxh",
+      "name": "XỊT TẨY KEO // XOÁ DẤU VẾT KEO",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "12 CHAI/T",
+      "variants": [
+        {
+          "size": "TS",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356319996_a6iulzsdh",
+      "name": "NỈ",
+      "category": "ACCESSORY",
+      "description": "Nỉ đỏ cây 20 cái - Nỉ xám cây 10 cái",
+      "variants": [
+        {
+          "size": "Nỉ Đỏ ",
+          "unit": "Cây"
+        },
+        {
+          "size": "Nỉ Xám",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356371730_b9z9b6b0g",
+      "name": "CAO SU NON TOMBO MALAYSIA (mua thùng900,000)",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "TOMBO",
+          "unit": "hộp/60 cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356425828_s2eaativn",
+      "name": "XỊT WD40",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "THÙNG 24 CHAI",
+      "variants": [
+        {
+          "size": "WD",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356471307_8dh8tc6c4",
+      "name": "Chai xịt chống rỉ sét RP7C",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "THÙNG 12 CHAI",
+      "variants": [
+        {
+          "size": "175G",
+          "unit": "Chai"
+        },
+        {
+          "size": "280G",
+          "unit": "Chai"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356750117_u34aar4k5",
+      "name": "SÚNG BẮN KEO NẾN VÂN SƠN",
+      "category": "ACCESSORY",
+      "description": "10CÁI /LỐC",
+      "variants": [
+        {
+          "size": "Nhỏ",
+          "unit": "Cây"
+        },
+        {
+          "size": "Lớn",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356882439_2p0i3li3d",
+      "name": "KEO DÁN GẠCH ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "Thùng 12 chai",
+      "variants": [
+        {
+          "size": "VÀNG",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "ĐEN",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "TRẮNG",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356932280_n6p6zbmcv",
+      "name": "TITEBOND",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "THÙNG 12 CHAI",
+      "variants": [
+        {
+          "size": "TB",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765356989121_dynnbar99",
+      "name": "BÚT XOÁ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "HỘP 10 CÁI",
+      "variants": [
+        {
+          "size": "BX",
+          "unit": "HỘP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765357038770_kaf7qxoln",
+      "name": "BÚT LÔNG DẦU",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "HỘP 10 CÂY",
+      "variants": [
+        {
+          "size": "BLD",
+          "unit": "HỘP"
+        }
+      ]
+    },
+    {
+      "id": "p_1765357074073_1r4av2mz4",
+      "name": "BÚT LÔNG KIM",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "HỘP 10 CÂY",
+      "variants": [
+        {
+          "size": "BLK",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765357161169_m4c4wgilj",
+      "name": "KEO CHỐNG THẤM DS910",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "",
+      "variants": [
+        {
+          "size": "KCT",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765357207879_11yacdi86",
+      "name": "KÍNH  805",
+      "category": "ACCESSORY",
+      "description": "HỘP 10 CÁI",
+      "variants": [
+        {
+          "size": "K805",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765357269513_w5v1kuhwo",
+      "name": "KÍNH  KINT\"S",
+      "category": "ACCESSORY",
+      "description": "12 CÁI/H",
+      "variants": [
+        {
+          "size": "KINT\"S",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765357312399_zvggdr376",
+      "name": "KÍNH HÀN",
+      "category": "ACCESSORY",
+      "description": "10 CÁI/H",
+      "variants": [
+        {
+          "size": "KHĐ",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765357412014_fj2vpqu6v",
+      "name": "DÂY RÚT TRẮNG - ĐEN( có hd )",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "BÁN KÍ",
+      "variants": [
+        {
+          "size": "3x100",
+          "unit": "KG"
+        },
+        {
+          "size": "3x150",
+          "unit": "KG"
+        },
+        {
+          "size": "5x200",
+          "unit": "KG"
+        },
+        {
+          "size": "5x250",
+          "unit": "KG"
+        },
+        {
+          "size": "5x300",
+          "unit": "KG"
+        },
+        {
+          "size": "5x350",
+          "unit": "KG"
+        },
+        {
+          "size": "8x400",
+          "unit": "KG"
+        },
+        {
+          "size": "10x500",
+          "unit": "KG"
+        }
+      ]
+    },
+    {
+      "id": "p_1765357480916_xu8jep7go",
+      "name": "VÒI TƯỚI VƯỜN GF",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "XÂU 5 CÁI",
+      "variants": [
+        {
+          "size": "VV",
+          "unit": "XÂU/10CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765357546518_ys2igv6jd",
+      "name": "KE HÍT GÓC MÀU ĐỎ",
+      "category": "ACCESSORY",
+      "description": "XÂU 5 CÁI",
+      "variants": [
+        {
+          "size": "3\"",
+          "unit": "CÁI"
+        },
+        {
+          "size": "4\"",
+          "unit": "CÁI"
+        },
+        {
+          "size": "5\"",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765357617018_gakbhl9hf",
+      "name": "RUỘT XE RÙA",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "6LI",
+          "unit": "CÁI"
+        },
+        {
+          "size": "8LI",
+          "unit": "CÁI"
+        },
+        {
+          "size": "10LI",
+          "unit": "CÁI"
+        },
+        {
+          "size": "12LI",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765357719274_qznc4rda3",
+      "name": "MÓC DẶM  LÚA ",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "DẸP VÀ NHỌN (XÂU 10 CÁI)",
+      "variants": [
+        {
+          "size": "3 RĂNG NHỌN",
+          "unit": "XÂU 10 CÁI"
+        },
+        {
+          "size": "3 RĂNG DẸP",
+          "unit": "XÂU 10 CÁI"
+        },
+        {
+          "size": "4 RĂNG NHỌN",
+          "unit": "XÂU 10 CÁI"
+        },
+        {
+          "size": "4 RĂNG DẸP",
+          "unit": "XÂU 10 CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1765455273588_04ya9v069",
+      "name": "Thước Kéo Cao Cấp",
+      "category": "ACCESSORY",
+      "description": "Hộp 12 Cái",
+      "variants": [
+        {
+          "size": "5m",
+          "unit": "Cây"
+        },
+        {
+          "size": "7.5m",
+          "unit": "Cây"
+        },
+        {
+          "size": "10m",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765455477483_saaluxi6k",
+      "name": "Mũi Khoan Đa Năng 2 Cạnh GF",
+      "category": "ACCESSORY",
+      "description": "Vỉ 5 Mũi",
+      "variants": [
+        {
+          "size": "6li",
+          "unit": "Cây"
+        },
+        {
+          "size": "8li",
+          "unit": "Cây"
+        },
+        {
+          "size": "10li",
+          "unit": "Cây"
+        },
+        {
+          "size": "12li",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765455652238_eb5y1aqt3",
+      "name": "Keo AB",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "500g",
+          "unit": "Bộ"
+        },
+        {
+          "size": "1Kg",
+          "unit": "Bộ"
+        },
+        {
+          "size": "2Kg",
+          "unit": "Bộ"
+        },
+        {
+          "size": "5Kg",
+          "unit": "Bộ"
+        }
+      ]
+    },
+    {
+      "id": "p_1765460962746_vhbdp6n56",
+      "name": "Băng Keo Dán Nhôm",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "47MM X 20M",
+          "unit": "Cuộn"
+        }
+      ]
+    },
+    {
+      "id": "p_1765631281888_k2k7e65nx",
+      "name": "Bút Lấy Dấu",
+      "category": "ACCESSORY",
+      "description": "Hộp 10 Cây",
+      "variants": [
+        {
+          "size": "Bút Lấy Dấu",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765631355276_q8daa01zj",
+      "name": "SỦI NAI KÌ NIKE",
+      "category": "ACCESSORY",
+      "description": "thùng 60 cây",
+      "variants": [
+        {
+          "size": "Ngắn",
+          "unit": "Cây"
+        },
+        {
+          "size": "Dài",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765632012650_wh9j6a0cb",
+      "name": "Búa Cao Su Trong",
+      "category": "ACCESSORY",
+      "description": "Sỉ Bao",
+      "variants": [
+        {
+          "size": "Nhỏ (100Cây/B)",
+          "unit": "Cây"
+        },
+        {
+          "size": "Trung (100Cây/B)",
+          "unit": "Cây"
+        },
+        {
+          "size": "Lớn (80Cây/B)",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1765885570941_8makc74ky",
+      "name": "Trục Nhám",
+      "category": "NHAM",
+      "description": "Bịch = 10 Cái",
+      "variants": [
+        {
+          "size": "25mm",
+          "unit": "Bịch"
+        },
+        {
+          "size": "35mm",
+          "unit": "Bịch"
+        },
+        {
+          "size": "45mm",
+          "unit": "Bịch"
+        },
+        {
+          "size": "55mm",
+          "unit": "Bịch"
+        }
+      ]
+    },
+    {
+      "id": "p_1767607494144_xsjx6af2l",
+      "name": "CHE SƠN",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "55CM",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "110CM",
+          "unit": "CUỘN"
+        },
+        {
+          "size": "280CM",
+          "unit": "CUỘN"
+        }
+      ]
+    },
+    {
+      "id": "p_1767708547365_vyyrwt0ws",
+      "name": "XỊT CHUỘT",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "24C/T",
+      "variants": [
+        {
+          "size": "X",
+          "unit": "T/24CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1767709718329_66p3ncw9e",
+      "name": "KEO SỮA ATM",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "THÙNG 10KG = 10 BỊCH",
+      "variants": [
+        {
+          "size": "B",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1769086279090_f9awyllv3",
+      "name": "NHÁM XANH TRẮNG FC",
+      "category": "NHAM",
+      "description": "NHÁM FC",
+      "variants": [
+        {
+          "size": "NHÁM FC#100-120-150-180-240-320)",
+          "unit": "XẤP"
+        }
+      ]
+    },
+    {
+      "id": "p_1771845387013_ddo60tkmg",
+      "name": "XỊT BÓNG GỖ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "Thùng 12 chai",
+      "variants": [
+        {
+          "size": "Xịt bóng gỗ",
+          "unit": "Thùng /12chai"
+        }
+      ]
+    },
+    {
+      "id": "p_1778670850077_4qy3szcud",
+      "name": "XẺNG VÀNG BẦU 1LY2( có hd)",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "BÓ 10 LƯỠI",
+      "variants": [
+        {
+          "size": "1LY2",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1780285221697_poktxln4h",
+      "name": "CUỐC VUÔNG VN CÁN SẮT 1M2",
+      "category": "DUNG_CU_NONG_NGHIEP_&_VUON",
+      "description": "",
+      "variants": [
+        {
+          "size": "1M2",
+          "unit": "Cái"
+        }
+      ]
+    },
+    {
+      "id": "p_1784006780318_ibey7l7xw",
+      "name": "Chai xịt chống rỉ sét RF7 ",
+      "category": "CHAT_TAY_RUA_&_HOA_CHAT",
+      "description": "THÙNG 12 CHAI",
+      "variants": [
+        {
+          "size": "RF7 180G",
+          "unit": "CHAI"
+        },
+        {
+          "size": "RF7 350G",
+          "unit": "CHAI"
+        }
+      ]
+    },
+    {
+      "id": "p_1786089797703_p7wpe45fl",
+      "name": "BĂNG KEO ĐIỆN ĐEN NANO JAPAN",
+      "category": "BANG_KEO",
+      "description": "",
+      "variants": [
+        {
+          "size": "10YARD",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "20YARD",
+          "unit": "THÙNG"
+        },
+        {
+          "size": "30YARD",
+          "unit": "THÙNG"
+        }
+      ]
+    },
+    {
+      "id": "p_1786350635015_201bjdmg4",
+      "name": "BẠT XANH CAM THƯỜNG ",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "4M -28KG",
+          "unit": "Cây"
+        },
+        {
+          "size": "4M -30KG",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1786526449310_lqsvwxgdn",
+      "name": "BÁNH CƯỚC SẮT",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "BÁNH CƯỚC 100MM LỖ 16",
+          "unit": "CÁI"
+        },
+        {
+          "size": "BÁNH CƯỚC 125MM LỖ 16",
+          "unit": "CÁI"
+        }
+      ]
+    },
+    {
+      "id": "p_1787309337378_ouj0yam5j",
+      "name": "LỤC GIÁC",
+      "category": "ACCESSORY",
+      "description": "",
+      "variants": [
+        {
+          "size": "LỤC GIÁC BI",
+          "unit": "Cây"
+        },
+        {
+          "size": "LỤC GIÁC BÔNG",
+          "unit": "Cây"
+        }
+      ]
+    },
+    {
+      "id": "p_1787309623831_gd1r4ne5h",
+      "name": "MŨI KHOAN BẮN VÍT KHÔNG TẮT KẼ",
+      "category": "ACCESSORY",
+      "description": "HÔP 10 MŨI TẶNG 2 MŨI",
+      "variants": [
+        {
+          "size": "MŨI KHOAN BẮN VÍT KHÔNG TẮT KẼ",
+          "unit": "MŨI"
+        }
+      ]
+    }
+  ]
+}
