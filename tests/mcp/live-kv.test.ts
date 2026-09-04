@@ -189,7 +189,7 @@ test("order and payment mutations update the same legacy KV documents used by ad
   assert.equal(projectedCustomer?.debt, 0);
 });
 
-test("ambiguous legacy debt and customer links block financial writes without blocking catalog", async () => {
+test("historical order review stays reported but does not document-fence customer or order writes", async () => {
   const kv = new MemoryKv();
   seedLiveShop(kv);
   const legacyOrders = kv.json<Array<Record<string, unknown>>>("orders") ?? [];
@@ -203,6 +203,21 @@ test("ambiguous legacy debt and customer links block financial writes without bl
     migrationReady: boolean;
     migrationBlockerCount: number;
     migrationBlockerSummary: Array<{ type: string; count: number }>;
+    migrationDiagnostics: {
+      sourceHash: string;
+      customerLinks: {
+        uniquePhoneAndMatchingName: number;
+        uniquePhoneNameDisagreement: number;
+        duplicatePhoneAmbiguity: number;
+        noCandidate: number;
+        missingPhone: number;
+      };
+      money: {
+        debtMatchingComputedTotal: number;
+        totalDiffersByLegacyDebt: number;
+        unexplainedTotalMismatch: number;
+      };
+    };
   };
   assert.equal(status.migrationReady, false);
   assert.equal(status.migrationBlockerCount, 2);
@@ -211,16 +226,58 @@ test("ambiguous legacy debt and customer links block financial writes without bl
     { type: "order:legacy_total_or_debt_requires_review", count: 1 },
   ]);
   assert.equal(JSON.stringify(status.migrationBlockerSummary).includes("o_live"), false);
-  await assert.rejects(
-    () => app.execute({ operationId: "createCustomer", input: { name: "B", phone: "0902", address: "HN" } }, ownerContext({ idempotencyKey: "blocked-customer" })),
-    (error: unknown) => Boolean(error && typeof error === "object" && "code" in error && error.code === "MIGRATION_READ_ONLY"),
+  assert.equal(status.migrationDiagnostics.customerLinks.uniquePhoneAndMatchingName, 1);
+  assert.equal(status.migrationDiagnostics.money.debtMatchingComputedTotal, 1);
+  assert.equal(
+    status.migrationDiagnostics.customerLinks.uniquePhoneAndMatchingName
+      + status.migrationDiagnostics.customerLinks.uniquePhoneNameDisagreement
+      + status.migrationDiagnostics.customerLinks.duplicatePhoneAmbiguity
+      + status.migrationDiagnostics.customerLinks.noCandidate
+      + status.migrationDiagnostics.customerLinks.missingPhone,
+    1,
   );
+  assert.equal(
+    status.migrationDiagnostics.money.debtMatchingComputedTotal
+      + status.migrationDiagnostics.money.totalDiffersByLegacyDebt
+      + status.migrationDiagnostics.money.unexplainedTotalMismatch,
+    1,
+  );
+  const created = await app.execute(
+    { operationId: "createCustomer", input: { name: "B", phone: "0902", address: "HN" } },
+    ownerContext({ idempotencyKey: "grandfathered-customer" }),
+  ) as { id: string };
+  const draft = await app.execute({
+    operationId: "createDraftOrder",
+    input: {
+      customerId: created.id,
+      items: [{
+        id: "new_line",
+        productId: "p_live",
+        name: "Cọ live",
+        unit: "Cây",
+        quantity: 1,
+        soCuon: null,
+        soKi: null,
+        unitPrice: 5000,
+        costPrice: 3000,
+        isManual: false,
+      }],
+      discount: 0,
+      shippingFee: 0,
+      paymentMethod: "cod",
+    },
+  }, ownerContext({ idempotencyKey: "grandfathered-order" })) as { id: string };
   await app.execute({
     operationId: "createProduct",
     input: { name: "Catalog vẫn an toàn", categoryId: "cat_brush", description: "", image: "", variants: [{ size: "1", unit: "Cái", price: 1000, costPrice: 500 }] },
   }, ownerContext({ idempotencyKey: "catalog-with-finance-blocker" }));
 
-  assert.equal((kv.json<Array<Record<string, unknown>>>("orders") ?? [])[0].customerId, undefined);
+  const orders = kv.json<Array<Record<string, unknown>>>("orders") ?? [];
+  assert.equal(orders[0].customerId, undefined);
+  assert.equal(orders[0].debt, 1000);
+  assert.equal(orders.some((order) => order.id === draft.id), true);
+  assert.equal((kv.json<Array<{ id?: string; name: string }>>("customers") ?? []).some((customer) => customer.name === "B"), true);
+  assert.equal((kv.json<Array<{ id?: string }>>("customers") ?? []).some((customer) => String(customer.id ?? "").startsWith("legacy_customer_")), false);
   assert.equal((kv.json<Array<{ name: string }>>("products") ?? []).some((product) => product.name === "Catalog vẫn an toàn"), true);
 });
 
@@ -328,4 +385,403 @@ test("stale KV reads after restart cannot roll back a strongly committed MCP mut
   await reopened.refreshConsistency();
   await reopenedApp.execute({ operationId: "createCategory", input: { label: "KV đã đồng bộ", value: "SYNCED" } }, ownerContext({ idempotencyKey: "kv-synced" }));
   assert.equal((kv.json<Array<{ value: string }>>("categories") ?? []).some((category) => category.value === "SYNCED"), true);
+});
+
+const paidItem = (id: string) => ({
+  id,
+  productId: "p_live",
+  name: "Cọ live",
+  unit: "Cây",
+  quantity: 1,
+  unitPrice: 5000,
+  costPrice: 3000,
+  total: 5000,
+});
+
+test("getStatus reports PII-safe source hash and reconciliation class counts", async () => {
+  const kv = new MemoryKv();
+  seedLiveShop(kv);
+  kv.seed("customers", [
+    { id: "c_live", name: "Nguyen Van Secret", phone: "0901 000 001", address: "12 Secret Street" },
+    { id: "c_unique", name: "Tran Unique", phone: "0902000002", address: "HN" },
+    { id: "c_dup_a", name: "Dup One", phone: "0904000004", address: "HN" },
+    { id: "c_dup_b", name: "Dup Two", phone: "0904-000-004", address: "HN" },
+  ]);
+  kv.seed("orders", [
+    {
+      id: "o_valid",
+      customerId: "c_live",
+      customerName: "Nguyen Van Secret",
+      phone: "0901000001",
+      address: "12 Secret Street",
+      items: [paidItem("i_valid")],
+      total: 5000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "paid",
+    },
+    {
+      id: "order-secret-id",
+      customerName: "Nguyen Van Secret",
+      phone: "0901000001",
+      address: "12 Secret Street",
+      items: [paidItem("i_match")],
+      total: 5000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+    {
+      id: "o_name_disagree",
+      customerName: "Wrong Name",
+      phone: "0902000002",
+      address: "HN",
+      items: [paidItem("i_disagree")],
+      total: 5000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+    {
+      id: "o_dup_phone",
+      customerName: "Dup One",
+      phone: "0904000004",
+      address: "HN",
+      items: [paidItem("i_dup")],
+      total: 5000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+    {
+      id: "o_no_candidate",
+      customerName: "Ghost Customer",
+      phone: "0999999999",
+      address: "HN",
+      items: [paidItem("i_none")],
+      total: 5000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+    {
+      id: "o_missing_phone",
+      customerName: "No Phone",
+      phone: "",
+      address: "HN",
+      items: [paidItem("i_nophone")],
+      total: 5000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+    {
+      id: "o_debt_match",
+      customerId: "c_live",
+      customerName: "Nguyen Van Secret",
+      phone: "0901000001",
+      address: "12 Secret Street",
+      items: [paidItem("i_debt")],
+      total: 5000,
+      debt: 1000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+    {
+      id: "o_debt_carry",
+      customerId: "c_unique",
+      customerName: "Tran Unique",
+      phone: "0902000002",
+      address: "HN",
+      items: [paidItem("i_carry")],
+      total: 6000,
+      debt: 1000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+    {
+      id: "o_unexplained",
+      customerId: "c_unique",
+      customerName: "Tran Unique",
+      phone: "0902000002",
+      address: "HN",
+      items: [paidItem("i_unexplained")],
+      total: 9999,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+  ]);
+  const store = await LiveKvStore.open(new MemoryCoordinator(), kv, { minimumWriteIntervalMs: 0 });
+  const status = await new GiabanApplication(store).query({ operationId: "getStatus", input: {} }, ownerContext()) as {
+    migrationBlockerCount: number;
+    migrationBlockerSummary: Array<{ type: string; count: number }>;
+    migrationDiagnostics: {
+      sourceHash: string;
+      customerLinks: Record<string, number>;
+      money: Record<string, number>;
+    };
+  };
+
+  assert.match(status.migrationDiagnostics.sourceHash, /^[a-f0-9]{64}$/);
+  assert.equal(status.migrationDiagnostics.customerLinks.explicitValidId, 4);
+  assert.equal(status.migrationDiagnostics.customerLinks.uniquePhoneAndMatchingName, 1);
+  assert.equal(status.migrationDiagnostics.customerLinks.uniquePhoneNameDisagreement, 1);
+  assert.equal(status.migrationDiagnostics.customerLinks.duplicatePhoneAmbiguity, 1);
+  assert.equal(status.migrationDiagnostics.customerLinks.noCandidate, 1);
+  assert.equal(status.migrationDiagnostics.customerLinks.missingPhone, 1);
+  assert.equal(status.migrationDiagnostics.money.debtMatchingComputedTotal, 1);
+  assert.equal(status.migrationDiagnostics.money.totalDiffersByLegacyDebt, 1);
+  assert.equal(status.migrationDiagnostics.money.unexplainedTotalMismatch, 1);
+
+  const customerLinkBlockers = status.migrationBlockerSummary.find((item) => item.type === "order:customer_id_requires_review")?.count ?? 0;
+  const moneyBlockers = status.migrationBlockerSummary.find((item) => item.type === "order:legacy_total_or_debt_requires_review")?.count ?? 0;
+  assert.equal(
+    status.migrationDiagnostics.customerLinks.uniquePhoneAndMatchingName
+      + status.migrationDiagnostics.customerLinks.uniquePhoneNameDisagreement
+      + status.migrationDiagnostics.customerLinks.duplicatePhoneAmbiguity
+      + status.migrationDiagnostics.customerLinks.noCandidate
+      + status.migrationDiagnostics.customerLinks.missingPhone,
+    customerLinkBlockers,
+  );
+  assert.equal(
+    status.migrationDiagnostics.money.debtMatchingComputedTotal
+      + status.migrationDiagnostics.money.totalDiffersByLegacyDebt
+      + status.migrationDiagnostics.money.unexplainedTotalMismatch,
+    moneyBlockers,
+  );
+
+  const leaked = JSON.stringify({
+    ...status,
+    migrationDiagnostics: { ...status.migrationDiagnostics, sourceHash: "" },
+  });
+  for (const value of ["Nguyen Van Secret", "0901000001", "12 Secret Street", "order-secret-id", "c_live", "Ghost Customer"]) {
+    assert.equal(leaked.includes(value), false, value);
+  }
+
+  const firstHash = status.migrationDiagnostics.sourceHash;
+  kv.seed("settings", { phoneNumber: "0900000000" });
+  const changed = await LiveKvStore.open(new MemoryCoordinator(), kv, { minimumWriteIntervalMs: 0 });
+  const changedStatus = await new GiabanApplication(changed).query({ operationId: "getStatus", input: {} }, ownerContext()) as {
+    migrationDiagnostics: { sourceHash: string };
+  };
+  assert.notEqual(changedStatus.migrationDiagnostics.sourceHash, firstHash);
+});
+
+const seedReconciliationShop = (kv: MemoryKv) => {
+  seedLiveShop(kv);
+  kv.seed("customers", [
+    { id: "c_live", name: "Nguyen Van Secret", phone: "0901 000 001", address: "12 Secret Street" },
+    { id: "c_unique", name: "Unique Customer", phone: "0901888777", address: "HN" },
+    { id: "c_dup_a", name: "Dup A", phone: "0901222333", address: "A" },
+    { id: "c_dup_b", name: "Dup B", phone: "0901222333", address: "B" },
+  ]);
+  kv.seed("orders", [
+    {
+      id: "o_autolink",
+      customerName: "Nguyen Van Secret",
+      phone: "0901000001",
+      address: "12 Secret Street",
+      items: [{ id: "i_autolink", productId: "p_live", name: "Cọ live", unit: "Cây", quantity: 1, unitPrice: 5000, total: 5000 }],
+      total: 5000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+    {
+      id: "o_debt_match",
+      customerId: "c_unique",
+      customerName: "Unique Customer",
+      phone: "0901888777",
+      items: [{ id: "i_debt", productId: "p_live", name: "Cọ live", unit: "Cây", quantity: 1, unitPrice: 5000, total: 5000 }],
+      total: 5000,
+      debt: 1000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+    {
+      id: "o_carry",
+      customerId: "c_unique",
+      customerName: "Unique Customer",
+      phone: "0901888777",
+      items: [{ id: "i_carry", productId: "p_live", name: "Cọ live", unit: "Cây", quantity: 1, unitPrice: 5000, total: 5000 }],
+      total: 6000,
+      debt: 1000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+    {
+      id: "o_unexplained",
+      customerId: "c_unique",
+      customerName: "Unique Customer",
+      phone: "0901888777",
+      items: [{ id: "i_unexplained", productId: "p_live", name: "Cọ live", unit: "Cây", quantity: 1, unitPrice: 5000, total: 5000 }],
+      total: 8000,
+      debt: 1000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+    {
+      id: "o_dup",
+      customerName: "Dup A",
+      phone: "0901222333",
+      items: [{ id: "i_dup", productId: "p_live", name: "Cọ live", unit: "Cây", quantity: 1, unitPrice: 5000, total: 5000 }],
+      total: 5000,
+      status: "pending",
+      createdAt: "2026-09-01T00:00:00.000Z",
+      paymentMethod: "cod",
+      paymentStatus: "unpaid",
+    },
+  ]);
+};
+
+test("previewLiveReconciliation reports PII-safe R2 counts and confirm applies only approved classes", async () => {
+  const kv = new MemoryKv();
+  seedReconciliationShop(kv);
+  const store = await LiveKvStore.open(new MemoryCoordinator(), kv, { minimumWriteIntervalMs: 0 });
+  const app = new GiabanApplication(store);
+  const preview = await app.preview({ operationId: "previewLiveReconciliation", input: {} }, ownerContext()) as {
+    confirmationToken: string;
+    planHash: string;
+    sourceHash: string;
+    affectedDocuments: string[];
+    counts: Record<string, number>;
+    blockers: string[];
+  };
+  assert.match(preview.planHash, /^[a-f0-9]{64}$/);
+  assert.match(preview.sourceHash, /^[a-f0-9]{64}$/);
+  assert.deepEqual(preview.affectedDocuments, ["orders"]);
+  assert.equal(preview.counts.autoLinkUniquePhoneAndMatchingName, 1);
+  assert.equal(preview.counts.preserveExplicitValidId, 3);
+  assert.equal(preview.counts.quarantineCustomerLinks, 1);
+  assert.equal(preview.counts.deriveHistoricalPayment, 1);
+  assert.equal(preview.counts.stripPriorDebtCarryover, 1);
+  assert.equal(preview.counts.quarantineMoney, 1);
+  const leaked = JSON.stringify(preview);
+  for (const value of ["Nguyen Van Secret", "0901000001", "12 Secret Street", "o_autolink", "c_live"]) {
+    assert.equal(leaked.includes(value), false, value);
+  }
+
+  const result = await app.confirm({
+    operationId: "confirmLiveReconciliation",
+    input: { confirmationToken: preview.confirmationToken, sourceHash: preview.sourceHash, planHash: preview.planHash },
+  }, ownerContext()) as {
+    ok: boolean;
+    migrationReady: boolean;
+    migrationBlockerCount: number;
+    counts: Record<string, number>;
+  };
+  assert.equal(result.ok, true);
+  assert.equal(result.migrationReady, false);
+  const orders = kv.json<Array<Record<string, unknown>>>("orders") ?? [];
+  assert.equal(orders.find((order) => order.id === "o_autolink")?.customerId, "c_live");
+  assert.equal(orders.find((order) => order.id === "o_dup")?.customerId, undefined);
+  assert.equal(orders.find((order) => order.id === "o_debt_match")?.debt, 0);
+  assert.equal(orders.find((order) => order.id === "o_debt_match")?.paidAmount, 4000);
+  assert.equal(orders.find((order) => order.id === "o_carry")?.total, 5000);
+  assert.equal(orders.find((order) => order.id === "o_unexplained")?.total, 8000);
+  const status = await app.query({ operationId: "getStatus", input: {} }, ownerContext()) as {
+    migrationBlockerCount: number;
+    migrationBlockerSummary: Array<{ type: string; count: number }>;
+  };
+  assert.equal(status.migrationBlockerSummary.find((item) => item.type === "order:customer_id_requires_review")?.count, 1);
+  assert.equal(status.migrationBlockerSummary.find((item) => item.type === "order:legacy_total_or_debt_requires_review")?.count, 1);
+  await app.execute(
+    { operationId: "createCustomer", input: { name: "B", phone: "0902", address: "HN" } },
+    ownerContext({ idempotencyKey: "grandfathered-after-confirm" }),
+  );
+  assert.equal((kv.json<Array<Record<string, unknown>>>("orders") ?? []).find((order) => order.id === "o_dup")?.customerId, undefined);
+  assert.equal((kv.json<Array<Record<string, unknown>>>("orders") ?? []).find((order) => order.id === "o_unexplained")?.total, 8000);
+});
+
+test("confirmLiveReconciliation fails closed on source drift, reused token, and MemoryStore", async () => {
+  const kv = new MemoryKv();
+  seedReconciliationShop(kv);
+  const store = await LiveKvStore.open(new MemoryCoordinator(), kv, { minimumWriteIntervalMs: 0 });
+  const app = new GiabanApplication(store);
+  const preview = await app.preview({ operationId: "previewLiveReconciliation", input: {} }, ownerContext()) as {
+    confirmationToken: string;
+    planHash: string;
+    sourceHash: string;
+  };
+  kv.seed("settings", { phoneNumber: "changed" });
+  await assert.rejects(
+    () => app.confirm({
+      operationId: "confirmLiveReconciliation",
+      input: { confirmationToken: preview.confirmationToken, sourceHash: preview.sourceHash, planHash: preview.planHash },
+    }, ownerContext()),
+    (error: unknown) => Boolean(error && typeof error === "object" && "code" in error && error.code === "CONFIRMATION_STALE"),
+  );
+
+  const fresh = await LiveKvStore.open(new MemoryCoordinator(), kv, { minimumWriteIntervalMs: 0 });
+  const freshApp = new GiabanApplication(fresh);
+  const second = await freshApp.preview({ operationId: "previewLiveReconciliation", input: {} }, ownerContext()) as {
+    confirmationToken: string;
+    planHash: string;
+    sourceHash: string;
+  };
+  await freshApp.confirm({
+    operationId: "confirmLiveReconciliation",
+    input: { confirmationToken: second.confirmationToken, sourceHash: second.sourceHash, planHash: second.planHash },
+  }, ownerContext());
+  await assert.rejects(
+    () => freshApp.confirm({
+      operationId: "confirmLiveReconciliation",
+      input: { confirmationToken: second.confirmationToken, sourceHash: second.sourceHash, planHash: second.planHash },
+    }, ownerContext()),
+    (error: unknown) => Boolean(error && typeof error === "object" && "code" in error && error.code === "CONFIRMATION_STALE"),
+  );
+
+  const memoryApp = new GiabanApplication(new (await import("../../server/persistence/memory/store.ts")).MemoryStore());
+  await assert.rejects(
+    () => memoryApp.preview({ operationId: "previewLiveReconciliation", input: {} }, ownerContext()),
+    (error: unknown) => Boolean(error && typeof error === "object" && "code" in error && error.code === "VALIDATION_ERROR"),
+  );
+});
+
+test("partial live reconciliation publish rolls forward from the journal", async () => {
+  const kv = new MemoryKv();
+  seedReconciliationShop(kv);
+  kv.failOnKey = "orders";
+  const coordinator = new MemoryCoordinator();
+  const store = await LiveKvStore.open(coordinator, kv, { minimumWriteIntervalMs: 0 });
+  const app = new GiabanApplication(store);
+  const preview = await app.preview({ operationId: "previewLiveReconciliation", input: {} }, ownerContext()) as {
+    confirmationToken: string;
+    planHash: string;
+    sourceHash: string;
+  };
+  await assert.rejects(
+    () => app.confirm({
+      operationId: "confirmLiveReconciliation",
+      input: { confirmationToken: preview.confirmationToken, sourceHash: preview.sourceHash, planHash: preview.planHash },
+    }, ownerContext()),
+    (error: unknown) => Boolean(error && typeof error === "object" && "code" in error && error.code === "INTERNAL_ERROR"),
+  );
+  kv.failOnKey = null;
+  const recovered = await LiveKvStore.open(coordinator, kv, { minimumWriteIntervalMs: 0 });
+  const orders = kv.json<Array<Record<string, unknown>>>("orders") ?? [];
+  assert.equal(orders.find((order) => order.id === "o_autolink")?.customerId, "c_live");
+  const status = await new GiabanApplication(recovered).query({ operationId: "getStatus", input: {} }, ownerContext()) as {
+    migrationBlockerSummary: Array<{ type: string; count: number }>;
+  };
+  assert.equal(status.migrationBlockerSummary.find((item) => item.type === "order:customer_id_requires_review")?.count, 1);
 });

@@ -62,3 +62,36 @@ test("public product schema allowlists fields and excludes cost", () => {
 test("error codes in the contract match the domain", () => {
   assert.deepEqual(spec.components.schemas.ErrorCode.enum, [...ERROR_CODES]);
 });
+
+test("status view includes PII-safe migration diagnostics", () => {
+  const schema = spec.components.schemas.StatusView;
+  assert.equal(schema.additionalProperties, false);
+  assert.equal(schema.required.includes("migrationDiagnostics"), true);
+  const diagnostics = spec.components.schemas.MigrationDiagnostics;
+  assert.equal(diagnostics.additionalProperties, false);
+  assert.deepEqual(diagnostics.required, ["sourceHash", "customerLinks", "money"]);
+  assert.equal(diagnostics.properties.sourceHash.pattern, "^$|^[a-f0-9]{64}$");
+  assert.equal(diagnostics.properties.customerLinks.additionalProperties, false);
+  assert.equal(diagnostics.properties.money.additionalProperties, false);
+});
+
+test("live reconciliation preview is PII-safe and bound to hashes", () => {
+  const preview = spec.components.schemas.LiveReconciliationPreview;
+  const confirm = spec.components.schemas.LiveReconciliationConfirm;
+  const result = spec.components.schemas.LiveReconciliationResult;
+  const counts = spec.components.schemas.LiveReconciliationCounts;
+  assert.equal(preview.additionalProperties, false);
+  assert.equal(confirm.additionalProperties, false);
+  assert.equal(result.additionalProperties, false);
+  assert.equal(counts.additionalProperties, false);
+  for (const schema of [preview, confirm, result, counts]) {
+    const blob = JSON.stringify(schema);
+    assert.equal(blob.includes("customerId"), false);
+    assert.equal(blob.includes("phone"), false);
+    assert.equal(blob.includes("address"), false);
+  }
+  assert.equal(preview.properties.planHash.pattern, "^[a-f0-9]{64}$");
+  assert.deepEqual(confirm.required, ["confirmationToken", "sourceHash", "planHash"]);
+  assert.equal(spec.paths["/migrations/live-reconciliation/preview"].post.operationId, "previewLiveReconciliation");
+  assert.equal(spec.paths["/migrations/live-reconciliation/confirm"].post.operationId, "confirmLiveReconciliation");
+});

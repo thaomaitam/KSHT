@@ -27,6 +27,7 @@ export interface McpEnv {
   MCP_PUBLIC_URL?: string;
   MCP_READ_DISABLED?: string;
   MCP_WRITE_DISABLED?: string;
+  MCP_RECONCILE_ENABLED?: string;
   MCP_CHANNEL_DISABLED?: string;
   TEST_OWNER_ID?: string;
   ASSERTION_SECRET?: string;
@@ -175,7 +176,11 @@ export const handleMcpRequest = async (
     const policy = operationByTool.get(name);
     if (!policy || PERSONAL_MCP_DISABLED_OPERATION_IDS.has(policy.operationId)) return rpcError(message.id, -32601, `Unknown tool ${name}`);
     const isWrite = policy.kind !== "query";
-    if (isWrite && env.MCP_WRITE_DISABLED === "1") return rpcError(message.id, -32000, "MCP writes disabled");
+    const isLiveReconciliation = policy.operationId === "previewLiveReconciliation" || policy.operationId === "confirmLiveReconciliation";
+    if (policy.operationId === "confirmLiveReconciliation" && env.MCP_RECONCILE_ENABLED !== "1") {
+      return rpcError(message.id, -32000, "MCP live reconciliation disabled");
+    }
+    if (isWrite && env.MCP_WRITE_DISABLED === "1" && !isLiveReconciliation) return rpcError(message.id, -32000, "MCP writes disabled");
     const args = (message.params?.arguments ?? {}) as Record<string, unknown>;
     const invocationContext: InvocationContext = {
       ...context,
@@ -224,6 +229,7 @@ export const handleMcpRequest = async (
             mcpRead: env.MCP_READ_DISABLED === "1",
             mcpWrite: env.MCP_WRITE_DISABLED === "1",
             mcpChannel: env.MCP_CHANNEL_DISABLED === "1",
+            mcpReconcile: env.MCP_RECONCILE_ENABLED !== "1",
           },
         };
       }

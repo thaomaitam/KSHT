@@ -20,10 +20,11 @@ Two separately deployed Workers share this repository and, after an explicitly a
 - Persistence target: the same Workers KV namespace `DB` used by `cloudflare_worker.js`. On first live request, MCP hydrates the ten legacy shop documents; mutations persist a versioned private canonical state and publish only changed legacy-compatible documents.
 - Public `products` remain storefront-compatible (`category`, not `categoryId`) and omit `costPrice`; private cost data stays in `costPrices` and canonical state.
 - KV allows one write per second per key and has no multi-key transaction. MCP throttles same-key writes and journals roll-forward. Do not write through the web admin concurrently with MCP.
-- Initial hydration is read-only. Explicit IDs are preserved. Ambiguous legacy order/customer links, debt, or totals are reported by `getStatus` and block affected writes with `MIGRATION_READ_ONLY` instead of silently rewriting history.
+- Initial hydration is read-only. Explicit IDs are preserved. Ambiguous legacy order/customer links, debt, or totals are reported by `getStatus`. Historical `customer_id_requires_review` and `legacy_total_or_debt_requires_review` rows are grandfathered: they stay unrepaired and are not document-fenced; projection must not write synthetic `legacy_customer_*` ids or rewrite those rows. Other blockers and external KV drift still fail closed with `MIGRATION_READ_ONLY`.
+- Live `ksht-mcp` grandfather deploy sets `MCP_WRITE_DISABLED=0` and keeps `MCP_RECONCILE_ENABLED=1`. Remaining 331 historical reviews keep `migrationReady` false. Do not apply another live repair or delete historical orders without a named request. Do not use web-admin writes concurrently with MCP.
 - On restart, the DO commit mirror wins over a potentially stale KV read. If any legacy document differs, MCP keeps the committed view and blocks all writes until KV propagation catches up or an explicit reconciliation handles a real external edit. This prevents rollback or stale overwrite.
 - Backup import/export/restore tools are intentionally absent from personal MCP until real artifact validation and live-safe recovery exist.
-- Pi config: project `.mcp.json` server `KSHT`, `protocolVersion` `2026-07-28`, header `${KSHT_API_KEY}`. No `npm run mcp:local` for this path.
+- Pi config: owner-wide `~/.pi/agent/mcp.json` server `KSHT`, `protocolVersion` `2026-07-28`, header `${KSHT_API_KEY}`. Project `.mcp.json` is optional convenience and is not required. No `npm run mcp:local` for this path.
 - MCP tools are business operations only. They must not deploy, bind, or rotate Cloudflare/GitHub resources.
 
 ## Shared domain (source, not live-wired)
@@ -42,7 +43,6 @@ Two separately deployed Workers share this repository and, after an explicitly a
 
 ## Intentionally not done
 
-- Deployment of the new MCP-to-live-KV binding and first live hydration.
 - Production Domain Worker, D1, `DOMAIN_AUTHORITATIVE=1`.
 - GitHub OAuth MCP (cancelled; not a future requirement for this path).
 - Routing `/mcp` on `giaban.khosihuythao.com` (that host is Pages).

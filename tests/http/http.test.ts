@@ -14,6 +14,9 @@ test("GET /api/v1/status returns dataset generation", async () => {
   const body = await response!.json();
   assert.equal(body.ok, true);
   assert.equal(typeof body.datasetGenerationId, "string");
+  assert.equal(body.migrationDiagnostics.sourceHash, "");
+  assert.equal(body.migrationDiagnostics.customerLinks.explicitValidId, 0);
+  assert.equal(body.migrationDiagnostics.money.unexplainedTotalMismatch, 0);
 });
 
 test("unknown v1 route is 404 and non-v1 is ignored", async () => {

@@ -1581,6 +1581,51 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/RestoreResult" }
         default: { $ref: "#/components/responses/Error" }
+  /migrations/live-reconciliation/preview:
+    post:
+      operationId: previewLiveReconciliation
+      tags: [system]
+      x-giaban-mcp:
+        tool: giaban_preview_live_reconciliation
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [migration:reconcile]
+      x-giaban-confirmation: preview
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties: {}
+      responses:
+        "200":
+          description: PII-safe live reconciliation preview
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LiveReconciliationPreview" }
+        default: { $ref: "#/components/responses/Error" }
+  /migrations/live-reconciliation/confirm:
+    post:
+      operationId: confirmLiveReconciliation
+      tags: [system]
+      x-giaban-mcp:
+        tool: giaban_confirm_live_reconciliation
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [migration:reconcile]
+      x-giaban-confirmation: confirm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LiveReconciliationConfirm" }
+      responses:
+        "200":
+          description: Applied live reconciliation without PII
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LiveReconciliationResult" }
+        default: { $ref: "#/components/responses/Error" }
   /audit-events:
     get:
       operationId: searchAuditEvents
@@ -1746,6 +1791,7 @@ components:
         - backups:import
         - backups:restore
         - audit:read
+        - migration:reconcile
     OrderStatus:
       type: string
       enum: [draft, confirmed, shipping, completed, cancelled, discarded]
@@ -1764,7 +1810,7 @@ components:
     StatusView:
       type: object
       additionalProperties: false
-      required: [ok, contractVersion, authoritativeStore, datasetGenerationId, writeFence, migrationReady, migrationBlockerCount, migrationBlockerSummary, mcpMutationsEnabled]
+      required: [ok, contractVersion, authoritativeStore, datasetGenerationId, writeFence, migrationReady, migrationBlockerCount, migrationBlockerSummary, migrationDiagnostics, mcpMutationsEnabled]
       properties:
         ok: { type: boolean }
         contractVersion: { type: string }
@@ -1776,7 +1822,33 @@ components:
         migrationBlockerSummary:
           type: array
           items: { $ref: "#/components/schemas/MigrationBlockerSummaryItem" }
+        migrationDiagnostics: { $ref: "#/components/schemas/MigrationDiagnostics" }
         mcpMutationsEnabled: { type: boolean }
+    MigrationDiagnostics:
+      type: object
+      additionalProperties: false
+      required: [sourceHash, customerLinks, money]
+      properties:
+        sourceHash: { type: string, pattern: "^$|^[a-f0-9]{64}$" }
+        customerLinks:
+          type: object
+          additionalProperties: false
+          required: [explicitValidId, uniquePhoneAndMatchingName, uniquePhoneNameDisagreement, duplicatePhoneAmbiguity, noCandidate, missingPhone]
+          properties:
+            explicitValidId: { type: integer, minimum: 0 }
+            uniquePhoneAndMatchingName: { type: integer, minimum: 0 }
+            uniquePhoneNameDisagreement: { type: integer, minimum: 0 }
+            duplicatePhoneAmbiguity: { type: integer, minimum: 0 }
+            noCandidate: { type: integer, minimum: 0 }
+            missingPhone: { type: integer, minimum: 0 }
+        money:
+          type: object
+          additionalProperties: false
+          required: [debtMatchingComputedTotal, totalDiffersByLegacyDebt, unexplainedTotalMismatch]
+          properties:
+            debtMatchingComputedTotal: { type: integer, minimum: 0 }
+            totalDiffersByLegacyDebt: { type: integer, minimum: 0 }
+            unexplainedTotalMismatch: { type: integer, minimum: 0 }
     MigrationBlockerSummaryItem:
       type: object
       additionalProperties: false
@@ -1804,6 +1876,7 @@ components:
             mcpRead: { type: boolean }
             mcpWrite: { type: boolean }
             mcpChannel: { type: boolean }
+            mcpReconcile: { type: boolean }
     PublicProductVariant:
       type: object
       additionalProperties: false
@@ -2405,6 +2478,67 @@ components:
       required: [confirmationToken]
       properties:
         confirmationToken: { type: string, minLength: 16 }
+    LiveReconciliationCounts:
+      type: object
+      additionalProperties: false
+      required:
+        - preserveExplicitValidId
+        - autoLinkUniquePhoneAndMatchingName
+        - quarantineCustomerLinks
+        - deriveHistoricalPayment
+        - stripPriorDebtCarryover
+        - quarantineMoney
+      properties:
+        preserveExplicitValidId: { type: integer, minimum: 0 }
+        autoLinkUniquePhoneAndMatchingName: { type: integer, minimum: 0 }
+        quarantineCustomerLinks: { type: integer, minimum: 0 }
+        deriveHistoricalPayment: { type: integer, minimum: 0 }
+        stripPriorDebtCarryover: { type: integer, minimum: 0 }
+        quarantineMoney: { type: integer, minimum: 0 }
+    LiveReconciliationPreview:
+      type: object
+      additionalProperties: false
+      required: [confirmationToken, operationId, expiresAt, impactSummary, blockers, planHash, sourceHash, affectedDocuments, counts]
+      properties:
+        confirmationToken: { type: string }
+        operationId: { type: string }
+        expiresAt: { type: string, format: date-time }
+        impactSummary: { type: string }
+        blockers:
+          type: array
+          items: { type: string }
+        planHash: { type: string, pattern: "^[a-f0-9]{64}$" }
+        sourceHash: { type: string, pattern: "^$|^[a-f0-9]{64}$" }
+        affectedDocuments:
+          type: array
+          items:
+            type: string
+            enum: [orders, customers]
+        counts: { $ref: "#/components/schemas/LiveReconciliationCounts" }
+    LiveReconciliationConfirm:
+      type: object
+      additionalProperties: false
+      required: [confirmationToken, sourceHash, planHash]
+      properties:
+        confirmationToken: { type: string, minLength: 16 }
+        sourceHash: { type: string, pattern: "^[a-f0-9]{64}$" }
+        planHash: { type: string, pattern: "^[a-f0-9]{64}$" }
+    LiveReconciliationResult:
+      type: object
+      additionalProperties: false
+      required: [ok, planHash, sourceHash, affectedDocuments, counts, migrationReady, migrationBlockerCount]
+      properties:
+        ok: { type: boolean }
+        planHash: { type: string, pattern: "^[a-f0-9]{64}$" }
+        sourceHash: { type: string, pattern: "^[a-f0-9]{64}$" }
+        affectedDocuments:
+          type: array
+          items:
+            type: string
+            enum: [orders, customers]
+        counts: { $ref: "#/components/schemas/LiveReconciliationCounts" }
+        migrationReady: { type: boolean }
+        migrationBlockerCount: { type: integer, minimum: 0 }
     BackupManifest:
       type: object
       additionalProperties: false

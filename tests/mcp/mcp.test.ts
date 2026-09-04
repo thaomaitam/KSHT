@@ -172,3 +172,56 @@ test("status and capabilities expose the active write kill switch", async () => 
   assert.equal(status.result.structuredContent.mcpMutationsEnabled, false);
   assert.equal(capabilities.result.structuredContent.killSwitches.mcpWrite, true);
 });
+
+test("previewLiveReconciliation is allowed while writes are disabled; confirm needs MCP_RECONCILE_ENABLED", async () => {
+  const app = new GiabanApplication(new MemoryStore());
+  const writesOff = { MCP_WRITE_DISABLED: "1" };
+  const preview = await handleMcpRequest(
+    rpc("tools/call", { name: "giaban_preview_live_reconciliation", arguments: {} }),
+    app,
+    ownerContext(),
+    writesOff,
+  );
+  const previewBody = await preview.json();
+  assert.equal(previewBody.error, undefined);
+  assert.equal(previewBody.result.isError, true);
+  assert.equal(previewBody.result.structuredContent.code, "VALIDATION_ERROR");
+
+  const confirmBlocked = await handleMcpRequest(
+    rpc("tools/call", { name: "giaban_confirm_live_reconciliation", arguments: { confirmationToken: "cnf_testtoken12", sourceHash: "a".repeat(64), planHash: "b".repeat(64) } }),
+    app,
+    ownerContext(),
+    writesOff,
+  );
+  const confirmBlockedBody = await confirmBlocked.json();
+  assert.equal(confirmBlockedBody.error.message, "MCP live reconciliation disabled");
+
+  const confirmGated = await handleMcpRequest(
+    rpc("tools/call", { name: "giaban_confirm_live_reconciliation", arguments: { confirmationToken: "cnf_testtoken12", sourceHash: "a".repeat(64), planHash: "b".repeat(64) } }),
+    app,
+    ownerContext(),
+    { MCP_WRITE_DISABLED: "1", MCP_RECONCILE_ENABLED: "1" },
+  );
+  const confirmGatedBody = await confirmGated.json();
+  assert.equal(confirmGatedBody.error, undefined);
+  assert.equal(confirmGatedBody.result.isError, true);
+  assert.equal(confirmGatedBody.result.structuredContent.code, "VALIDATION_ERROR");
+
+  const ordinaryWrite = await handleMcpRequest(
+    rpc("tools/call", { name: "giaban_create_customer", arguments: { name: "A", phone: "0901", address: "x" } }),
+    app,
+    ownerContext(),
+    { MCP_WRITE_DISABLED: "1", MCP_RECONCILE_ENABLED: "1" },
+  );
+  const ordinaryWriteBody = await ordinaryWrite.json();
+  assert.equal(ordinaryWriteBody.error.message, "MCP writes disabled");
+
+  const capabilities = await handleMcpRequest(
+    rpc("tools/call", { name: "giaban_get_capabilities", arguments: {} }),
+    app,
+    ownerContext(),
+    writesOff,
+  );
+  const capabilitiesBody = await capabilities.json();
+  assert.equal(capabilitiesBody.result.structuredContent.killSwitches.mcpReconcile, true);
+});

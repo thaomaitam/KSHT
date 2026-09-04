@@ -45,6 +45,53 @@ import {
 const CONFIRMATION_TTL_MS = 10 * 60 * 1000;
 const newId = (prefix: string) => `${prefix}_${crypto.randomUUID()}`;
 
+const EMPTY_MIGRATION_DIAGNOSTICS = {
+  sourceHash: "",
+  customerLinks: {
+    explicitValidId: 0,
+    uniquePhoneAndMatchingName: 0,
+    uniquePhoneNameDisagreement: 0,
+    duplicatePhoneAmbiguity: 0,
+    noCandidate: 0,
+    missingPhone: 0,
+  },
+  money: {
+    debtMatchingComputedTotal: 0,
+    totalDiffersByLegacyDebt: 0,
+    unexplainedTotalMismatch: 0,
+  },
+};
+
+const nonNegativeCount = (value: unknown): number => typeof value === "number" && Number.isSafeInteger(value) && value >= 0 ? value : 0;
+
+const sanitizeMigrationDiagnostics = (value: unknown) => {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return EMPTY_MIGRATION_DIAGNOSTICS;
+  const record = value as {
+    sourceHash?: unknown;
+    customerLinks?: Record<string, unknown>;
+    money?: Record<string, unknown>;
+  };
+  const sourceHash = typeof record.sourceHash === "string" && (/^$|^[a-f0-9]{64}$/.test(record.sourceHash))
+    ? record.sourceHash
+    : "";
+  return {
+    sourceHash,
+    customerLinks: {
+      explicitValidId: nonNegativeCount(record.customerLinks?.explicitValidId),
+      uniquePhoneAndMatchingName: nonNegativeCount(record.customerLinks?.uniquePhoneAndMatchingName),
+      uniquePhoneNameDisagreement: nonNegativeCount(record.customerLinks?.uniquePhoneNameDisagreement),
+      duplicatePhoneAmbiguity: nonNegativeCount(record.customerLinks?.duplicatePhoneAmbiguity),
+      noCandidate: nonNegativeCount(record.customerLinks?.noCandidate),
+      missingPhone: nonNegativeCount(record.customerLinks?.missingPhone),
+    },
+    money: {
+      debtMatchingComputedTotal: nonNegativeCount(record.money?.debtMatchingComputedTotal),
+      totalDiffersByLegacyDebt: nonNegativeCount(record.money?.totalDiffersByLegacyDebt),
+      unexplainedTotalMismatch: nonNegativeCount(record.money?.unexplainedTotalMismatch),
+    },
+  };
+};
+
 const requireScopes = (context: InvocationContext, scopes: Scope[]): void => {
   for (const scope of scopes) {
     if (!context.scopes.includes(scope)) {
@@ -246,6 +293,7 @@ export class GiabanApplication {
 
     try {
       if (policy.kind === "query" && !policy.sensitiveRead) return await run();
+      if (operationId === "previewLiveReconciliation" || operationId === "confirmLiveReconciliation") return await run();
       return await this.store.runInTransaction(run);
     } catch (error) {
       this.audit(authorized, operationId, error instanceof DomainError ? error.code : "INTERNAL_ERROR", this.targetIds(input));
@@ -348,6 +396,7 @@ export class GiabanApplication {
     const migrationStore = this.store as MemoryStore & {
       migrationBlockers?: unknown[];
       migrationBlockerSummary?: Array<{ type: string; count: number }>;
+      migrationDiagnostics?: unknown;
     };
     const migrationBlockerCount = Array.isArray(migrationStore.migrationBlockers)
       ? migrationStore.migrationBlockers.length
@@ -369,13 +418,14 @@ export class GiabanApplication {
           migrationReady: migrationBlockerCount === 0,
           migrationBlockerCount,
           migrationBlockerSummary,
+          migrationDiagnostics: sanitizeMigrationDiagnostics(migrationStore.migrationDiagnostics),
         };
       case "getCapabilities":
         return {
           contractVersion: "1.0.0",
           operations: OPERATIONS.map((operation) => operation.operationId),
           mcpTools: OPERATIONS.map((operation) => operation.tool).filter(Boolean),
-          killSwitches: { mcpRead: false, mcpWrite: false, mcpChannel: false },
+          killSwitches: { mcpRead: false, mcpWrite: false, mcpChannel: false, mcpReconcile: false },
         };
       case "listPublicProducts":
         return this.pagePublicProducts(input);
@@ -621,9 +671,99 @@ export class GiabanApplication {
             .map((event) => ({ ...event, createdAt: event.at })),
           input.limit as number | undefined,
         );
+      case "previewLiveReconciliation":
+        return this.previewLiveReconciliation(input, context);
+      case "confirmLiveReconciliation":
+        return this.confirmLiveReconciliation(input, context);
       default:
         fail("NOT_FOUND", `Unknown operation ${operationId}`);
     }
+  }
+
+  private liveReconciliationStore(): {
+    previewLiveReconciliation?: () => Promise<{
+      planHash: string;
+      sourceHash: string;
+      affectedDocuments: Array<"orders" | "customers">;
+      counts: Record<string, number>;
+      blockers: string[];
+    }>;
+    applyLiveReconciliation?: (sourceHash: string, planHash: string) => Promise<{
+      ok: true;
+      planHash: string;
+      sourceHash: string;
+      affectedDocuments: Array<"orders" | "customers">;
+      counts: Record<string, number>;
+      migrationReady: boolean;
+      migrationBlockerCount: number;
+    }>;
+    currentSourceHash?: () => Promise<string>;
+  } {
+    return this.store as MemoryStore & {
+      previewLiveReconciliation?: () => Promise<{
+        planHash: string;
+        sourceHash: string;
+        affectedDocuments: Array<"orders" | "customers">;
+        counts: Record<string, number>;
+        blockers: string[];
+      }>;
+      applyLiveReconciliation?: (sourceHash: string, planHash: string) => Promise<{
+        ok: true;
+        planHash: string;
+        sourceHash: string;
+        affectedDocuments: Array<"orders" | "customers">;
+        counts: Record<string, number>;
+        migrationReady: boolean;
+        migrationBlockerCount: number;
+      }>;
+      currentSourceHash?: () => Promise<string>;
+    };
+  }
+
+  private async previewLiveReconciliation(input: Record<string, unknown>, context: InvocationContext) {
+    const store = this.liveReconciliationStore();
+    if (typeof store.previewLiveReconciliation !== "function") {
+      fail("VALIDATION_ERROR", "Live reconciliation requires the live KV store", {
+        nextAction: "Run previewLiveReconciliation against ksht-mcp with live KV hydration.",
+      });
+    }
+    const plan = await store.previewLiveReconciliation();
+    return {
+      ...this.issuePreview(
+        context,
+        "previewLiveReconciliation",
+        { sourceHash: plan.sourceHash, planHash: plan.planHash },
+        "Apply R2 live reconciliation to orders.",
+        plan.blockers,
+      ),
+      planHash: plan.planHash,
+      sourceHash: plan.sourceHash,
+      affectedDocuments: plan.affectedDocuments,
+      counts: plan.counts,
+    };
+  }
+
+  private async confirmLiveReconciliation(input: Record<string, unknown>, context: InvocationContext) {
+    const store = this.liveReconciliationStore();
+    if (typeof store.applyLiveReconciliation !== "function" || typeof store.currentSourceHash !== "function") {
+      fail("VALIDATION_ERROR", "Live reconciliation requires the live KV store", {
+        nextAction: "Run confirmLiveReconciliation against ksht-mcp with live KV hydration.",
+      });
+    }
+    const sourceHash = String(input.sourceHash ?? "");
+    const planHash = String(input.planHash ?? "");
+    const currentHash = await store.currentSourceHash();
+    if (currentHash !== sourceHash) {
+      fail("CONFIRMATION_STALE", "Live source changed after preview", {
+        nextAction: "Preview live reconciliation again, then confirm the new plan.",
+      });
+    }
+    const intent = this.consumeConfirmation(context, "confirmLiveReconciliation", input);
+    const previewed = intent.input as { sourceHash?: string; planHash?: string };
+    if (previewed.sourceHash !== sourceHash || previewed.planHash !== planHash) {
+      fail("CONFIRMATION_STALE", "Confirmation payload does not match the previewed plan");
+    }
+    return store.applyLiveReconciliation(sourceHash, planHash);
   }
 
   private matchesQuery(query: unknown, ...fields: string[]) {

@@ -33,6 +33,7 @@ const env: McpEnv = {
   TEST_OWNER_ID: process.env.TEST_OWNER_ID || "owner-local",
   MCP_PUBLIC_URL: process.env.MCP_PUBLIC_URL || `${origin}/mcp`,
   MCP_WRITE_DISABLED: process.env.MCP_WRITE_DISABLED,
+  MCP_RECONCILE_ENABLED: process.env.MCP_RECONCILE_ENABLED,
   MCP_READ_DISABLED: process.env.MCP_READ_DISABLED,
   MCP_CHANNEL_DISABLED: process.env.MCP_CHANNEL_DISABLED,
   LOCAL_MCP_BEARER: process.env.LOCAL_MCP_BEARER || "giaban-local-test",

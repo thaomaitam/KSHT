@@ -8,7 +8,8 @@
     "enabled": true
   },
   "vars": {
-    "MCP_WRITE_DISABLED": "1"
+    "MCP_WRITE_DISABLED": "0",
+    "MCP_RECONCILE_ENABLED": "1"
   },
   "kv_namespaces": [
     {

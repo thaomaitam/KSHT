@@ -23,6 +23,7 @@ export const ALL_SCOPES = [
   "backups:import",
   "backups:restore",
   "audit:read",
+  "migration:reconcile",
 ] as const;
 
 export type Scope = (typeof ALL_SCOPES)[number];
@@ -181,6 +182,8 @@ export const OPERATIONS: OperationPolicy[] = [
   { operationId: "previewRestore", tool: "giaban_preview_restore", kind: "preview", scopes: ["backups:restore"] },
   { operationId: "confirmRestore", tool: "giaban_confirm_restore", kind: "confirm", scopes: ["backups:restore"] },
   { operationId: "searchAuditEvents", tool: "giaban_search_audit_events", kind: "query", scopes: ["audit:read"] },
+  { operationId: "previewLiveReconciliation", tool: "giaban_preview_live_reconciliation", kind: "preview", scopes: ["migration:reconcile"] },
+  { operationId: "confirmLiveReconciliation", tool: "giaban_confirm_live_reconciliation", kind: "confirm", scopes: ["migration:reconcile"] },
 ];
 
 export const operationById = new Map(OPERATIONS.map((operation) => [operation.operationId, operation]));

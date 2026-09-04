@@ -68,6 +68,8 @@ const EXACT: Array<[string, string, string]> = [
   ["POST", "/api/v1/backups/uploads", "createBackupUploadIntent"],
   ["POST", "/api/v1/restores/preview", "previewRestore"],
   ["POST", "/api/v1/restores/confirm", "confirmRestore"],
+  ["POST", "/api/v1/migrations/live-reconciliation/preview", "previewLiveReconciliation"],
+  ["POST", "/api/v1/migrations/live-reconciliation/confirm", "confirmLiveReconciliation"],
   ["GET", "/api/v1/audit-events", "searchAuditEvents"],
 ];
 
