@@ -2,7 +2,7 @@ import React from 'react';
 import html2canvas from 'html2canvas';
 import { FileText, Search, Plus, ChevronDown, Store } from 'lucide-react';
 import { Product } from '../../types';
-import { Order, BankInfo, ShopTemplate } from '../../businessService';
+import { Order, BankInfo, ShopTemplate, Customer } from '../../businessService';
 import { NewOrder, OrderItem } from '../../hooks/useBusinessData';
 import { generateImagePreviewContent, generatePDFContent, generateReceiptContent, openPrintWindow } from '../../utils/pdfGenerator';
 import { ManualEntryRow } from './ManualEntryRow';
@@ -25,12 +25,16 @@ interface OrderFormTabProps {
     removeItem: (itemId: string) => void;
     getSubtotal: () => number;
     getTotal: () => number;
-    handleSaveOrder: () => Promise<Order | null>;
+    handleSaveOrder: (confirm: boolean) => Promise<Order | null>;
     bankInfo: BankInfo | null;
     shopTemplates: ShopTemplate[];
     orderCount: number;
     resetOrderForm: () => void;
     productDropdownRef: React.RefObject<HTMLDivElement>;
+    customerMatches?: Customer[];
+    searchExistingCustomers?: (query: string) => void;
+    selectCustomer?: (customerId: string) => void;
+    saving?: boolean;
 }
 
 const formatPrice = (price: number): string => {
@@ -43,14 +47,14 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
     addProductFromList, addVariantToOrder, addQuantity, setAddQuantity,
     updateItemField, removeItem, getSubtotal, getTotal,
     handleSaveOrder, bankInfo, shopTemplates, orderCount, resetOrderForm,
-    productDropdownRef
+    productDropdownRef, customerMatches = [], searchExistingCustomers, selectCustomer, saving,
 }) => {
     const [expandedProductId, setExpandedProductId] = React.useState<string | null>(null);
     const hasSoCuonInTable = newOrder.items.some(item => item.soCuon !== undefined && item.soCuon > 0);
     const hasSoKiInTable = newOrder.items.some(item => item.soKi !== undefined && item.soKi > 0);
 
     const handleCreateAndExportPDF = async () => {
-        const order = await handleSaveOrder();
+        const order = await handleSaveOrder(true);
         if (!order) return;
 
         const selectedTemplate = shopTemplates.find(t => t.id === order.shopTemplateId) || shopTemplates[0];
@@ -100,7 +104,7 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
     };
 
     const handleThermalPrint = async () => {
-        const order = await handleSaveOrder();
+        const order = await handleSaveOrder(true);
         if (!order) return;
 
         const selectedTemplate = shopTemplates.find(t => t.id === order.shopTemplateId) || shopTemplates[0];
@@ -151,28 +155,66 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                             <div className="w-1 h-4 bg-blue-500 rounded-full"></div>
                             Thông tin khách hàng
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input
-                                type="text"
-                                placeholder="Tên khách hàng *"
-                                value={newOrder.customerName}
-                                onChange={(e) => setNewOrder({ ...newOrder, customerName: e.target.value })}
-                                className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-sm"
-                            />
-                            <input
-                                type="tel"
-                                placeholder="Số điện thoại"
-                                value={newOrder.phone}
-                                onChange={(e) => setNewOrder({ ...newOrder, phone: e.target.value })}
-                                className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-sm"
-                            />
-                            <input
-                                type="text"
-                                placeholder="Địa chỉ"
-                                value={newOrder.address}
-                                onChange={(e) => setNewOrder({ ...newOrder, address: e.target.value })}
-                                className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-sm"
-                            />
+                        <div className="space-y-3">
+                            <label className="flex items-center gap-2 text-sm">
+                                <input
+                                    type="checkbox"
+                                    checked={newOrder.createNewCustomer}
+                                    onChange={(e) => setNewOrder({ ...newOrder, createNewCustomer: e.target.checked, customerId: e.target.checked ? '' : newOrder.customerId })}
+                                />
+                                Tạo khách hàng mới (không tự khớp SĐT)
+                            </label>
+                            {!newOrder.createNewCustomer && (
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder="Tìm khách hiện có theo tên hoặc SĐT *"
+                                        onChange={(e) => searchExistingCustomers?.(e.target.value)}
+                                        className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white text-sm"
+                                    />
+                                    {customerMatches.length > 0 && (
+                                        <div className="absolute z-30 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-56 overflow-auto">
+                                            {customerMatches.map((customer) => (
+                                                <button
+                                                    key={customer.id}
+                                                    type="button"
+                                                    onClick={() => selectCustomer?.(customer.id)}
+                                                    className="w-full text-left px-4 py-2 hover:bg-slate-50 text-sm"
+                                                >
+                                                    {customer.name} · {customer.phone}
+                                                    {customer.duplicatePhoneWarning ? ' · trùng SĐT' : ''}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            {newOrder.customerId && !newOrder.createNewCustomer && (
+                                <p className="text-xs text-emerald-700 font-medium">Đã chọn {newOrder.customerId}</p>
+                            )}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input
+                                    type="text"
+                                    placeholder="Tên khách hàng *"
+                                    value={newOrder.customerName}
+                                    onChange={(e) => setNewOrder({ ...newOrder, customerName: e.target.value })}
+                                    className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-sm"
+                                />
+                                <input
+                                    type="tel"
+                                    placeholder="Số điện thoại *"
+                                    value={newOrder.phone}
+                                    onChange={(e) => setNewOrder({ ...newOrder, phone: e.target.value })}
+                                    className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-sm"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Địa chỉ *"
+                                    value={newOrder.address}
+                                    onChange={(e) => setNewOrder({ ...newOrder, address: e.target.value })}
+                                    className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-sm"
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -344,6 +386,7 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                         handleCreateAndExportPDF={handleCreateAndExportPDF}
                         handleThermalPrint={handleThermalPrint}
                         handleSaveOrder={handleSaveOrder}
+                        saving={saving}
                     />
                 </div>
             </section>

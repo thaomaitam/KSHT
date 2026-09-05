@@ -3,6 +3,8 @@
   "name": "ksht-mcp",
   "main": "workers/mcp/index.ts",
   "compatibility_date": "2026-09-04",
+  // GiabanHttp WorkerEntrypoint is consumed by ksht-api service binding GIABAN.
+  // Public fetch remains owner-key /mcp only; browser identity is never taken from headers.
   "workers_dev": true,
   "observability": {
     "enabled": true

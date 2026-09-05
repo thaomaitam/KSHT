@@ -95,3 +95,19 @@ test("live reconciliation preview is PII-safe and bound to hashes", () => {
   assert.equal(spec.paths["/migrations/live-reconciliation/preview"].post.operationId, "previewLiveReconciliation");
   assert.equal(spec.paths["/migrations/live-reconciliation/confirm"].post.operationId, "confirmLiveReconciliation");
 });
+
+test("browser production RPC is capped ksht-mcp GiabanHttp", () => {
+  const rpc = spec.info["x-giaban-browser-rpc"];
+  assert.equal(rpc.service, "ksht-mcp");
+  assert.equal(rpc.entrypoint, "GiabanHttp");
+  assert.equal(rpc.method, "handleBrowserApi");
+  assert.deepEqual(rpc.actors, ["public", "legacyAdmin"]);
+});
+
+test("MoneyVnd and order quantity factors allow exact decimal kilograms", () => {
+  assert.equal(spec.components.schemas.MoneyVnd.type, "number");
+  assert.deepEqual(spec.components.schemas.OrderLineWrite.properties.soKi.type, ["number", "null"]);
+  assert.deepEqual(spec.components.schemas.OrderLineWrite.properties.soCuon.type, ["number", "null"]);
+  assert.equal(spec.components.schemas.OrderLine.properties.effectiveQuantity.type, "number");
+  assert.equal(spec.components.schemas.OrderLine.properties.effectiveQuantity.exclusiveMinimum, 0);
+});

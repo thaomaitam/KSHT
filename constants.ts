@@ -1,4 +1,4 @@
-import { Product } from './types';
+import type { Product } from './types.ts';
 
 export const PHONE_NUMBER = "0901234567";
 

@@ -48,7 +48,16 @@ const secretValuesEqual = async (provided, expected) => {
     return difference === 0;
 };
 
-const createSessionToken = async (secret) => {
+export const presentedSessionToken = (request) => {
+    const authorization = request.headers.get("Authorization");
+    const bearerMatch = authorization && authorization.match(/^Bearer\s+(.+)$/i);
+    const token = bearerMatch
+        ? bearerMatch[1]
+        : request.headers.get("X-Admin-Secret");
+    return typeof token === "string" && token.trim() ? token.trim() : "";
+};
+
+export const createSessionToken = async (secret) => {
     const issuedAt = Date.now();
     const expiresAt = issuedAt + SESSION_TTL_MS;
     const payload = encodeBase64Url(textEncoder.encode(JSON.stringify({
@@ -66,7 +75,7 @@ const createSessionToken = async (secret) => {
     };
 };
 
-const verifySessionToken = async (token, secret) => {
+export const verifySessionToken = async (token, secret) => {
     if (!token || !secret) return false;
 
     const parts = token.split(".");
@@ -154,14 +163,10 @@ export default {
         );
 
         // Accept the standard bearer header and the legacy header during frontend rollout.
-        const isAuthorized = async () => {
-            const authorization = request.headers.get("Authorization");
-            const bearerMatch = authorization && authorization.match(/^Bearer\s+(.+)$/i);
-            const token = bearerMatch
-                ? bearerMatch[1]
-                : request.headers.get("X-Admin-Secret");
-            return verifySessionToken(token, env.SESSION_SIGNING_SECRET);
-        };
+        const isAuthorized = async () => verifySessionToken(
+            presentedSessionToken(request),
+            env.SESSION_SIGNING_SECRET,
+        );
 
         if (request.method === "GET" && path === "/api/status") {
             return jsonResponse({ ok: true });
@@ -192,13 +197,10 @@ export default {
             if (!DATA_KEYS.has(key)) {
                 return errorResponse("Not Found", 404);
             }
-            try {
-                const body = await request.json();
-                await env.DB.put(key, JSON.stringify(body));
-                return jsonResponse({ success: true });
-            } catch (e) {
-                return errorResponse("Invalid JSON", 400);
-            }
+            return jsonResponse({
+                error: "Whole-key writes are disabled. Use /api/v1 commands.",
+                code: "MIGRATION_READ_ONLY",
+            }, 423);
         }
 
         // 3. POST /api/login

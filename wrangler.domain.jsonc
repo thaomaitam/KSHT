@@ -3,6 +3,7 @@
   "name": "ksht-api-domain",
   "main": "workers/api/index.ts",
   "compatibility_date": "2026-09-04",
+  // Not production. Production ksht-api is wrangler.jsonc with GIABAN -> ksht-mcp GiabanHttp.
   "workers_dev": true,
   "observability": {
     "enabled": true

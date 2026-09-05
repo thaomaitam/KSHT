@@ -11,6 +11,7 @@ import {
   assertCanDiscardDraft,
   assertCustomerWrite,
   assertDraftEditable,
+  assertVnd,
   assertPaymentAllowed,
   assertPublicProjection,
   assertVariant,
@@ -436,7 +437,14 @@ export class GiabanApplication {
       case "getPublicSettings":
         return { phoneNumber: this.store.state.phone.phoneNumber, revision: this.store.state.phone.revision };
       case "listProducts":
-        return paginate(this.products(Boolean(input.includeArchived)).map((product) => this.adminProduct(product)), input.limit as number | undefined);
+        return paginate(
+          this.products(Boolean(input.includeArchived))
+            .filter((product) => !input.categoryId || product.categoryId === String(input.categoryId))
+            .filter((product) => this.matchesQuery(input.q, product.name, product.id, product.description))
+            .map((product) => this.adminProduct(product)),
+          input.limit as number | undefined,
+          input.cursor,
+        );
       case "getProduct":
         return this.adminProduct(this.product(String(input.id ?? input.productId)));
       case "createProduct":
@@ -448,7 +456,7 @@ export class GiabanApplication {
       case "restoreProduct":
         return this.setProductArchived(String(input.id ?? input.productId), false, context);
       case "listCategories":
-        return paginate(this.categories(Boolean(input.includeArchived)), input.limit as number | undefined);
+        return paginate(this.categories(Boolean(input.includeArchived)), input.limit as number | undefined, input.cursor);
       case "createCategory":
         return this.writeCategory(undefined, input, context);
       case "updateCategory":
@@ -463,6 +471,7 @@ export class GiabanApplication {
             .filter((customer) => this.matchesQuery(input.q, customer.name, customer.phone, customer.id))
             .map((customer) => maskCustomer(customer, activeCustomers(this.store))),
           input.limit as number | undefined,
+          input.cursor,
         );
       case "getCustomer":
         return customerDetail(this.customer(String(input.id ?? input.customerId)), activeCustomers(this.store));
@@ -486,9 +495,19 @@ export class GiabanApplication {
         return paginate(
           this.orders()
             .filter((order) => !input.status || order.status === input.status)
+            .filter((order) => !input.customerId || order.customerId === String(input.customerId))
             .filter((order) => this.matchesQuery(input.q, order.contact.name, order.contact.phone, order.id))
+            .filter((order) => {
+              if (!input.fromDate && !input.toDate) return true;
+              return inBusinessRange(
+                order.createdAt,
+                String(input.fromDate ?? "1970-01-01"),
+                String(input.toDate ?? "9999-12-31"),
+              );
+            })
             .map((order) => maskOrder(this.store, order)),
           input.limit as number | undefined,
+          input.cursor,
         );
       case "getOrder":
         return maskOrder(this.store, this.order(String(input.id ?? input.orderId)));
@@ -521,8 +540,17 @@ export class GiabanApplication {
           [...this.store.state.payments.values()]
             .filter((payment) => payment.datasetGenerationId === this.store.state.generationId)
             .filter((payment) => !input.orderId || payment.orderId === input.orderId)
+            .filter((payment) => {
+              if (!input.fromDate && !input.toDate) return true;
+              return inBusinessRange(
+                payment.createdAt,
+                String(input.fromDate ?? "1970-01-01"),
+                String(input.toDate ?? "9999-12-31"),
+              );
+            })
             .map(paymentView),
           input.limit as number | undefined,
+          input.cursor,
         );
       case "listReceivables":
         return paginate(
@@ -539,8 +567,10 @@ export class GiabanApplication {
                 outstanding: money.outstanding,
               };
             })
-            .filter((row) => row.outstanding > 0),
+            .filter((row) => row.outstanding > 0)
+            .filter((row) => !input.customerId || row.customerId === String(input.customerId)),
           input.limit as number | undefined,
+          input.cursor,
         );
       case "previewPaymentReversal":
       case "previewPaymentRefund":
@@ -553,6 +583,7 @@ export class GiabanApplication {
         return paginate(
           [...this.store.state.cash.values()].filter((row) => row.datasetGenerationId === this.store.state.generationId),
           input.limit as number | undefined,
+          input.cursor,
         );
       case "createCashTransaction":
         return this.createCash(input, context);
@@ -637,6 +668,7 @@ export class GiabanApplication {
         return paginate(
           [...this.store.state.templates.values()].filter((row) => row.datasetGenerationId === this.store.state.generationId),
           input.limit as number | undefined,
+          input.cursor,
         );
       case "createShopTemplate":
         return this.writeTemplate(undefined, input, context);
@@ -670,6 +702,7 @@ export class GiabanApplication {
             .filter((event) => !input.operationId || event.operationId === input.operationId)
             .map((event) => ({ ...event, createdAt: event.at })),
           input.limit as number | undefined,
+          input.cursor,
         );
       case "previewLiveReconciliation":
         return this.previewLiveReconciliation(input, context);
@@ -800,9 +833,15 @@ export class GiabanApplication {
   }
 
   private pagePublicProducts(input: Record<string, unknown>) {
-    const items = this.products(false).map((product) => publicProductFromAdmin(product));
-    items.forEach(assertPublicProjection);
-    return paginate(items.map((item, index) => ({ ...item, createdAt: this.products(false)[index].createdAt })), input.limit as number | undefined);
+    const products = this.products(false)
+      .filter((product) => !input.categoryId || product.categoryId === String(input.categoryId))
+      .filter((product) => this.matchesQuery(input.q, product.name, product.id, product.description));
+    const items = products.map((product) => {
+      const projection = publicProductFromAdmin(product);
+      assertPublicProjection(projection);
+      return { ...projection, createdAt: product.createdAt };
+    });
+    return paginate(items, input.limit as number | undefined, input.cursor);
   }
 
   private publicProduct(id: string) {
@@ -1150,11 +1189,12 @@ export class GiabanApplication {
     this.store.requireWritable();
     const order = this.order(String(input.orderId));
     const money = orderMoney(this.store, order);
-    assertPaymentAllowed(money.total, money.netCollected, Number(input.amount), order.status);
+    const amount = assertVnd(input.amount, "amount");
+    assertPaymentAllowed(money.total, money.netCollected, amount, order.status);
     const payment: PaymentRecord = {
       id: newId("pay"),
       orderId: order.id,
-      amount: Number(input.amount),
+      amount,
       reversedAmount: 0,
       refundedAmount: 0,
       method: String(input.method ?? "cash"),
@@ -1179,7 +1219,7 @@ export class GiabanApplication {
     const body = intent.input as Record<string, unknown>;
     const payment = this.store.state.payments.get(String(body.id ?? body.paymentId));
     if (!payment) fail("NOT_FOUND", "Payment not found");
-    const next = applyConsumption(payment, kind, Number(body.amount));
+    const next = applyConsumption(payment, kind, assertVnd(body.amount, kind));
     payment.reversedAmount = next.reversedAmount;
     payment.refundedAmount = next.refundedAmount;
     return paymentView(payment);

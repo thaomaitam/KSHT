@@ -68,11 +68,16 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 );
             }
 
+            const publicVariant = {
+                size: variant.size,
+                unit: variant.unit,
+                price: variant.price,
+            };
             return [...prev, {
                 productId: product.id,
                 productName: product.name,
                 productImage: product.image,
-                variant,
+                variant: publicVariant,
                 quantity: 1,
             }];
         });

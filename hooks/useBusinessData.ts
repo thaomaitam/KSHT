@@ -1,99 +1,147 @@
+import { businessDateOnly, businessYearStart } from '../server/domain/timezone.ts';
+import { lineAmount } from '../server/domain/quantity.ts';
+
 import { useState, useEffect, useRef } from 'react';
-import { businessService, Order, Customer, Transaction, BankInfo, ShopTemplate } from '../businessService';
+import {
+    businessService,
+    CloudWriteError,
+    Customer,
+    HistoricalReview,
+    Order,
+    ReportSummary,
+    ShopTemplate,
+    Transaction,
+} from '../businessService';
 import { storageService } from '../storageService';
 import { Product } from '../types';
+import { createSubmitLock, isRetryableError, stepKey } from '../utils/operationState';
+import { BankInfo } from '../businessService';
 
 export type TabType = 'orders' | 'history' | 'customers' | 'profit' | 'reports';
 
 export interface OrderItem {
     id: string;
+    productId?: string | null;
     name: string;
     unit: string;
     quantity: number;
-    soCuon?: number;  // Number of rolls
-    soKi?: number;    // Weight in kg
+    soCuon?: number;
+    soKi?: number;
     unitPrice: number;
     costPrice?: number;
     total: number;
-    isManual?: boolean; // Flag for manually entered items
+    isManual?: boolean;
 }
 
 export interface NewOrder {
+    customerId: string;
     customerName: string;
     phone: string;
     address: string;
     items: OrderItem[];
     shippingFee: number;
     discount: number;
-    debt: number;
+    collectAmount: number;
     note: string;
     isManualEntry: boolean;
-    showSoCuon: boolean;     // Toggle column visibility
-    showSoKi: boolean;       // Toggle column visibility
-    selectedTemplateId: string; // New field
+    showSoCuon: boolean;
+    showSoKi: boolean;
+    selectedTemplateId: string;
     totalAmountInWords: string;
+    paymentMethod: 'cod' | 'banking';
+    createNewCustomer: boolean;
 }
+
+const emptyOrder = (templateId = 'default'): NewOrder => ({
+    customerId: '',
+    customerName: '',
+    phone: '',
+    address: '',
+    items: [],
+    shippingFee: 0,
+    discount: 0,
+    collectAmount: 0,
+    note: '',
+    isManualEntry: false,
+    showSoCuon: false,
+    showSoKi: false,
+    selectedTemplateId: templateId,
+    totalAmountInWords: '',
+    paymentMethod: 'cod',
+    createNewCustomer: false,
+});
 
 export const useBusinessData = () => {
     const [activeTab, setActiveTab] = useState<TabType>('orders');
     const [orders, setOrders] = useState<Order[]>([]);
+    const [ordersTruncated, setOrdersTruncated] = useState(false);
     const [customers, setCustomers] = useState<Customer[]>([]);
+    const [customersTruncated, setCustomersTruncated] = useState(false);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
+    const [productsTruncated, setProductsTruncated] = useState(false);
     const [bankInfo, setBankInfo] = useState<BankInfo | null>(null);
     const [shopTemplates, setShopTemplates] = useState<ShopTemplate[]>([]);
+    const [report, setReport] = useState<ReportSummary | null>(null);
+    const [review, setReview] = useState<HistoricalReview | null>(null);
+    const [loadError, setLoadError] = useState<string>('');
+    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const submitLock = useRef(createSubmitLock());
+    const createdCustomerIdRef = useRef('');
 
-    // Order form state
-    const [newOrder, setNewOrder] = useState<NewOrder>({
-        customerName: '',
-        phone: '',
-        address: '',
-        items: [],
-        shippingFee: 0,
-        discount: 0,
-        debt: 0,
-        note: '',
-        isManualEntry: false,
-        showSoCuon: false,
-        showSoKi: false,
-        selectedTemplateId: 'default',
-        totalAmountInWords: ''
-    });
-
+    const [newOrder, setNewOrder] = useState<NewOrder>(emptyOrder());
+    const [customerMatches, setCustomerMatches] = useState<Customer[]>([]);
     const [orderSearch, setOrderSearch] = useState('');
     const [customerSearch, setCustomerSearch] = useState('');
     const [productSearch, setProductSearch] = useState('');
     const [showProductDropdown, setShowProductDropdown] = useState(false);
-    const [addQuantity, setAddQuantity] = useState<number | ''>('');
+    const [addQuantity, setAddQuantity] = useState<number>(1);
 
     const productDropdownRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        loadData();
-    }, []);
-
     const loadData = async () => {
-        const [ordersData, customersData, transactionsData, productsData, bankInfoData, shopTemplatesData] = await Promise.all([
-            businessService.getOrders(),
-            businessService.getCustomers(),
-            businessService.getTransactions(),
-            storageService.getAdminProducts(),
-            businessService.getBankInfo(),
-            businessService.getShopTemplates()
-        ]);
-        setOrders(ordersData);
-        setCustomers(customersData);
-        setTransactions(transactionsData);
-        setProducts(productsData);
-        setBankInfo(bankInfoData);
-        setShopTemplates(shopTemplatesData);
-
-        // Set initial selected template to default
-        const defaultTemplate = shopTemplatesData.find(t => t.isDefault) || shopTemplatesData[0];
-        if (defaultTemplate) {
-            setNewOrder(prev => ({ ...prev, selectedTemplateId: defaultTemplate.id }));
+        setLoading(true);
+        setLoadError('');
+        try {
+            const today = new Date();
+            const toDate = businessDateOnly(today);
+            const fromDate = businessYearStart(today);
+            const [ordersData, customersData, transactionsData, productsData, bankInfoData, shopTemplatesData, reportData, reviewData] = await Promise.all([
+                businessService.getOrders(),
+                businessService.getCustomers(),
+                businessService.getTransactions(),
+                storageService.getAdminProducts(),
+                businessService.getBankInfo(),
+                businessService.getShopTemplates(),
+                businessService.getReportSummary(fromDate, toDate),
+                businessService.getStatusReview(),
+            ]);
+            setOrders(ordersData.items);
+            setOrdersTruncated(ordersData.truncated);
+            setCustomers(customersData.items);
+            setCustomersTruncated(customersData.truncated);
+            setTransactions(transactionsData.items);
+            setProducts(productsData.products);
+            setProductsTruncated(productsData.truncated);
+            setBankInfo(bankInfoData);
+            setShopTemplates(shopTemplatesData.items);
+            setReport(reportData);
+            setReview(reviewData);
+            const defaultTemplate = shopTemplatesData.items.find(t => t.isDefault) || shopTemplatesData.items[0];
+            if (defaultTemplate) {
+                setNewOrder(prev => ({ ...prev, selectedTemplateId: defaultTemplate.id }));
+            }
+        } catch (error) {
+            setLoadError(error instanceof Error ? error.message : 'Không tải được dữ liệu kinh doanh.');
+        } finally {
+            setLoading(false);
         }
     };
+
+    useEffect(() => {
+        void loadData();
+    }, []);
 
     const filteredProducts = products.filter(p =>
         p.name.toLowerCase().includes(productSearch.toLowerCase())
@@ -108,14 +156,16 @@ export const useBusinessData = () => {
     };
 
     const addVariantToOrder = (product: Product, variant: import('../types').ProductVariant) => {
+        const quantity = Number(addQuantity) >= 1 ? Number(addQuantity) : 1;
         const item: OrderItem = {
             id: 'item_' + Date.now(),
+            productId: product.id,
             name: product.name + (variant.size ? ` - ${variant.size}` : ''),
             unit: variant.unit,
-            quantity: addQuantity,
+            quantity,
             unitPrice: variant.price,
             costPrice: variant.costPrice || 0,
-            total: variant.price * addQuantity
+            total: variant.price * quantity
         };
         setNewOrder({
             ...newOrder,
@@ -123,37 +173,24 @@ export const useBusinessData = () => {
         });
         setProductSearch('');
         setShowProductDropdown(false);
-        setAddQuantity('');
+        setAddQuantity(1);
     };
 
     const addProductFromList = (product: Product) => {
         if (product.variants.length === 1) {
             addVariantToOrder(product, product.variants[0]);
         }
-        // If multiple variants, the UI should handle showing them
     };
 
-    // Calculate total based on automatic logic
     const calculateItemTotal = (item: OrderItem): number => {
-        const quantity = Number(item.quantity) || 0;
-        const soCuon = Number(item.soCuon) || 0;
-        const soKi = Number(item.soKi) || 0;
-        const unitPrice = Number(item.unitPrice) || 0;
-
-        // Automatic formula detection:
-        // 1. If both Cuon and Ki > 0: SL * Cuon * Ki * Price
-        // 2. If only Cuon > 0: SL * Cuon * Price
-        // 3. If only Ki > 0: SL * Ki * Price
-        // 4. Default: SL * Price
-
-        if (soCuon > 0 && soKi > 0) {
-            return quantity * soCuon * soKi * unitPrice;
-        } else if (soCuon > 0) {
-            return quantity * soCuon * unitPrice;
-        } else if (soKi > 0) {
-            return quantity * soKi * unitPrice;
-        } else {
-            return quantity * unitPrice;
+        try {
+            return lineAmount(Number(item.unitPrice) || 0, {
+                quantity: Number(item.quantity) || 0,
+                soCuon: item.soCuon,
+                soKi: item.soKi,
+            });
+        } catch {
+            return 0;
         }
     };
 
@@ -163,7 +200,6 @@ export const useBusinessData = () => {
             items: newOrder.items.map(item => {
                 if (item.id === itemId) {
                     const updated = { ...item, [field]: value };
-                    // Recalculate total when any calculation-related field changes
                     if (field === 'quantity' || field === 'unitPrice' || field === 'soCuon' || field === 'soKi') {
                         updated.total = calculateItemTotal(updated);
                     }
@@ -182,43 +218,75 @@ export const useBusinessData = () => {
     };
 
     const resetOrderForm = () => {
-        // Get current default template
+        if (submitLock.current.key) {
+            alert('Đơn đang chờ xác định kết quả. Thử lại nguyên nội dung đã gửi trước khi tạo đơn mới.');
+            return;
+        }
         const defaultTemplate = shopTemplates.find(t => t.isDefault) || shopTemplates[0];
-
-        setNewOrder({
-            customerName: '',
-            phone: '',
-            address: '',
-            items: [],
-            shippingFee: 0,
-            discount: 0,
-            debt: 0,
-            note: '',
-            isManualEntry: false,
-            showSoCuon: false,
-            showSoKi: false,
-            selectedTemplateId: defaultTemplate?.id || 'default',
-            totalAmountInWords: ''
-        });
+        setNewOrder(emptyOrder(defaultTemplate?.id || 'default'));
+        setCustomerMatches([]);
     };
 
-    const handleSaveOrder = async (): Promise<Order | null> => {
-        if (!newOrder.customerName.trim()) {
-            alert('Vui lòng nhập tên khách hàng');
-            return null;
+    const searchExistingCustomers = async (query: string) => {
+        if (!query.trim()) {
+            setCustomerMatches([]);
+            return;
         }
-        if (!newOrder.phone.trim() || !newOrder.address.trim()) {
-            alert('Vui lòng nhập số điện thoại và địa chỉ');
+        try {
+            const result = await businessService.searchCustomers(query.trim());
+            setCustomerMatches(result.items);
+        } catch {
+            setCustomerMatches([]);
+        }
+    };
+
+    const selectCustomer = async (customerId: string) => {
+        const detail = await businessService.loadCustomer(customerId);
+        setNewOrder({
+            ...newOrder,
+            customerId: detail.id,
+            customerName: detail.name,
+            phone: detail.phone,
+            address: detail.address,
+            createNewCustomer: false,
+        });
+        setCustomerMatches([]);
+    };
+
+    const handleSaveOrder = async (confirm: boolean): Promise<Order | null> => {
+        if (submitLock.current.inFlight) return null;
+        if (!newOrder.customerName.trim() || !newOrder.phone.trim() || !newOrder.address.trim()) {
+            alert('Vui lòng nhập đủ tên, số điện thoại và địa chỉ.');
             return null;
         }
         if (newOrder.items.length === 0) {
             alert('Vui lòng thêm ít nhất 1 sản phẩm');
             return null;
         }
-
+        const key = submitLock.current.begin();
+        if (!key) return null;
+        setSaving(true);
         try {
+            let customerId = newOrder.customerId || createdCustomerIdRef.current;
+            if (newOrder.createNewCustomer || !customerId) {
+                if (!newOrder.createNewCustomer) {
+                    throw new Error('Chọn khách hàng hiện có hoặc bật "Tạo khách hàng mới". Không tự khớp.');
+                }
+                if (!customerId) {
+                    const created = await businessService.createCustomer({
+                        name: newOrder.customerName,
+                        phone: newOrder.phone,
+                        address: newOrder.address,
+                    }, stepKey(key, "customer"));
+                    customerId = String(created.id);
+                    createdCustomerIdRef.current = customerId;
+                    setNewOrder((prev) => ({ ...prev, customerId, createNewCustomer: false }));
+                }
+            }
             const total = getTotal();
+            const collectAmount = Math.min(Math.max(0, Number(newOrder.collectAmount) || 0), total);
             const saved = await businessService.placeOrder({
+                customerId,
                 customerName: newOrder.customerName,
                 phone: newOrder.phone,
                 address: newOrder.address,
@@ -227,30 +295,48 @@ export const useBusinessData = () => {
                 discount: newOrder.discount || 0,
                 note: newOrder.note,
                 shopTemplateId: newOrder.selectedTemplateId,
-                collectAmount: Math.max(0, total - (newOrder.debt || 0)),
+                collectAmount: confirm ? collectAmount : 0,
+                confirm,
+                paymentMethod: newOrder.paymentMethod,
+                totalAmountInWords: newOrder.totalAmountInWords,
+                idempotencyKey: key,
             });
-            const [ordersData, customersData] = await Promise.all([
-                businessService.getOrders(),
-                businessService.getCustomers(),
-            ]);
-            setOrders(ordersData);
-            setCustomers(customersData);
+            submitLock.current.succeed();
+            createdCustomerIdRef.current = '';
+            await loadData();
             resetOrderForm();
             return saved;
         } catch (error) {
+            if (isRetryableError(error) || (error instanceof CloudWriteError && (error.retryable || error.code === 'IDEMPOTENCY_CONFLICT'))) {
+                submitLock.current.failRetryable();
+            } else {
+                submitLock.current.failTerminal();
+            }
             alert(error instanceof Error ? error.message : 'Không lưu được đơn lên máy chủ.');
             return null;
+        } finally {
+            setSaving(false);
         }
     };
 
     return {
         activeTab, setActiveTab,
         orders, setOrders,
+        ordersTruncated,
         customers, setCustomers,
+        customersTruncated,
         transactions,
         bankInfo, setBankInfo,
         shopTemplates, setShopTemplates,
+        report,
+        review,
+        loading,
+        loadError,
+        saving,
         newOrder, setNewOrder,
+        customerMatches,
+        searchExistingCustomers,
+        selectCustomer,
         orderSearch, setOrderSearch,
         customerSearch, setCustomerSearch,
         productSearch, setProductSearch,
@@ -258,9 +344,11 @@ export const useBusinessData = () => {
         addQuantity, setAddQuantity,
         productDropdownRef,
         filteredProducts,
+        productsTruncated,
         getSubtotal, getTotal,
         addProductFromList, addVariantToOrder, updateItemField, removeItem,
         handleSaveOrder,
-        resetOrderForm
+        resetOrderForm,
+        reload: loadData,
     };
 };

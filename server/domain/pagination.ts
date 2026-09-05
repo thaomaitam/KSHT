@@ -47,13 +47,30 @@ export const decodeCursor = (cursor: string | undefined): { createdAt: string; i
   }
 };
 
+const compareCreatedAtIdDesc = (
+  left: { createdAt: string; id: string },
+  right: { createdAt: string; id: string },
+): number => right.createdAt.localeCompare(left.createdAt) || right.id.localeCompare(left.id);
+
+export const asCursor = (value: unknown): string | undefined => {
+  if (value == null || value === "") return undefined;
+  if (typeof value === "string") return value;
+  fail("VALIDATION_ERROR", "Invalid cursor");
+};
+
 export const paginate = <T extends { createdAt: string; id: string }>(
   rows: T[],
   limitInput: number | undefined,
+  cursorInput?: unknown,
 ): { items: T[]; page: PageMeta } => {
   const limit = normalizeLimit(limitInput);
-  const hasMore = rows.length > limit;
-  const items = hasMore ? rows.slice(0, limit) : rows;
+  const cursor = decodeCursor(asCursor(cursorInput));
+  const sorted = [...rows].sort(compareCreatedAtIdDesc);
+  const remaining = cursor
+    ? sorted.filter((row) => compareCreatedAtIdDesc(row, cursor) > 0)
+    : sorted;
+  const hasMore = remaining.length > limit;
+  const items = hasMore ? remaining.slice(0, limit) : remaining;
   const last = items[items.length - 1];
   return {
     items,

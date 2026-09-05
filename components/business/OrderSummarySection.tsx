@@ -1,5 +1,5 @@
 import React from 'react';
-import { Printer, Check } from 'lucide-react';
+import { Printer, Check, FileText } from 'lucide-react';
 import { NewOrder } from '../../hooks/useBusinessData';
 
 interface OrderSummarySectionProps {
@@ -10,7 +10,8 @@ interface OrderSummarySectionProps {
     formatPrice: (price: number) => string;
     handleCreateAndExportPDF: () => Promise<void>;
     handleThermalPrint: () => Promise<void>;
-    handleSaveOrder: () => Promise<any>;
+    handleSaveOrder: (confirm: boolean) => Promise<any>;
+    saving?: boolean;
 }
 
 export const OrderSummarySection: React.FC<OrderSummarySectionProps> = ({
@@ -21,8 +22,13 @@ export const OrderSummarySection: React.FC<OrderSummarySectionProps> = ({
     formatPrice,
     handleCreateAndExportPDF,
     handleThermalPrint,
-    handleSaveOrder
+    handleSaveOrder,
+    saving,
 }) => {
+    const total = getTotal();
+    const collectAmount = Math.min(Math.max(0, Number(newOrder.collectAmount) || 0), total);
+    const remaining = Math.max(0, total - collectAmount);
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
             <div className="lg:col-span-8 space-y-4">
@@ -37,8 +43,9 @@ export const OrderSummarySection: React.FC<OrderSummarySectionProps> = ({
                             <input
                                 type="number"
                                 min="0"
+                                step="0.1"
                                 value={newOrder.shippingFee || ''}
-                                onChange={(e) => setNewOrder({ ...newOrder, shippingFee: parseInt(e.target.value) || 0 })}
+                                onChange={(e) => setNewOrder({ ...newOrder, shippingFee: Number(e.target.value) || 0 })}
                                 className="w-32 px-4 py-2 border border-slate-200 rounded-xl text-right font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 placeholder="0"
                             />
@@ -48,26 +55,32 @@ export const OrderSummarySection: React.FC<OrderSummarySectionProps> = ({
                             <input
                                 type="number"
                                 min="0"
+                                step="0.1"
                                 value={newOrder.discount || ''}
-                                onChange={(e) => setNewOrder({ ...newOrder, discount: parseInt(e.target.value) || 0 })}
+                                onChange={(e) => setNewOrder({ ...newOrder, discount: Number(e.target.value) || 0 })}
                                 className="w-32 px-4 py-2 border border-slate-200 rounded-xl text-right font-bold text-red-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 placeholder="0"
                             />
                         </div>
                         <div className="flex items-center justify-between gap-4">
-                            <span className="font-medium text-slate-600">Công nợ:</span>
+                            <span className="font-medium text-slate-600">Thu ngay khi xác nhận:</span>
                             <input
                                 type="number"
                                 min="0"
-                                value={newOrder.debt || ''}
-                                onChange={(e) => setNewOrder({ ...newOrder, debt: parseInt(e.target.value) || 0 })}
-                                className="w-32 px-4 py-2 border border-slate-200 rounded-xl text-right font-bold text-orange-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                step="0.1"
+                                value={newOrder.collectAmount || ''}
+                                onChange={(e) => setNewOrder({ ...newOrder, collectAmount: Number(e.target.value) || 0 })}
+                                className="w-32 px-4 py-2 border border-slate-200 rounded-xl text-right font-bold text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 placeholder="0"
                             />
                         </div>
+                        <div className="flex justify-between items-center text-slate-600">
+                            <span className="font-medium">Còn phải thu (dự kiến):</span>
+                            <span className="font-bold text-orange-600">{formatPrice(remaining)}</span>
+                        </div>
                         <div className="flex justify-between items-center pt-3 border-t border-slate-100">
                             <span className="text-lg font-bold text-slate-800">Tổng cộng:</span>
-                            <span className="text-2xl font-black text-emerald-600">{formatPrice(getTotal())}</span>
+                            <span className="text-2xl font-black text-emerald-600">{formatPrice(total)}</span>
                         </div>
                         <div className="pt-2">
                             <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Cộng Thành Tiền (viết bằng chữ):</label>
@@ -94,24 +107,35 @@ export const OrderSummarySection: React.FC<OrderSummarySectionProps> = ({
             <div className="lg:col-span-4 flex flex-col gap-3 justify-center">
                 <button
                     onClick={handleThermalPrint}
-                    className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-blue-500 text-white rounded-2xl font-bold hover:bg-blue-600 transition-all shadow-md shadow-blue-100 active:scale-95"
+                    disabled={saving}
+                    className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-blue-500 text-white rounded-2xl font-bold hover:bg-blue-600 transition-all shadow-md shadow-blue-100 active:scale-95 disabled:opacity-60"
                 >
                     <Printer size={20} />
-                    IN BILL NHIỆT (80MM)
+                    Xác nhận & IN BILL
                 </button>
                 <button
                     onClick={handleCreateAndExportPDF}
-                    className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-emerald-500 text-white rounded-2xl font-bold hover:bg-emerald-600 transition-all shadow-md shadow-emerald-100 active:scale-95"
+                    disabled={saving}
+                    className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-emerald-500 text-white rounded-2xl font-bold hover:bg-emerald-600 transition-all shadow-md shadow-emerald-100 active:scale-95 disabled:opacity-60"
                 >
                     <Printer size={20} />
-                    Tạo đơn & Xuất PDF
+                    Xác nhận & Xuất PDF
                 </button>
                 <button
-                    onClick={() => handleSaveOrder()}
-                    className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-emerald-100 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-50 transition-all active:scale-95"
+                    onClick={() => handleSaveOrder(true)}
+                    disabled={saving}
+                    className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-emerald-100 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-50 transition-all active:scale-95 disabled:opacity-60"
                 >
                     <Check size={20} />
-                    Lưu đơn
+                    {saving ? 'Đang lưu...' : 'Xác nhận đơn'}
+                </button>
+                <button
+                    onClick={() => handleSaveOrder(false)}
+                    disabled={saving}
+                    className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold hover:bg-slate-50 transition-all disabled:opacity-60"
+                >
+                    <FileText size={18} />
+                    Lưu nháp
                 </button>
             </div>
         </div>

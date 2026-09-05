@@ -1,20 +1,20 @@
 import React from 'react';
 import { ArrowLeft, FileText, History, Users, TrendingUp, BarChart3 } from 'lucide-react';
 import { useBusinessData, TabType, OrderItem } from '../hooks/useBusinessData';
-import { Order } from '../businessService';
+import { Order, businessService } from '../businessService';
 import { OrderFormTab } from './business/OrderFormTab';
 import { OrderHistoryTab } from './business/OrderHistoryTab';
 import { CustomersTab } from './business/CustomersTab';
 import { ProfitTab } from './business/ProfitTab';
 import { ReportsTab } from './business/ReportsTab';
-
+import { NoticeBanner } from './NoticeBanner';
 
 export const BusinessPage: React.FC = () => {
+    const data = useBusinessData();
     const {
         activeTab, setActiveTab,
         orders, setOrders,
         customers, setCustomers,
-        transactions,
         bankInfo,
         shopTemplates,
         newOrder, setNewOrder,
@@ -32,8 +32,20 @@ export const BusinessPage: React.FC = () => {
         getSubtotal,
         getTotal,
         handleSaveOrder,
-        resetOrderForm
-    } = useBusinessData();
+        resetOrderForm,
+        report,
+        review,
+        loading,
+        loadError,
+        saving,
+        reload,
+        ordersTruncated,
+        customersTruncated,
+        productsTruncated,
+        customerMatches,
+        searchExistingCustomers,
+        selectCustomer,
+    } = data;
 
     const tabs = [
         { id: 'orders', label: 'Tạo đơn', icon: FileText, color: 'text-green-600', bg: 'bg-green-50' },
@@ -43,10 +55,10 @@ export const BusinessPage: React.FC = () => {
         { id: 'reports', label: 'Báo cáo', icon: BarChart3, color: 'text-indigo-600', bg: 'bg-indigo-50' },
     ];
 
-    // Handle recreate order - copy order data to form and switch to orders tab
     const handleRecreateOrder = (order: Order) => {
         const items: OrderItem[] = order.items.map((item: any) => ({
             id: 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            productId: item.productId || null,
             name: item.name,
             unit: item.unit,
             quantity: item.quantity,
@@ -57,58 +69,56 @@ export const BusinessPage: React.FC = () => {
             total: item.total,
             isManual: item.isManual
         }));
-
-        // Check if any item has soCuon or soKi values
         const hasSoCuon = items.some(item => item.soCuon !== undefined && item.soCuon > 0);
         const hasSoKi = items.some(item => item.soKi !== undefined && item.soKi > 0);
-
-        // Use original template if it still exists, otherwise use current default
         const originalTemplate = shopTemplates.find(t => t.id === order.shopTemplateId);
         const defaultTemplate = shopTemplates.find(t => t.isDefault) || shopTemplates[0];
         const templateToUse = originalTemplate || defaultTemplate;
 
         setNewOrder({
+            customerId: order.customerId || '',
             customerName: order.customerName,
             phone: order.phone,
             address: order.address,
-            items: items,
+            items,
             shippingFee: order.shippingFee || 0,
             discount: order.discount || 0,
-            debt: order.debt || 0,
+            collectAmount: 0,
             note: order.note || '',
             isManualEntry: true,
             showSoCuon: hasSoCuon,
             showSoKi: hasSoKi,
             selectedTemplateId: templateToUse?.id || 'default',
-            totalAmountInWords: order.totalAmountInWords || ''
+            totalAmountInWords: '',
+            paymentMethod: order.paymentMethod,
+            createNewCustomer: !order.customerId,
         });
-
         setActiveTab('orders');
     };
 
-    // Handle create order from customer - populate customer info and switch to orders tab
-    const handleCreateOrderFromCustomer = (customer: any) => {
+    const handleCreateOrderFromCustomer = async (customer: { id: string }) => {
+        const detail = await businessService.loadCustomer(customer.id);
         setNewOrder({
-            customerName: customer.name,
-            phone: customer.phone,
-            address: customer.address || '',
+            ...newOrder,
+            customerId: detail.id,
+            customerName: detail.name,
+            phone: detail.phone,
+            address: detail.address,
             items: [],
             shippingFee: 0,
             discount: 0,
-            debt: 0,
+            collectAmount: 0,
             note: '',
             isManualEntry: false,
             showSoCuon: false,
             showSoKi: false,
-            selectedTemplateId: newOrder.selectedTemplateId
+            createNewCustomer: false,
         });
-
         setActiveTab('orders');
     };
 
     return (
         <div className="min-h-screen bg-slate-50 pb-20">
-            {/* Header */}
             <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
                 <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -121,8 +131,6 @@ export const BusinessPage: React.FC = () => {
                         <h1 className="text-xl font-black text-slate-900 tracking-tight">Quản lý kinh doanh</h1>
                     </div>
                 </div>
-
-                {/* Tab Navigation */}
                 <div className="max-w-7xl mx-auto px-4 overflow-x-auto no-scrollbar">
                     <div className="flex gap-2 py-2">
                         {tabs.map(tab => (
@@ -142,7 +150,16 @@ export const BusinessPage: React.FC = () => {
                 </div>
             </header>
 
-            <main className="max-w-7xl mx-auto px-4 py-8">
+            <main className="max-w-7xl mx-auto px-4 py-8 space-y-4">
+                {loading && <NoticeBanner kind="info" message="Đang tải dữ liệu kinh doanh từ /api/v1..." />}
+                {loadError && <NoticeBanner kind="error" title="Không tải được" message={loadError} onRetry={reload} />}
+                {review && !review.ready && (
+                    <NoticeBanner kind="warning" title="Rà soát lịch sử" message={review.message} />
+                )}
+                {productsTruncated && activeTab === 'orders' && (
+                    <NoticeBanner kind="warning" message="Catalog chọn hàng chưa tải đủ trang. Phần đang hiện có thể thiếu." />
+                )}
+
                 {activeTab === 'orders' && (
                     <OrderFormTab
                         newOrder={newOrder}
@@ -154,7 +171,7 @@ export const BusinessPage: React.FC = () => {
                         filteredProducts={filteredProducts}
                         addProductFromList={addProductFromList}
                         addVariantToOrder={addVariantToOrder}
-                        addQuantity={addQuantity}
+                        addQuantity={typeof addQuantity === 'number' ? addQuantity : 1}
                         setAddQuantity={setAddQuantity}
                         updateItemField={updateItemField}
                         removeItem={removeItem}
@@ -166,6 +183,10 @@ export const BusinessPage: React.FC = () => {
                         orderCount={orders.length}
                         resetOrderForm={resetOrderForm}
                         productDropdownRef={productDropdownRef}
+                        customerMatches={customerMatches}
+                        searchExistingCustomers={searchExistingCustomers}
+                        selectCustomer={selectCustomer}
+                        saving={saving}
                     />
                 )}
 
@@ -180,6 +201,8 @@ export const BusinessPage: React.FC = () => {
                         shopTemplates={shopTemplates}
                         customers={customers}
                         setCustomers={setCustomers}
+                        truncated={ordersTruncated}
+                        onReload={reload}
                     />
                 )}
 
@@ -190,19 +213,16 @@ export const BusinessPage: React.FC = () => {
                         customerSearch={customerSearch}
                         setCustomerSearch={setCustomerSearch}
                         onCreateOrder={handleCreateOrderFromCustomer}
+                        truncated={customersTruncated}
                     />
                 )}
 
                 {activeTab === 'profit' && (
-                    <ProfitTab orders={orders} />
+                    <ProfitTab report={report} />
                 )}
 
                 {activeTab === 'reports' && (
-                    <ReportsTab
-                        orders={orders}
-                        transactions={transactions}
-                        customers={customers}
-                    />
+                    <ReportsTab report={report} truncated={ordersTruncated || customersTruncated} />
                 )}
             </main>
         </div>

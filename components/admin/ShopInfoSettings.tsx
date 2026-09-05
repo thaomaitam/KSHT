@@ -1,22 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Store, Save, Check, Plus, Trash2, Star } from 'lucide-react';
 import { businessService, ShopTemplate } from '../../businessService';
+import { NoticeBanner } from '../NoticeBanner';
 
 export const ShopInfoSettings: React.FC = () => {
     const [templates, setTemplates] = useState<ShopTemplate[]>([]);
+    const [truncated, setTruncated] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [saveSuccess, setSaveSuccess] = useState(false);
+    const [loadError, setLoadError] = useState('');
 
     useEffect(() => {
-        loadTemplates();
+        void loadTemplates();
     }, []);
 
     const loadTemplates = async () => {
-        const data = await businessService.getShopTemplates();
-        setTemplates(data);
-        if (data.length > 0 && !editingId) {
-            setEditingId(data.find(t => t.isDefault)?.id || data[0].id);
+        setLoadError('');
+        try {
+            const data = await businessService.getShopTemplates();
+            setTemplates(data.items);
+            setTruncated(data.truncated);
+            if (data.items.length > 0) {
+                setEditingId((current) => current || data.items.find(t => t.isDefault)?.id || data.items[0].id);
+            }
+        } catch (error) {
+            setLoadError(error instanceof Error ? error.message : 'Không tải được mẫu in.');
         }
     };
 
@@ -26,32 +35,44 @@ export const ShopInfoSettings: React.FC = () => {
             name: 'Mẫu mới',
             address: '',
             phone: '',
-            isDefault: templates.length === 0
+            isDefault: templates.length === 0,
+            revision: 1,
         };
         setTemplates([...templates, newTemplate]);
         setEditingId(newTemplate.id);
     };
 
-    const handleDeleteTemplate = (id: string) => {
-        if (templates.length <= 1) {
-            alert('Phải có ít nhất một mẫu thông tin');
+    const handleDeleteTemplate = async (id: string) => {
+        const current = templates.find(t => t.id === id);
+        if (!current) return;
+        if (id.startsWith('temp_')) {
+            const next = templates.filter(t => t.id !== id);
+            setTemplates(next);
+            if (editingId === id) setEditingId(next[0]?.id || null);
             return;
         }
-        const newTemplates = templates.filter(t => t.id !== id);
-        if (templates.find(t => t.id === id)?.isDefault) {
-            newTemplates[0].isDefault = true;
-        }
-        setTemplates(newTemplates);
-        if (editingId === id) {
-            setEditingId(newTemplates[0].id);
+        try {
+            const next = await businessService.archiveShopTemplate(id, current.revision);
+            setTemplates(next.items);
+            setTruncated(next.truncated);
+            setEditingId(next.items[0]?.id || null);
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không lưu trữ được mẫu.');
         }
     };
 
-    const handleSetDefault = (id: string) => {
-        setTemplates(templates.map(t => ({
-            ...t,
-            isDefault: t.id === id
-        })));
+    const handleSetDefault = async (id: string) => {
+        const current = templates.find(t => t.id === id);
+        if (!current || current.id.startsWith('temp_')) {
+            setTemplates(templates.map(t => ({ ...t, isDefault: t.id === id })));
+            return;
+        }
+        try {
+            const next = await businessService.setDefaultShopTemplate(id, current.revision || 1);
+            setTemplates(next.items);
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Không đặt mặc định được.');
+        }
     };
 
     const handleUpdateField = (id: string, field: keyof ShopTemplate, value: string) => {
@@ -59,14 +80,17 @@ export const ShopInfoSettings: React.FC = () => {
     };
 
     const handleSave = async () => {
+        const current = templates.find(t => t.id === editingId);
+        if (!current) return;
         setIsSaving(true);
         try {
-            await businessService.saveShopTemplates(templates);
+            const saved = await businessService.saveShopTemplate(current);
+            await loadTemplates();
+            setEditingId(saved.id);
             setSaveSuccess(true);
             setTimeout(() => setSaveSuccess(false), 2000);
         } catch (error) {
-            console.error('Error saving templates:', error);
-            alert('Có lỗi xảy ra khi lưu');
+            alert(error instanceof Error ? error.message : 'Không lưu được mẫu in.');
         } finally {
             setIsSaving(false);
         }
@@ -83,7 +107,7 @@ export const ShopInfoSettings: React.FC = () => {
                     </div>
                     <div>
                         <h3 className="font-bold text-slate-800">Mẫu in hóa đơn</h3>
-                        <p className="text-sm text-slate-500">Quản lý nhiều thông tin cửa hàng</p>
+                        <p className="text-sm text-slate-500">Lưu từng mẫu với revision; không ghi local-only.</p>
                     </div>
                 </div>
                 <button
@@ -95,8 +119,10 @@ export const ShopInfoSettings: React.FC = () => {
                 </button>
             </div>
 
+            {loadError && <div className="px-6 pt-4"><NoticeBanner kind="error" message={loadError} onRetry={loadTemplates} /></div>}
+            {truncated && <div className="px-6 pt-4"><NoticeBanner kind="warning" message="Danh sách mẫu in chưa tải đủ trang." /></div>}
+
             <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Sidebar: List of templates */}
                 <div className="space-y-2">
                     <p className="text-xs font-bold text-slate-400 uppercase px-2">Danh sách mẫu</p>
                     {templates.map(t => (
@@ -118,7 +144,7 @@ export const ShopInfoSettings: React.FC = () => {
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        handleDeleteTemplate(t.id);
+                                        void handleDeleteTemplate(t.id);
                                     }}
                                     className="p-1.5 text-slate-400 hover:text-red-500 transition-all"
                                 >
@@ -129,7 +155,6 @@ export const ShopInfoSettings: React.FC = () => {
                     ))}
                 </div>
 
-                {/* Main: Edit current template */}
                 <div className="md:col-span-2 space-y-6">
                     {currentTemplate ? (
                         <>
@@ -183,7 +208,7 @@ export const ShopInfoSettings: React.FC = () => {
 
                                 <div className="flex items-center gap-4 pt-2">
                                     <button
-                                        onClick={() => handleSetDefault(currentTemplate.id)}
+                                        onClick={() => void handleSetDefault(currentTemplate.id)}
                                         disabled={currentTemplate.isDefault}
                                         className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${currentTemplate.isDefault
                                             ? 'bg-amber-50 text-amber-600 border border-amber-200'
@@ -207,12 +232,12 @@ export const ShopInfoSettings: React.FC = () => {
                                 {saveSuccess ? (
                                     <>
                                         <Check size={24} />
-                                        ĐÃ LƯU TẤT CẢ THAY ĐỔI
+                                        ĐÃ LƯU MẪU NÀY
                                     </>
                                 ) : (
                                     <>
                                         <Save size={24} />
-                                        {isSaving ? 'ĐANG LƯU...' : 'LƯU CẤU HÌNH TEMPLATE'}
+                                        {isSaving ? 'ĐANG LƯU...' : 'LƯU MẪU ĐANG SỬA'}
                                     </>
                                 )}
                             </button>

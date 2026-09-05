@@ -258,9 +258,12 @@ test('the legacy header accepts only a signed session token for writes', async (
     {},
   );
 
-  assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), { success: true });
-  assert.deepEqual(env.DB.writes, [['orders', JSON.stringify(payload)]]);
+  assert.equal(response.status, 423);
+  assert.deepEqual(await response.json(), {
+    error: 'Whole-key writes are disabled. Use /api/v1 commands.',
+    code: 'MIGRATION_READ_ONLY',
+  });
+  assert.deepEqual(env.DB.writes, []);
 });
 
 test('a tampered session token cannot read sensitive data', async () => {

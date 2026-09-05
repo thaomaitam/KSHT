@@ -2,6 +2,7 @@ import { DomainError } from "../domain/errors.ts";
 import { GiabanApplication } from "../application/giaban.ts";
 import { operationById } from "../application/registry.ts";
 import type { InvocationContext } from "../safety/assertion.ts";
+import { ApiBodyError, readApiBody } from "./limits.ts";
 
 const HTTP_STATUS: Record<string, number> = {
   VALIDATION_ERROR: 400,
@@ -22,7 +23,12 @@ const HTTP_STATUS: Record<string, number> = {
 const json = (body: unknown, status = 200, extra: HeadersInit = {}) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { "content-type": "application/json", "cache-control": "no-store", ...extra },
+    headers: {
+      "content-type": "application/json",
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      ...extra,
+    },
   });
 
 const EXACT: Array<[string, string, string]> = [
@@ -114,6 +120,15 @@ const PATTERNS: Array<[string, RegExp, string, string]> = [
   ["POST", /^\/api\/v1\/backups\/uploads\/([^/]+)\/finalize$/, "finalizeBackupUpload", "uploadId"],
 ];
 
+const coerceSearchParam = (key: string, value: string): unknown => {
+  if (key === "limit" && /^[0-9]+$/.test(value)) return Number(value);
+  if (key === "includeArchived") {
+    if (value === "true") return true;
+    if (value === "false") return false;
+  }
+  return value;
+};
+
 const pathToOperation = (method: string, pathname: string): { operationId: string; params: Record<string, string> } | null => {
   for (const [routeMethod, routePath, operationId] of EXACT) {
     if (method === routeMethod && pathname === routePath) return { operationId, params: {} };
@@ -122,11 +137,26 @@ const pathToOperation = (method: string, pathname: string): { operationId: strin
     if (method !== routeMethod) continue;
     const match = pathname.match(regex);
     if (match) {
-      const value = decodeURIComponent(match[1]);
-      return { operationId, params: { [param]: value, id: value } };
+      try {
+        const value = decodeURIComponent(match[1]);
+        return { operationId, params: { [param]: value, id: value } };
+      } catch {
+        return null;
+      }
     }
   }
   return null;
+};
+
+export const resolveApiV1Route = (method: string, pathname: string) => {
+  const mapped = pathToOperation(method, pathname);
+  if (!mapped) {
+    if (pathname.startsWith("/api/v1/")) return { kind: "unknown" as const };
+    return null;
+  }
+  const policy = operationById.get(mapped.operationId);
+  if (!policy) return { kind: "unknown" as const };
+  return { kind: "operation" as const, operationId: mapped.operationId, public: Boolean(policy.public) };
 };
 
 export const handleApiV1 = async (
@@ -143,11 +173,28 @@ export const handleApiV1 = async (
   const policy = operationById.get(mapped.operationId);
   if (!policy) return json({ code: "NOT_FOUND", message: "Not Found", retryable: false }, 404);
   let body: Record<string, unknown> = {};
-  if (request.method !== "GET") {
-    const text = await request.text();
-    if (text) body = JSON.parse(text);
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    let text: string;
+    try {
+      text = await readApiBody(request);
+    } catch (error) {
+      const status = error instanceof ApiBodyError ? error.status : 400;
+      const message = error instanceof ApiBodyError ? error.message : "Invalid request body";
+      return json({ code: "VALIDATION_ERROR", message, retryable: false }, status);
+    }
+    if (text) {
+      try {
+        const parsed = JSON.parse(text);
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+          return json({ code: "VALIDATION_ERROR", message: "JSON object body required", retryable: false }, 400);
+        }
+        body = parsed as Record<string, unknown>;
+      } catch {
+        return json({ code: "VALIDATION_ERROR", message: "Invalid JSON", retryable: false }, 400);
+      }
+    }
   }
-  for (const [key, value] of url.searchParams.entries()) body[key] = value;
+  for (const [key, value] of url.searchParams.entries()) body[key] = coerceSearchParam(key, value);
   const input = { ...body, ...mapped.params };
   const invoked = {
     ...context,

@@ -1,9 +1,16 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "ksht-api",
-  "main": "cloudflare_worker.js",
+  "main": "workers/api/index.ts",
   "compatibility_date": "2025-12-11",
   "workers_dev": true,
+  "services": [
+    {
+      "binding": "GIABAN",
+      "service": "ksht-mcp",
+      "entrypoint": "GiabanHttp"
+    }
+  ],
   "kv_namespaces": [
     {
       "binding": "DB",

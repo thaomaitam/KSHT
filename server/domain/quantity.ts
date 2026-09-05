@@ -1,5 +1,8 @@
 import { fail } from "./errors.ts";
-import { assertVnd, multiplyVnd, type Vnd } from "./money.ts";
+import { assertVnd, fromMicroVnd, toMicroVnd, toScaledInteger, type Vnd } from "./money.ts";
+
+export const FACTOR_DECIMALS = 3;
+const FACTOR_SCALE = 1000n;
 
 export interface QuantityFactors {
   quantity: number;
@@ -7,31 +10,50 @@ export interface QuantityFactors {
   soKi?: number | null;
 }
 
-const optionalPositiveFactor = (value: number | null | undefined, field: string): number => {
-  if (value === null || value === undefined) return 1;
-  if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 0) {
-    fail("VALIDATION_ERROR", `${field} must be a non-negative safe integer`);
-  }
-  return value > 0 ? value : 1;
+const optionalFactorScaled = (value: number | null | undefined, field: string): bigint => {
+  if (value === null || value === undefined) return FACTOR_SCALE;
+  const scaled = toScaledInteger(value, FACTOR_DECIMALS, field);
+  return scaled > 0n ? scaled : FACTOR_SCALE;
+};
+
+export const assertFactor = (value: unknown, field: string): number => {
+  const scaled = toScaledInteger(value, FACTOR_DECIMALS, field);
+  return Number(scaled) / 10 ** FACTOR_DECIMALS;
 };
 
 export const effectiveQuantity = ({ quantity, soCuon, soKi }: QuantityFactors): number => {
   if (typeof quantity !== "number" || !Number.isSafeInteger(quantity) || quantity < 1) {
     fail("VALIDATION_ERROR", "quantity must be a positive safe integer");
   }
-  const rolls = optionalPositiveFactor(soCuon, "soCuon");
-  const kilos = optionalPositiveFactor(soKi, "soKi");
-  if (quantity > Math.floor(Number.MAX_SAFE_INTEGER / rolls)) {
+  const rolls = optionalFactorScaled(soCuon, "soCuon");
+  const kilos = optionalFactorScaled(soKi, "soKi");
+  const numerator = BigInt(quantity) * rolls * kilos;
+  const denom = FACTOR_SCALE * FACTOR_SCALE;
+  if (numerator % denom === 0n) {
+    const whole = numerator / denom;
+    if (whole > BigInt(Number.MAX_SAFE_INTEGER)) {
+      fail("VALIDATION_ERROR", "effective quantity overflowed");
+    }
+    return Number(whole);
+  }
+  const asNumber = Number(numerator) / Number(denom);
+  if (!Number.isFinite(asNumber) || asNumber <= 0) {
     fail("VALIDATION_ERROR", "effective quantity overflowed");
   }
-  const withRolls = quantity * rolls;
-  if (withRolls > Math.floor(Number.MAX_SAFE_INTEGER / kilos)) {
-    fail("VALIDATION_ERROR", "effective quantity overflowed");
-  }
-  return withRolls * kilos;
+  return asNumber;
 };
 
 export const lineAmount = (unitPrice: Vnd, factors: QuantityFactors, field = "line"): Vnd => {
   assertVnd(unitPrice, field);
-  return multiplyVnd(unitPrice, effectiveQuantity(factors), field);
+  if (typeof factors.quantity !== "number" || !Number.isSafeInteger(factors.quantity) || factors.quantity < 1) {
+    fail("VALIDATION_ERROR", "quantity must be a positive safe integer");
+  }
+  const rolls = optionalFactorScaled(factors.soCuon, "soCuon");
+  const kilos = optionalFactorScaled(factors.soKi, "soKi");
+  const numerator = toMicroVnd(unitPrice, field) * BigInt(factors.quantity) * rolls * kilos;
+  const denom = FACTOR_SCALE * FACTOR_SCALE;
+  if (numerator % denom !== 0n) {
+    fail("VALIDATION_ERROR", `${field} is not representable without rounding`);
+  }
+  return fromMicroVnd(numerator / denom, field);
 };

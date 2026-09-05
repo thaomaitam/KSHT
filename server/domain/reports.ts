@@ -1,4 +1,4 @@
-import { addVnd, type Vnd } from "./money.ts";
+import { addVnd, subtractVnd, type Vnd } from "./money.ts";
 import { isActiveSaleStatus, type OrderStatus } from "./lifecycle.ts";
 import { netCollected, outstandingForOrder, type PaymentBalance } from "./payments.ts";
 import { computeOrderTotals, type OrderLineInput } from "./orders.ts";
@@ -24,7 +24,6 @@ export interface ReportTotals {
   profit: Vnd;
 }
 
-export const BUSINESS_TIMEZONE = "Asia/Ho_Chi_Minh";
 
 export const summarizeOrders = (orders: ReportOrder[]): ReportTotals => {
   let confirmedSales = 0;
@@ -46,14 +45,14 @@ export const summarizeOrders = (orders: ReportOrder[]): ReportTotals => {
       receivables = addVnd(receivables, outstandingForOrder(totals.total, collected, order.status));
     }
     for (const payment of order.payments) {
-      const validGross = payment.amount - payment.reversedAmount;
+      const validGross = subtractVnd(payment.amount, payment.reversedAmount);
       grossReceipts = addVnd(grossReceipts, validGross);
       refunds = addVnd(refunds, payment.refundedAmount);
     }
   }
 
-  const netReceipts = grossReceipts - refunds;
-  const profit = confirmedSales - cogs;
+  const netReceipts = subtractVnd(grossReceipts, refunds);
+  const profit = subtractVnd(confirmedSales, cogs);
   return {
     confirmedSales,
     grossReceipts,

@@ -25,8 +25,8 @@ export const applyConsumption = (
   consume: Vnd,
 ): PaymentBalance => {
   assertVnd(consume, kind);
-  if (consume < 1) {
-    fail("VALIDATION_ERROR", `${kind} amount must be at least 1`);
+  if (consume <= 0) {
+    fail("VALIDATION_ERROR", `${kind} amount must be greater than 0`);
   }
   const remaining = remainingConsumable(payment);
   if (consume > remaining) {
@@ -60,8 +60,8 @@ export const assertPaymentAllowed = (
   status: OrderStatus,
 ): void => {
   assertVnd(incoming, "payment");
-  if (incoming < 1) {
-    fail("VALIDATION_ERROR", "payment amount must be at least 1");
+  if (incoming <= 0) {
+    fail("VALIDATION_ERROR", "payment amount must be greater than 0");
   }
   if (!isActiveSaleStatus(status) && status !== "draft") {
     fail("INVALID_TRANSITION", "Cannot record payment on a cancelled or discarded order");

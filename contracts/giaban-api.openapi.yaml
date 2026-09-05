@@ -11,6 +11,11 @@ info:
     entrypoint: GiabanDomain
     method: invoke
     envelope: InvokeEnvelope
+  x-giaban-browser-rpc:
+    service: ksht-mcp
+    entrypoint: GiabanHttp
+    method: handleBrowserApi
+    actors: [public, legacyAdmin]
   x-giaban-limits:
     pageDefault: 50
     pageMax: 100
@@ -1761,9 +1766,10 @@ components:
           type: object
           additionalProperties: true
     MoneyVnd:
-      type: integer
+      type: number
       minimum: 0
       maximum: 9007199254740991
+      description: Non-negative VND. Line/order totals keep the exact quantity times price and are not rounded to whole dong.
     Scope:
       type: string
       enum:
@@ -2072,10 +2078,10 @@ components:
         unit: { type: string }
         quantity: { type: integer, minimum: 1 }
         soCuon:
-          type: ["integer", "null"]
+          type: ["number", "null"]
           minimum: 0
         soKi:
-          type: ["integer", "null"]
+          type: ["number", "null"]
           minimum: 0
         unitPrice: { $ref: "#/components/schemas/MoneyVnd" }
         costPrice: { $ref: "#/components/schemas/MoneyVnd" }
@@ -2092,12 +2098,12 @@ components:
         unit: { type: string }
         quantity: { type: integer, minimum: 1 }
         soCuon:
-          type: ["integer", "null"]
+          type: ["number", "null"]
         soKi:
-          type: ["integer", "null"]
+          type: ["number", "null"]
         unitPrice: { $ref: "#/components/schemas/MoneyVnd" }
         costPrice: { $ref: "#/components/schemas/MoneyVnd" }
-        effectiveQuantity: { type: integer, minimum: 1 }
+        effectiveQuantity: { type: number, exclusiveMinimum: 0 }
         saleSubtotal: { $ref: "#/components/schemas/MoneyVnd" }
         cogs: { $ref: "#/components/schemas/MoneyVnd" }
         isManual: { type: boolean }

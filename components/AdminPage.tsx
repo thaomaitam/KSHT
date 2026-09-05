@@ -4,15 +4,14 @@ import { Product } from '../types';
 import { storageService } from '../storageService';
 import { settingsService, CategoryItem } from '../settingsService';
 import { ProductForm } from './ProductForm';
+import { NoticeBanner } from './NoticeBanner';
 import { isAdminAuthenticated } from './LoginModal';
 
 export const AdminPage: React.FC = () => {
-    if (!isAdminAuthenticated()) {
-        window.location.hash = '#/';
-        return null;
-    }
-
     const [products, setProducts] = useState<Product[]>([]);
+    const [truncated, setTruncated] = useState(false);
+    const [loadError, setLoadError] = useState('');
+    const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<CategoryItem[]>([]);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [showForm, setShowForm] = useState(false);
@@ -20,33 +19,50 @@ export const AdminPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('ALL');
 
-    useEffect(() => {
-        const loadData = async () => {
-            const prods = await storageService.getAdminProducts();
-            const cats = await settingsService.getCategories();
-            setProducts(prods);
+    const loadData = async () => {
+        setLoading(true);
+        setLoadError('');
+        try {
+            const [prods, cats] = await Promise.all([
+                storageService.getAdminProducts(),
+                settingsService.getCategories(),
+            ]);
+            setProducts(prods.products);
+            setTruncated(prods.truncated);
             setCategories(cats);
-        };
-        loadData();
+        } catch (error) {
+            setLoadError(error instanceof Error ? error.message : 'Không tải được catalog quản trị.');
+            setProducts([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        void loadData();
     }, []);
 
     const handleSave = async (product: Product) => {
         try {
-            if (editingProduct) {
-                setProducts(await storageService.updateProduct(product));
-            } else {
-                setProducts(await storageService.addProduct(product));
-            }
+            const next = editingProduct
+                ? await storageService.updateProduct(product)
+                : await storageService.addProduct(product);
+            setProducts(next.products);
+            setTruncated(next.truncated);
             setShowForm(false);
             setEditingProduct(null);
         } catch (error) {
             alert(error instanceof Error ? error.message : 'Không lưu được sản phẩm.');
+            throw error;
         }
     };
 
     const handleDelete = async (id: string) => {
         try {
-            setProducts(await storageService.deleteProduct(id));
+            const product = products.find((item) => item.id === id);
+            const next = await storageService.deleteProduct(id, product?.revision);
+            setProducts(next.products);
+            setTruncated(next.truncated);
             setShowDeleteConfirm(null);
         } catch (error) {
             alert(error instanceof Error ? error.message : 'Không xóa được sản phẩm.');
@@ -79,9 +95,10 @@ export const AdminPage: React.FC = () => {
         })
         .sort((a, b) => a.category.localeCompare(b.category));
 
+    if (!isAdminAuthenticated()) return null;
+
     return (
         <div className="min-h-screen bg-slate-50">
-            {/* Header */}
             <header className="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-40">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
@@ -128,12 +145,18 @@ export const AdminPage: React.FC = () => {
                 </div>
             </header>
 
-            {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-4">
+                {loading && <NoticeBanner kind="info" message="Đang tải catalog quản trị..." />}
+                {loadError && <NoticeBanner kind="error" title="Không tải được catalog" message={loadError} onRetry={loadData} />}
+                {truncated && (
+                    <NoticeBanner
+                        kind="warning"
+                        title="Danh sách bị cắt"
+                        message="Danh sách chưa tải đủ trang. Phần đang hiện có thể thiếu; hãy tải lại trước khi đối chiếu."
+                    />
+                )}
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    {/* Filters - Mobile Optimized */}
                     <div className="px-4 sm:px-6 py-4 border-b border-slate-200 bg-slate-50 space-y-3">
-                        {/* Search Row - Full Width on Mobile */}
                         <div className="relative w-full">
                             <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                             <input
@@ -144,7 +167,6 @@ export const AdminPage: React.FC = () => {
                                 className="w-full pl-12 pr-4 py-3 text-base border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white"
                             />
                         </div>
-                        {/* Category & Count Row */}
                         <div className="flex items-center justify-between gap-3">
                             <select
                                 value={selectedCategory}
@@ -152,7 +174,7 @@ export const AdminPage: React.FC = () => {
                                 className="flex-1 max-w-[200px] px-4 py-3 text-base border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white"
                             >
                                 <option value="ALL">Tất cả nhóm</option>
-                                {categories.map(cat => (
+                                {categories.filter((cat) => cat.value !== 'ALL').map(cat => (
                                     <option key={cat.id} value={cat.value}>{cat.label}</option>
                                 ))}
                             </select>
@@ -162,7 +184,6 @@ export const AdminPage: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Table */}
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead className="bg-slate-50 border-b border-slate-200">
@@ -174,10 +195,10 @@ export const AdminPage: React.FC = () => {
                                         Danh mục
                                     </th>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">
-                                        Giá từ
+                                        Giá bán từ
                                     </th>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden lg:table-cell">
-                                        Variants
+                                        Giá gốc từ
                                     </th>
                                     <th className="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                         Hành động
@@ -220,8 +241,8 @@ export const AdminPage: React.FC = () => {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 hidden lg:table-cell">
-                                            <span className="text-sm text-slate-600">
-                                                {product.variants.length} kích thước
+                                            <span className="text-sm text-slate-700">
+                                                {formatPrice(Math.min(...product.variants.map(v => v.costPrice ?? 0)))}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
@@ -236,7 +257,7 @@ export const AdminPage: React.FC = () => {
                                                 <button
                                                     onClick={() => setShowDeleteConfirm(product.id)}
                                                     className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                    title="Xóa"
+                                                    title="Lưu trữ"
                                                 >
                                                     <Trash2 size={18} />
                                                 </button>
@@ -248,7 +269,7 @@ export const AdminPage: React.FC = () => {
                         </table>
                     </div>
 
-                    {products.length === 0 && (
+                    {!loading && !loadError && products.length === 0 && (
                         <div className="py-16 text-center">
                             <Package size={48} className="mx-auto text-slate-300 mb-4" />
                             <p className="text-slate-500">Chưa có sản phẩm nào</p>
@@ -263,7 +284,6 @@ export const AdminPage: React.FC = () => {
                 </div>
             </main>
 
-            {/* Product Form Modal */}
             {showForm && (
                 <ProductForm
                     product={editingProduct}
@@ -275,13 +295,12 @@ export const AdminPage: React.FC = () => {
                 />
             )}
 
-            {/* Delete Confirmation Modal */}
             {showDeleteConfirm && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
-                        <h3 className="text-lg font-bold text-slate-800 mb-2">Xác nhận xóa</h3>
+                        <h3 className="text-lg font-bold text-slate-800 mb-2">Lưu trữ sản phẩm</h3>
                         <p className="text-slate-600 mb-6">
-                            Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.
+                            Sản phẩm sẽ được lưu trữ trên máy chủ, không xóa cứng. Đơn cũ vẫn giữ dòng hàng.
                         </p>
                         <div className="flex gap-3">
                             <button
@@ -294,13 +313,12 @@ export const AdminPage: React.FC = () => {
                                 onClick={() => handleDelete(showDeleteConfirm)}
                                 className="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-colors"
                             >
-                                Xóa
+                                Lưu trữ
                             </button>
                         </div>
                     </div>
                 </div>
             )}
-
         </div>
     );
 };

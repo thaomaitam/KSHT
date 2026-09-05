@@ -1,8 +1,9 @@
 import React from 'react';
 import { Search } from 'lucide-react';
-import { Product } from '../types';
+import { CatalogLoad, Product } from '../types';
 import { ProductCard } from './ProductCard';
 import { CategoryItem } from '../settingsService';
+import { NoticeBanner } from './NoticeBanner';
 
 interface ProductListProps {
     filteredProducts: Product[];
@@ -11,6 +12,9 @@ interface ProductListProps {
     searchTerm: string;
     setSearchTerm: (term: string) => void;
     setSelectedProduct: (product: Product) => void;
+    catalog?: CatalogLoad;
+    loading?: boolean;
+    onRetry?: () => void;
 }
 
 export const ProductList: React.FC<ProductListProps> = ({
@@ -19,10 +23,26 @@ export const ProductList: React.FC<ProductListProps> = ({
     categories,
     searchTerm,
     setSearchTerm,
-    setSelectedProduct
+    setSelectedProduct, catalog, loading, onRetry
 }) => {
     return (
-        <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-4">
+            {loading && <NoticeBanner kind="info" message="Đang tải catalog cửa hàng..." />}
+            {catalog?.error && (
+                <NoticeBanner
+                    kind={catalog.source === 'stale-cache' ? 'stale' : 'error'}
+                    title={catalog.source === 'stale-cache' ? 'Đang hiện cache cũ' : 'Không tải được cửa hàng'}
+                    message={catalog.error.message}
+                    onRetry={onRetry}
+                />
+            )}
+            {catalog?.truncated && catalog.source === 'network' && (
+                <NoticeBanner
+                    kind="warning"
+                    title="Danh sách bị cắt"
+                    message="Danh sách chưa tải đủ trang; một số sản phẩm có thể chưa hiển thị."
+                />
+            )}
             <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-xl md:text-2xl font-bold text-slate-800">
                     {activeCategory === 'ALL' ? 'Tất cả sản phẩm' : categories.find(c => c.value === activeCategory)?.label}

@@ -506,10 +506,10 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
                             <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; color: ${PDF_COLORS.accent}; border-left: 1px solid ${PDF_COLORS.grayBorder}; border-top: none;">-${formatPrice(order.discount)}</td>
                         </tr>
                         ` : ''}
-                        ${order.debt ? `
+                        ${order.outstanding ? `
                         <tr style="background: ${PDF_COLORS.white};">
-                            <td colspan="${colSpan}" style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 600; color: #F57C00; border-right: none; border-top: none;">Công nợ cũ:</td>
-                            <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; color: #F57C00; border-left: 1px solid ${PDF_COLORS.grayBorder}; border-top: none;">+${formatPrice(order.debt)}</td>
+                            <td colspan="${colSpan}" style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 600; color: #F57C00; border-right: none; border-top: none;">Còn phải thu:</td>
+                            <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; color: #F57C00; border-left: 1px solid ${PDF_COLORS.grayBorder}; border-top: none;">${formatPrice(order.outstanding)}</td>
                         </tr>
                         ` : ''}
                         <!-- Total Row - Using Accent Color (Cam đỏ) for payment attention -->
@@ -663,11 +663,10 @@ export const generateReceiptContent = (order: Order, orderCount: number, shopTem
                         <span style="font-size: 11px; color: #E53E3E; padding-right: 10px;">-${formatPrice(order.discount)}</span>
                     </div>
                     ` : ''}
-                    ${order.debt ? `
-                    <!-- Debt -->
+                    ${order.outstanding ? `
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                        <span style="color: #F57C00; font-size: 11px;">Công nợ cũ:</span>
-                        <span style="font-size: 11px; color: #F57C00; padding-right: 10px;">+${formatPrice(order.debt)}</span>
+                        <span style="color: #F57C00; font-size: 11px;">Còn phải thu:</span>
+                        <span style="font-size: 11px; color: #F57C00; padding-right: 10px;">${formatPrice(order.outstanding)}</span>
                     </div>
                     ` : ''}
                     <!-- Total -->

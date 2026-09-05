@@ -1,6 +1,7 @@
 import React from 'react';
-import { Users, Search, Phone, MapPin, Trash2, FilePlus } from 'lucide-react';
+import { Users, Search, Phone, Trash2, FilePlus } from 'lucide-react';
 import { Customer, businessService } from '../../businessService';
+import { NoticeBanner } from '../NoticeBanner';
 
 interface CustomersTabProps {
     customers: Customer[];
@@ -8,6 +9,7 @@ interface CustomersTabProps {
     customerSearch: string;
     setCustomerSearch: (search: string) => void;
     onCreateOrder: (customer: Customer) => void;
+    truncated?: boolean;
 }
 
 const formatPrice = (price: number): string => {
@@ -15,18 +17,18 @@ const formatPrice = (price: number): string => {
 };
 
 export const CustomersTab: React.FC<CustomersTabProps> = ({
-    customers, setCustomers, customerSearch, setCustomerSearch, onCreateOrder
+    customers, setCustomers, customerSearch, setCustomerSearch, onCreateOrder, truncated,
 }) => {
-
     const filteredCustomers = customers.filter(customer =>
         customer.name.toLowerCase().includes(customerSearch.toLowerCase()) ||
         customer.phone.includes(customerSearch)
     );
 
     const handleDeleteCustomer = async (customerId: string) => {
-        if (!window.confirm('Bạn có chắc chắn muốn xóa khách hàng này?')) return;
+        if (!window.confirm('Lưu trữ khách hàng này trên máy chủ?')) return;
         try {
-            setCustomers(await businessService.deleteCustomer(customerId));
+            const next = await businessService.deleteCustomer(customerId);
+            setCustomers(next.items);
         } catch (error) {
             alert(error instanceof Error ? error.message : 'Không xóa được khách hàng.');
         }
@@ -34,23 +36,28 @@ export const CustomersTab: React.FC<CustomersTabProps> = ({
 
     return (
         <div className="space-y-6">
+            {truncated && (
+                <NoticeBanner
+                    kind="warning"
+                    title="Danh sách khách bị cắt"
+                    message="Danh sách khách hoặc phải thu chưa tải đủ trang. Số phải thu từng khách có thể thiếu."
+                />
+            )}
             <section className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <Users size={20} className="text-purple-600" />
                         <h2 className="font-semibold text-slate-800">Danh sách khách hàng</h2>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <div className="relative">
-                            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                            <input
-                                type="text"
-                                placeholder="Tìm theo tên, SĐT..."
-                                value={customerSearch}
-                                onChange={(e) => setCustomerSearch(e.target.value)}
-                                className="pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm w-64"
-                            />
-                        </div>
+                    <div className="relative">
+                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input
+                            type="text"
+                            placeholder="Tìm theo tên, SĐT..."
+                            value={customerSearch}
+                            onChange={(e) => setCustomerSearch(e.target.value)}
+                            className="pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm w-64"
+                        />
                     </div>
                 </div>
                 <div className="overflow-x-auto">
@@ -58,9 +65,8 @@ export const CustomersTab: React.FC<CustomersTabProps> = ({
                         <thead className="bg-slate-50/50 text-xs uppercase tracking-wider font-semibold text-slate-500">
                             <tr>
                                 <th className="px-6 py-4 text-left">Khách hàng</th>
-                                <th className="px-6 py-4 text-left">Liên hệ</th>
-                                <th className="px-6 py-4 text-right">Tổng mua</th>
-                                <th className="px-6 py-4 text-right">Công nợ</th>
+                                <th className="px-6 py-4 text-left">Liên hệ (đã che)</th>
+                                <th className="px-6 py-4 text-right">Phải thu</th>
                                 <th className="px-6 py-4 text-right">Thao tác</th>
                             </tr>
                         </thead>
@@ -69,38 +75,25 @@ export const CustomersTab: React.FC<CustomersTabProps> = ({
                                 filteredCustomers.map(customer => (
                                     <tr key={customer.id} className="hover:bg-slate-50/50 transition-colors group">
                                         <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600 font-bold">
-                                                    {customer.name.charAt(0).toUpperCase()}
-                                                </div>
-                                                <div>
-                                                    <div className="text-sm font-bold text-slate-800">{customer.name}</div>
-                                                    <div className="text-xs text-slate-400">ID: {customer.id.slice(-6).toUpperCase()}</div>
-                                                </div>
-                                            </div>
+                                            <div className="text-sm font-bold text-slate-800">{customer.name}</div>
+                                            <div className="text-xs text-slate-400 font-mono">{customer.id}</div>
+                                            {customer.duplicatePhoneWarning && (
+                                                <div className="text-[10px] text-amber-600 font-bold mt-1">Trùng SĐT</div>
+                                            )}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="flex flex-col gap-1">
-                                                <div className="flex items-center gap-2 text-sm text-slate-600">
-                                                    <Phone size={14} className="text-slate-400" />
-                                                    {customer.phone}
-                                                </div>
-                                                {customer.address && (
-                                                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                                                        <MapPin size={14} className="text-slate-400" />
-                                                        {customer.address}
-                                                    </div>
-                                                )}
+                                            <div className="flex items-center gap-2 text-sm text-slate-600">
+                                                <Phone size={14} className="text-slate-400" />
+                                                {customer.phone}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <div className="text-sm font-bold text-slate-900">{formatPrice(customer.totalSpent)}</div>
-                                            <div className="text-xs text-slate-500">{customer.orderCount} đơn hàng</div>
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className={`text-sm font-bold ${customer.debt > 0 ? 'text-red-500' : 'text-slate-400'}`}>
-                                                {formatPrice(customer.debt)}
+                                            <div className={`text-sm font-bold ${(customer.outstanding || 0) > 0 ? 'text-orange-600' : 'text-slate-400'}`}>
+                                                {formatPrice(customer.outstanding || 0)}
                                             </div>
+                                            {!customer.outstandingComplete && (
+                                                <div className="text-[10px] text-amber-600">Không đủ trang phải thu</div>
+                                            )}
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end gap-2">
@@ -114,7 +107,7 @@ export const CustomersTab: React.FC<CustomersTabProps> = ({
                                                 <button
                                                     onClick={() => handleDeleteCustomer(customer.id)}
                                                     className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                                                    title="Xóa khách hàng"
+                                                    title="Lưu trữ khách"
                                                 >
                                                     <Trash2 size={16} />
                                                 </button>
@@ -124,7 +117,7 @@ export const CustomersTab: React.FC<CustomersTabProps> = ({
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
+                                    <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
                                         <div className="flex flex-col items-center gap-2">
                                             <Users size={40} className="text-slate-200" />
                                             <p>Chưa có khách hàng nào</p>

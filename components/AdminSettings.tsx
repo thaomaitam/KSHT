@@ -9,13 +9,9 @@ import { CloudSettings } from './admin/CloudSettings';
 import { BackupSettings } from './admin/BackupSettings';
 import { CategorySettings } from './admin/CategorySettings';
 import { SecuritySettings } from './admin/SecuritySettings';
+import { NoticeBanner } from './NoticeBanner';
 
 export const AdminSettings: React.FC = () => {
-    if (!isAdminAuthenticated()) {
-        window.location.hash = '#/';
-        return null;
-    }
-
     const {
         settings, setSettings,
         categories,
@@ -41,8 +37,12 @@ export const AdminSettings: React.FC = () => {
         handleBackup,
         handleFileImport,
         handleSyncToCloud,
-        handlePullFromCloud
+        handlePullFromCloud,
+        categoriesTruncated,
+        saving, loading, loadError,
     } = useAdminSettings();
+
+    if (!isAdminAuthenticated()) return null;
 
     return (
         <div className="min-h-screen bg-slate-50">
@@ -67,6 +67,12 @@ export const AdminSettings: React.FC = () => {
 
             {/* Main Content */}
             <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+                {loading && <NoticeBanner kind="info" message="Đang tải cài đặt..." />}
+                {loadError && <NoticeBanner kind="error" message={loadError} onRetry={handlePullFromCloud} />}
+                <fieldset disabled={loading || saving || Boolean(loadError)} className="space-y-8 disabled:opacity-60">
+                {categoriesTruncated && (
+                    <NoticeBanner kind="warning" message="Danh mục chưa tải đủ trang; chưa thể đối chiếu đầy đủ." />
+                )}
                 <PhoneSettings
                     settings={settings}
                     setSettings={setSettings}
@@ -117,6 +123,7 @@ export const AdminSettings: React.FC = () => {
                 />
 
                 <SecuritySettings />
+                </fieldset>
             </main>
 
             {/* Delete Confirmation Modal */}

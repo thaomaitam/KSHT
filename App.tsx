@@ -16,7 +16,7 @@ const MainApp: React.FC = () => {
     activeCategory, setActiveCategory, searchTerm, setSearchTerm,
     selectedProduct, setSelectedProduct, currentPage, categories,
     showLoginModal, setShowLoginModal, showCart, setShowCart,
-    filteredProducts, handleLoginSuccess
+    filteredProducts, handleLoginSuccess, catalog, loading, reloadStorefront
   } = useAppData();
 
   if (currentPage === 'admin') return <AdminPage />;
@@ -43,6 +43,9 @@ const MainApp: React.FC = () => {
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         setSelectedProduct={setSelectedProduct}
+        catalog={catalog}
+        loading={loading}
+        onRetry={reloadStorefront}
       />
 
       <Footer />

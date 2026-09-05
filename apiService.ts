@@ -1,4 +1,5 @@
-import { PUBLIC_READ_KEYS } from './workerContract.js';
+import { PUBLIC_READ_KEYS, PRIVATE_DATA_KEYS } from './workerContract.js';
+import { stripCostFromProduct } from './client/giabanPayloads.ts';
 
 const API_URL_KEY = 'giaban_api_url';
 const SESSION_TOKEN_KEY = 'giaban_admin_session_token';
@@ -7,6 +8,12 @@ const ADMIN_AUTH_KEY = 'giaban_admin_auth';
 const LEGACY_ADMIN_SECRET_KEY = 'giaban_admin_secret';
 const DEFAULT_API_URL = 'https://ksht-api.ngthanhhuy951.workers.dev';
 const PUBLIC_READ_KEY_SET = new Set(PUBLIC_READ_KEYS);
+const PRIVATE_CACHE_KEYS = [
+    ...PRIVATE_DATA_KEYS.map((key) => `giaban_${key}`),
+    'giaban_admin_products',
+];
+const PUBLIC_PRODUCTS_KEY = 'giaban_products';
+const CART_KEY = 'giaban_cart';
 
 interface LoginResult {
     success: boolean;
@@ -18,12 +25,37 @@ const removeLegacyCredential = () => {
     localStorage.removeItem(LEGACY_ADMIN_SECRET_KEY);
 };
 
+const stripPublicProductCache = () => {
+    const stored = localStorage.getItem(PUBLIC_PRODUCTS_KEY);
+    if (!stored) return;
+    try {
+        const parsed = JSON.parse(stored);
+        if (!Array.isArray(parsed)) {
+            localStorage.removeItem(PUBLIC_PRODUCTS_KEY);
+            return;
+        }
+        localStorage.setItem(PUBLIC_PRODUCTS_KEY, JSON.stringify(parsed.map((product: any) => stripCostFromProduct(product))));
+    } catch {
+        localStorage.removeItem(PUBLIC_PRODUCTS_KEY);
+    }
+};
+
+const clearPrivateCache = () => {
+    for (const key of PRIVATE_CACHE_KEYS) localStorage.removeItem(key);
+    stripPublicProductCache();
+};
+
+export const SESSION_ENDED_EVENT = 'giaban-session-ended';
+
 const clearSession = () => {
+    const hadSession = Boolean(sessionStorage.getItem(SESSION_TOKEN_KEY));
     sessionStorage.removeItem(SESSION_TOKEN_KEY);
     sessionStorage.removeItem(SESSION_EXPIRY_KEY);
     sessionStorage.removeItem(ADMIN_AUTH_KEY);
     localStorage.removeItem(ADMIN_AUTH_KEY);
     removeLegacyCredential();
+    clearPrivateCache();
+    if (hadSession && typeof window !== 'undefined') window.dispatchEvent(new Event(SESSION_ENDED_EVENT));
 };
 
 const getSessionToken = (): string => {
@@ -67,7 +99,11 @@ export const apiService = {
     getSessionToken,
 
     setSession(token: string, expiresAt: number): void {
-        clearSession();
+        sessionStorage.removeItem(SESSION_TOKEN_KEY);
+        sessionStorage.removeItem(SESSION_EXPIRY_KEY);
+        sessionStorage.removeItem(ADMIN_AUTH_KEY);
+        localStorage.removeItem(ADMIN_AUTH_KEY);
+        removeLegacyCredential();
         if (!token || !Number.isSafeInteger(expiresAt) || expiresAt <= Date.now()) return;
 
         sessionStorage.setItem(SESSION_TOKEN_KEY, token);
@@ -76,6 +112,8 @@ export const apiService = {
     },
 
     clearSession,
+
+    clearPrivateCache,
 
     async getCloud<T>(key: string): Promise<T | null> {
         const apiUrl = this.getApiUrl();
@@ -132,3 +170,7 @@ export const apiService = {
         }
     },
 };
+
+export const PUBLIC_PRODUCTS_CACHE_KEY = PUBLIC_PRODUCTS_KEY;
+export const ADMIN_PRODUCTS_CACHE_KEY = 'giaban_admin_products';
+export const CART_CACHE_KEY = CART_KEY;

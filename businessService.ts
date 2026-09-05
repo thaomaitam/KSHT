@@ -1,4 +1,15 @@
-import { giabanClient, newIdempotencyKey, CloudWriteError } from './client/giabanClient';
+import { giabanClient, newIdempotencyKey, CloudWriteError } from './client/giabanClient.ts';
+import { collectPages } from './client/giabanPage.ts';
+import { stepKey } from './utils/operationState.ts';
+import {
+  toCashTransactionWrite,
+  toCustomerWrite,
+  toDraftOrderWrite,
+  toPaymentWrite,
+  toShopTemplateWrite,
+} from './client/giabanPayloads.ts';
+
+export type OrderStatus = 'draft' | 'confirmed' | 'shipping' | 'completed' | 'cancelled' | 'discarded';
 
 export interface Order {
     id: string;
@@ -8,20 +19,24 @@ export interface Order {
     address: string;
     items: any[];
     total: number;
-    status: 'pending' | 'shipping' | 'completed' | 'cancelled';
+    status: OrderStatus;
     createdAt: string;
     paymentMethod: 'cod' | 'banking';
     note?: string;
     shippingFee?: number;
     discount?: number;
-    debt?: number;
-    paymentStatus?: 'paid' | 'unpaid';
-    totalAmountInWords?: string;
-    shopTemplateId?: string;
     revision?: number;
-    domainStatus?: string;
     netCollected?: number;
     outstanding?: number;
+    shopTemplateId?: string;
+    reviewFlags?: string[];
+    totalAmountInWords?: string;
+    sellerSnapshot?: {
+        id?: string;
+        name?: string;
+        address?: string;
+        phone?: string;
+    };
 }
 
 export interface Customer {
@@ -29,16 +44,23 @@ export interface Customer {
     name: string;
     phone: string;
     address: string;
-    totalSpent: number;
-    lastOrderDate: string;
-    orderCount?: number;
-    debt?: number;
     revision?: number;
+    duplicatePhoneWarning?: boolean;
+    outstanding?: number;
+    outstandingComplete?: boolean;
+    piiComplete?: boolean;
 }
 
-export interface CostPrice {
-    productId: string;
-    price: number;
+export interface PaymentRecord {
+    id: string;
+    orderId: string;
+    amount: number;
+    reversedAmount: number;
+    refundedAmount: number;
+    remaining: number;
+    method: string;
+    note?: string;
+    createdAt: string;
 }
 
 export interface Transaction {
@@ -64,19 +86,54 @@ export interface ShopTemplate {
     address: string;
     phone: string;
     isDefault?: boolean;
+    archived?: boolean;
     revision?: number;
 }
 
-const mapUiStatus = (status: string): Order['status'] => {
-    if (status === 'shipping') return 'shipping';
-    if (status === 'completed') return 'completed';
-    if (status === 'cancelled' || status === 'discarded') return 'cancelled';
-    return 'pending';
+export interface ReportSummary {
+    fromDate: string;
+    toDate: string;
+    timezone: string;
+    confirmedSales: number;
+    grossReceipts: number;
+    refunds: number;
+    netReceipts: number;
+    receivables: number;
+    discounts: number;
+    shippingFees: number;
+    cogs: number;
+    profit: number;
+}
+
+export interface HistoricalReview {
+    ready: boolean;
+    count: number;
+    canRepair: boolean;
+    message: string;
+    types: Array<{ type: string; count: number }>;
+}
+
+export interface ListedPage<T> {
+    items: T[];
+    truncated: boolean;
+    complete?: boolean;
+    reason?: string;
+}
+
+const DOMAIN_STATUSES = new Set<OrderStatus>(['draft', 'confirmed', 'shipping', 'completed', 'cancelled', 'discarded']);
+
+export const requireCustomerId = (customerId: string | undefined | null): string => {
+    const id = String(customerId || '').trim();
+    if (!id) throw new Error('customerId is required; chọn khách hiện có hoặc tạo khách mới, không khớp mờ.');
+    return id;
 };
 
-const toOrder = (row: any): Order => {
+export const mapOrderFromInvoice = (row: any): Order => {
     const contact = row.contact || {};
-    const outstanding = Number(row.outstanding) || 0;
+    const statusRaw = String(row.status || 'draft');
+    const status = DOMAIN_STATUSES.has(statusRaw as OrderStatus) ? statusRaw as OrderStatus : 'draft';
+    const reviewFlags: string[] = [];
+    if (!row.customerId) reviewFlags.push('customer_id_requires_review');
     return {
         id: String(row.id),
         customerId: row.customerId ? String(row.customerId) : undefined,
@@ -88,72 +145,173 @@ const toOrder = (row: any): Order => {
             total: Number(item.saleSubtotal ?? item.total) || 0,
         })),
         total: Number(row.total) || 0,
-        status: mapUiStatus(String(row.status || 'confirmed')),
+        status,
         createdAt: String(row.createdAt || ''),
         paymentMethod: row.paymentMethod === 'banking' ? 'banking' : 'cod',
         note: row.note ? String(row.note) : '',
         shippingFee: Number(row.shippingFee) || 0,
         discount: Number(row.discount) || 0,
-        debt: outstanding,
-        paymentStatus: outstanding > 0 ? 'unpaid' : 'paid',
         shopTemplateId: row.shopTemplateId ? String(row.shopTemplateId) : undefined,
         revision: Number(row.revision) || 1,
-        domainStatus: String(row.status || ''),
         netCollected: Number(row.netCollected) || 0,
-        outstanding,
+        outstanding: Number(row.outstanding) || 0,
+        reviewFlags,
+        sellerSnapshot: row.sellerSnapshot && typeof row.sellerSnapshot === 'object'
+            ? {
+                id: row.sellerSnapshot.id ? String(row.sellerSnapshot.id) : undefined,
+                name: String(row.sellerSnapshot.name || ''),
+                address: String(row.sellerSnapshot.address || ''),
+                phone: String(row.sellerSnapshot.phone || ''),
+            }
+            : undefined,
     };
 };
 
-const toCustomer = (row: any, debt = 0): Customer => ({
-    id: String(row.id),
-    name: String(row.name || row.displayName || ''),
-    phone: String(row.phone || row.phoneMasked || ''),
-    address: String(row.address || ''),
-    totalSpent: Number(row.totalSpent) || 0,
-    lastOrderDate: String(row.lastOrderDate || ''),
-    orderCount: Number(row.orderCount) || 0,
-    debt,
-    revision: Number(row.revision) || 1,
+export const mapReportSummary = (row: any): ReportSummary => ({
+    fromDate: String(row.fromDate || ''),
+    toDate: String(row.toDate || ''),
+    timezone: String(row.timezone || 'Asia/Ho_Chi_Minh'),
+    confirmedSales: Number(row.confirmedSales) || 0,
+    grossReceipts: Number(row.grossReceipts) || 0,
+    refunds: Number(row.refunds) || 0,
+    netReceipts: Number(row.netReceipts) || 0,
+    receivables: Number(row.receivables) || 0,
+    discounts: Number(row.discounts) || 0,
+    shippingFees: Number(row.shippingFees) || 0,
+    cogs: Number(row.cogs) || 0,
+    profit: Number(row.profit) || 0,
 });
 
-const loadInvoices = async (ids: string[]): Promise<Order[]> => {
-    const orders: Order[] = [];
-    for (const id of ids) {
-        try {
-            orders.push(toOrder(await giabanClient.getOrderInvoice(id)));
-        } catch {
-            try {
-                orders.push(toOrder(await giabanClient.getOrder(id)));
-            } catch {
-                // skip discarded/missing
-            }
-        }
+export const historicalReviewFromStatus = (row: any): HistoricalReview => {
+    const types = Array.isArray(row?.migrationBlockerSummary)
+        ? row.migrationBlockerSummary
+            .filter((item: any) => typeof item?.type === 'string' && Number(item.count) > 0)
+            .map((item: any) => ({ type: String(item.type), count: Number(item.count) }))
+        : [];
+    const count = Number(row?.migrationBlockerCount) || types.reduce((sum: number, item: { count: number }) => sum + item.count, 0);
+    const ready = Boolean(row?.migrationReady) && count === 0;
+    return {
+        ready,
+        count,
+        canRepair: false,
+        types,
+        message: ready
+            ? 'Không còn mục lịch sử cần rà soát.'
+            : `Còn ${count} mục lịch sử cần rà soát. Giao diện không tự sửa định danh hoặc tiền.`,
+    };
+};
+
+const mapPayment = (row: any): PaymentRecord => ({
+    id: String(row.id),
+    orderId: String(row.orderId || ''),
+    amount: Number(row.amount) || 0,
+    reversedAmount: Number(row.reversedAmount) || 0,
+    refundedAmount: Number(row.refundedAmount) || 0,
+    remaining: Number(row.remaining ?? ((Number(row.amount) || 0) - (Number(row.reversedAmount) || 0) - (Number(row.refundedAmount) || 0))),
+    method: String(row.method || ''),
+    note: row.note ? String(row.note) : '',
+    createdAt: String(row.createdAt || ''),
+});
+
+export const mapOrderFromList = (row: any): Order => {
+    if (row?.contact || Array.isArray(row?.items)) return mapOrderFromInvoice(row);
+    const statusRaw = String(row.status || 'draft');
+    const status = DOMAIN_STATUSES.has(statusRaw as OrderStatus) ? statusRaw as OrderStatus : 'draft';
+    return {
+        id: String(row.id),
+        customerId: row.customerId ? String(row.customerId) : undefined,
+        customerName: String(row.customerName || row.displayName || ''),
+        phone: String(row.phone || row.phoneMasked || ''),
+        address: String(row.address || ''),
+        items: [],
+        total: Number(row.total) || 0,
+        status,
+        createdAt: String(row.createdAt || ''),
+        paymentMethod: row.paymentMethod === 'banking' ? 'banking' : 'cod',
+        note: '',
+        shippingFee: Number(row.shippingFee) || 0,
+        discount: Number(row.discount) || 0,
+        revision: Number(row.revision) || 1,
+        netCollected: Number(row.netCollected) || 0,
+        outstanding: Number(row.outstanding) || 0,
+        reviewFlags: row.customerId ? [] : ['customer_id_requires_review'],
+    };
+};
+
+const listedFrom = <T>(collected: Awaited<ReturnType<typeof collectPages>>, map: (row: any) => T): ListedPage<T> => ({
+    items: collected.items.map(map),
+    truncated: collected.truncated,
+    complete: collected.complete,
+    reason: collected.reason,
+});
+
+const placeOrderPayloads = new Map<string, string>();
+const paymentPayloads = new Map<string, string>();
+
+const freezePlaceOrderPayload = (operationId: string, payload: unknown) => {
+    const encoded = JSON.stringify(payload);
+    const previous = placeOrderPayloads.get(operationId);
+    if (previous !== undefined && previous !== encoded) {
+        throw new CloudWriteError(
+            'Đơn đang chờ thử lại với nội dung khác. Giữ nguyên đơn đã gửi hoặc bắt đầu thao tác mới.',
+            { code: 'IDEMPOTENCY_CONFLICT', retryable: false },
+        );
     }
-    return orders.filter((order) => order.domainStatus !== 'discarded');
+    placeOrderPayloads.set(operationId, encoded);
+};
+
+const freezePaymentPayload = (idempotencyKey: string, payload: unknown) => {
+    const encoded = JSON.stringify(payload);
+    const previous = paymentPayloads.get(idempotencyKey);
+    if (previous !== undefined && previous !== encoded) {
+        throw new CloudWriteError(
+            'Phiếu thu đang chờ thử lại với số tiền đã gửi. Giữ nguyên số tiền hoặc bắt đầu thao tác mới.',
+            { code: 'IDEMPOTENCY_CONFLICT', retryable: false },
+        );
+    }
+    paymentPayloads.set(idempotencyKey, encoded);
+};
+
+let lastTaxRevision: number | undefined;
+
+const requireRevision = (revision: unknown, message: string): number => {
+    const value = Number(revision);
+    if (!Number.isSafeInteger(value) || value < 1) {
+        throw new CloudWriteError(message, { code: 'REVISION_REQUIRED', retryable: false });
+    }
+    return value;
 };
 
 export const businessService = {
-    async getOrders(): Promise<Order[]> {
-        const listed = giabanClient.itemsOf(await giabanClient.listOrders());
-        return loadInvoices(listed.map((row: any) => String(row.id)));
+    async getStatusReview(): Promise<HistoricalReview> {
+        try {
+            return historicalReviewFromStatus(await giabanClient.getStatus());
+        } catch {
+            return {
+                ready: false,
+                count: 0,
+                canRepair: false,
+                types: [],
+                message: 'Không đọc được getStatus. Không giả định dữ liệu lịch sử đã sạch.',
+            };
+        }
     },
 
-    async addOrder(order: Order): Promise<Order[]> {
-        await this.placeOrder({
-            customerName: order.customerName,
-            phone: order.phone,
-            address: order.address,
-            items: order.items,
-            shippingFee: order.shippingFee || 0,
-            discount: order.discount || 0,
-            note: order.note || '',
-            shopTemplateId: order.shopTemplateId,
-            collectAmount: Math.max(0, (order.total || 0) - (order.debt || 0)),
-        });
-        return this.getOrders();
+    async getOrders(): Promise<ListedPage<Order>> {
+        const collected = await collectPages((cursor) => giabanClient.listOrders({ cursor }));
+        const listed = listedFrom(collected, mapOrderFromList);
+        return {
+            ...listed,
+            items: listed.items.filter((order) => order.status !== 'discarded'),
+        };
+    },
+
+    async getOrderInvoice(id: string): Promise<Order> {
+        return mapOrderFromInvoice(await giabanClient.getOrderInvoice(id));
     },
 
     async placeOrder(input: {
+        customerId?: string;
         customerName: string;
         phone: string;
         address: string;
@@ -163,18 +321,30 @@ export const businessService = {
         note: string;
         shopTemplateId?: string;
         collectAmount: number;
+        confirm: boolean;
+        paymentMethod?: 'cod' | 'banking';
+        totalAmountInWords?: string;
+        idempotencyKey?: string;
     }): Promise<Order> {
-        const listed = giabanClient.itemsOf(await giabanClient.listCustomers(input.phone || input.customerName));
-        let customerId = listed.length === 1 ? String(listed[0].id) : '';
-        if (!customerId) {
-            const created = await giabanClient.createCustomer({
-                name: input.customerName,
-                phone: input.phone,
-                address: input.address,
-            }, newIdempotencyKey());
-            customerId = String(created.id);
-        }
-        const draft = await giabanClient.createDraftOrder({
+        const customerId = requireCustomerId(input.customerId);
+        const operationId = input.idempotencyKey || newIdempotencyKey();
+        const payload = {
+            customerId,
+            customerName: input.customerName,
+            phone: input.phone,
+            address: input.address,
+            items: input.items,
+            shippingFee: input.shippingFee,
+            discount: input.discount,
+            note: input.note,
+            shopTemplateId: input.shopTemplateId,
+            collectAmount: input.collectAmount,
+            confirm: input.confirm,
+            paymentMethod: input.paymentMethod,
+            totalAmountInWords: input.totalAmountInWords,
+        };
+        freezePlaceOrderPayload(operationId, payload);
+        const draft = await giabanClient.createDraftOrder(toDraftOrderWrite({
             customerId,
             contactSnapshot: { name: input.customerName, phone: input.phone, address: input.address },
             items: input.items.map((item) => ({
@@ -192,36 +362,69 @@ export const businessService = {
             shippingFee: input.shippingFee,
             note: input.note,
             shopTemplateId: input.shopTemplateId && input.shopTemplateId !== 'default' ? input.shopTemplateId : undefined,
-        }, newIdempotencyKey());
-        const confirmed = await giabanClient.confirmOrder(String(draft.id), Number(draft.revision) || 1, newIdempotencyKey());
-        if (input.collectAmount > 0) {
-            await giabanClient.recordPayment(String(confirmed.id), {
-                amount: input.collectAmount,
-                method: 'cash',
-            }, newIdempotencyKey());
+            totalAmountInWords: input.totalAmountInWords,
+            paymentMethod: input.paymentMethod,
+        }), stepKey(operationId, 'draft'));
+        if (!input.confirm) {
+            return mapOrderFromInvoice(draft);
         }
-        return toOrder(await giabanClient.getOrderInvoice(String(confirmed.id)));
+        const confirmed = await giabanClient.confirmOrder(String(draft.id), Number(draft.revision) || 1, stepKey(operationId, 'confirm'));
+        if (input.collectAmount > 0) {
+            await giabanClient.recordPayment(String(confirmed.id), toPaymentWrite({
+                amount: input.collectAmount,
+                method: input.paymentMethod === 'banking' ? 'banking' : 'cash',
+            }), stepKey(operationId, 'payment'));
+        }
+        return mapOrderFromInvoice(await giabanClient.getOrderInvoice(String(confirmed.id)));
     },
 
-    async updateOrder(updatedOrder: Order): Promise<Order[]> {
-        const current = updatedOrder.domainStatus || 'confirmed';
-        const target = updatedOrder.status;
-        if (target === 'shipping' && current !== 'shipping') {
-            await giabanClient.markOrderShipping(updatedOrder.id, updatedOrder.revision || 1, newIdempotencyKey());
-        } else if (target === 'completed' && current !== 'completed') {
-            await giabanClient.completeOrder(updatedOrder.id, updatedOrder.revision || 1, newIdempotencyKey());
-        }
+    async createCustomer(input: { name: string; phone: string; address: string }, idempotencyKey?: string) {
+        return giabanClient.createCustomer(toCustomerWrite(input), idempotencyKey || newIdempotencyKey());
+    },
+
+    async searchCustomers(q: string) {
+        const collected = await collectPages((cursor) => giabanClient.listCustomers({ q, cursor }));
+        return listedFrom(collected, (row: any) => ({
+            id: String(row.id),
+            name: String(row.displayName || row.name || ''),
+            phone: String(row.phoneMasked || row.phone || ''),
+            address: '',
+            revision: Number(row.revision) || 1,
+            duplicatePhoneWarning: Boolean(row.duplicatePhoneWarning),
+            piiComplete: false,
+        }));
+    },
+
+    async loadCustomer(id: string): Promise<Customer> {
+        const row = await giabanClient.getCustomer(id);
+        return {
+            id: String(row.id),
+            name: String(row.name || ''),
+            phone: String(row.phone || ''),
+            address: String(row.address || ''),
+            revision: Number(row.revision) || 1,
+            duplicatePhoneWarning: Boolean(row.duplicatePhoneWarning),
+            piiComplete: true,
+        };
+    },
+
+    async transitionOrder(order: Order, target: 'confirmed' | 'shipping' | 'completed'): Promise<ListedPage<Order>> {
+        const revision = order.revision || 1;
+        const key = `${order.id}:${target}:${revision}`;
+        if (target === 'confirmed') await giabanClient.confirmOrder(order.id, revision, key);
+        if (target === 'shipping') await giabanClient.markOrderShipping(order.id, revision, key);
+        if (target === 'completed') await giabanClient.completeOrder(order.id, revision, key);
         return this.getOrders();
     },
 
-    async deleteOrder(orderId: string): Promise<Order[]> {
-        const listed = giabanClient.itemsOf(await giabanClient.listOrders()).find((row: any) => row.id === orderId);
-        const status = String(listed?.status || '');
-        if (status === 'draft') {
-            await giabanClient.discardDraftOrder(orderId, Number(listed?.revision) || 1, newIdempotencyKey());
-            return this.getOrders();
-        }
-        const preview = await giabanClient.previewOrderCancellation(orderId, 'Xóa đơn từ giao diện admin');
+    async discardDraft(order: Order): Promise<ListedPage<Order>> {
+        const revision = order.revision || 1;
+        await giabanClient.discardDraftOrder(order.id, revision, `${order.id}:discard:${revision}`);
+        return this.getOrders();
+    },
+
+    async cancelOrder(orderId: string, reason: string): Promise<ListedPage<Order>> {
+        const preview = await giabanClient.previewOrderCancellation(orderId, reason);
         if (Array.isArray(preview.blockers) && preview.blockers.length > 0) {
             throw new CloudWriteError(preview.blockers.join('; '), { code: 'INVALID_TRANSITION' });
         }
@@ -229,74 +432,72 @@ export const businessService = {
         return this.getOrders();
     },
 
-    async markOrderPaid(order: Order): Promise<Order[]> {
-        const amount = Number(order.outstanding ?? order.debt) || 0;
-        if (amount > 0) {
-            await giabanClient.recordPayment(order.id, { amount, method: 'cash' }, newIdempotencyKey());
-        }
-        return this.getOrders();
+    async listPayments(orderId: string): Promise<ListedPage<PaymentRecord>> {
+        const collected = await collectPages((cursor) => giabanClient.listPayments({ orderId, cursor }));
+        return listedFrom(collected, mapPayment);
     },
 
-    async markOrderUnpaid(order: Order): Promise<Order[]> {
-        const payments = giabanClient.itemsOf(await giabanClient.listPayments(order.id));
-        for (const payment of payments) {
-            const remaining = Number(payment.remaining ?? payment.amount) || 0;
-            if (remaining <= 0) continue;
-            const preview = await giabanClient.previewPaymentRefund(String(payment.id), remaining, 'Đánh dấu chưa thanh toán');
-            await giabanClient.confirmPaymentRefund(String(payment.id), String(preview.confirmationToken));
-        }
-        return this.getOrders();
+    async recordPayment(orderId: string, amount: number, method: string, note?: string, idempotencyKey?: string): Promise<PaymentRecord> {
+        const key = idempotencyKey || newIdempotencyKey();
+        freezePaymentPayload(key, { orderId, amount, method, note: note || '' });
+        return mapPayment(await giabanClient.recordPayment(orderId, toPaymentWrite({ amount, method, note }), key));
     },
 
-    async getCustomers(): Promise<Customer[]> {
-        const [customersPage, receivablesPage, orders] = await Promise.all([
-            giabanClient.listCustomers(),
-            giabanClient.listReceivables(),
-            this.getOrders(),
+    async refundPayment(paymentId: string, amount: number, reason: string): Promise<PaymentRecord> {
+        const preview = await giabanClient.previewPaymentRefund(paymentId, amount, reason);
+        return mapPayment(await giabanClient.confirmPaymentRefund(paymentId, String(preview.confirmationToken)));
+    },
+
+    async getCustomers(): Promise<ListedPage<Customer>> {
+        const [customersPage, receivablesPage] = await Promise.all([
+            collectPages((cursor) => giabanClient.listCustomers({ cursor })),
+            collectPages((cursor) => giabanClient.listReceivables({ cursor })),
         ]);
-        const debtByCustomer = new Map<string, number>();
-        for (const row of giabanClient.itemsOf(receivablesPage)) {
+        const customersParsed = customersPage;
+        const receivablesParsed = receivablesPage;
+        const outstandingByCustomer = new Map<string, number>();
+        for (const row of receivablesParsed.items) {
             const customerId = String(row.customerId || '');
-            debtByCustomer.set(customerId, (debtByCustomer.get(customerId) || 0) + (Number(row.outstanding) || 0));
+            if (!customerId) continue;
+            outstandingByCustomer.set(customerId, (outstandingByCustomer.get(customerId) || 0) + (Number(row.outstanding) || 0));
         }
-        const spentByCustomer = new Map<string, { total: number; last: string; count: number }>();
-        for (const order of orders) {
-            if (!order.customerId || order.status === 'cancelled') continue;
-            const current = spentByCustomer.get(order.customerId) || { total: 0, last: '', count: 0 };
-            current.total += order.total;
-            current.count += 1;
-            if (order.createdAt > current.last) current.last = order.createdAt;
-            spentByCustomer.set(order.customerId, current);
-        }
-        return giabanClient.itemsOf(customersPage).map((row: any) => {
-            const customer = toCustomer(row, debtByCustomer.get(String(row.id)) || 0);
-            const spent = spentByCustomer.get(customer.id);
-            return spent
-                ? { ...customer, totalSpent: spent.total, lastOrderDate: spent.last, orderCount: spent.count }
-                : customer;
-        });
+        const truncated = customersParsed.truncated || receivablesParsed.truncated;
+        return {
+            items: customersParsed.items.map((row: any) => ({
+                id: String(row.id),
+                name: String(row.displayName || row.name || ''),
+                phone: String(row.phoneMasked || row.phone || ''),
+                address: '',
+                revision: Number(row.revision) || 1,
+                duplicatePhoneWarning: Boolean(row.duplicatePhoneWarning),
+                outstanding: outstandingByCustomer.get(String(row.id)) || 0,
+                outstandingComplete: !truncated,
+                piiComplete: false,
+            })),
+            truncated,
+        };
     },
 
-    async deleteCustomer(customerId: string): Promise<Customer[]> {
+    async deleteCustomer(customerId: string): Promise<ListedPage<Customer>> {
         await giabanClient.archiveCustomer(customerId, newIdempotencyKey());
         return this.getCustomers();
     },
 
-    async updateCustomer(updatedCustomer: Customer): Promise<Customer[]> {
-        await giabanClient.updateCustomer(updatedCustomer.id, {
-            name: updatedCustomer.name,
-            phone: updatedCustomer.phone,
-            address: updatedCustomer.address,
-        }, updatedCustomer.revision || 1, newIdempotencyKey());
+    async updateCustomer(updatedCustomer: Customer): Promise<ListedPage<Customer>> {
+        const detail = updatedCustomer.piiComplete
+            ? updatedCustomer
+            : await this.loadCustomer(updatedCustomer.id);
+        await giabanClient.updateCustomer(updatedCustomer.id, toCustomerWrite({
+            name: updatedCustomer.name || detail.name,
+            phone: updatedCustomer.phone || detail.phone,
+            address: updatedCustomer.address || detail.address,
+        }), updatedCustomer.revision || detail.revision || 1, newIdempotencyKey());
         return this.getCustomers();
     },
 
-    async getCostPrices(): Promise<CostPrice[]> {
-        return [];
-    },
-
-    async getTransactions(): Promise<Transaction[]> {
-        return giabanClient.itemsOf(await giabanClient.listCashTransactions()).map((row: any) => ({
+    async getTransactions(): Promise<ListedPage<Transaction>> {
+        const collected = await collectPages((cursor) => giabanClient.listCashTransactions({ cursor }));
+        return listedFrom(collected, (row: any) => ({
             id: String(row.id),
             type: row.type === 'expense' ? 'expense' : 'income',
             amount: Number(row.amount) || 0,
@@ -306,108 +507,112 @@ export const businessService = {
         }));
     },
 
-    async addTransaction(transaction: Transaction): Promise<Transaction[]> {
-        await giabanClient.createCashTransaction({
-            type: transaction.type,
-            amount: transaction.amount,
-            description: transaction.description,
-            category: transaction.category,
-            date: transaction.date,
-        }, newIdempotencyKey());
+    async addTransaction(transaction: Transaction): Promise<ListedPage<Transaction>> {
+        await giabanClient.createCashTransaction(toCashTransactionWrite(transaction), newIdempotencyKey());
         return this.getTransactions();
     },
 
-    async deleteTransaction(transactionId: string): Promise<Transaction[]> {
-        const preview = await giabanClient.previewCashReversal(transactionId);
+    async deleteTransaction(transactionId: string, reason: string): Promise<ListedPage<Transaction>> {
+        const preview = await giabanClient.previewCashReversal(transactionId, reason);
         await giabanClient.confirmCashReversal(transactionId, String(preview.confirmationToken));
         return this.getTransactions();
     },
 
-    async getBankInfo(): Promise<BankInfo | null> {
-        try {
-            const row = await giabanClient.getBankSettings();
-            return {
-                bankName: String(row.bankName || ''),
-                accountNumber: String(row.accountNumber || ''),
-                accountName: String(row.accountName || ''),
-                qrCodeUrl: String(row.qrCodeUrl || ''),
-                revision: Number(row.revision) || 1,
-            };
-        } catch {
-            return null;
-        }
+    async getReportSummary(fromDate: string, toDate: string): Promise<ReportSummary> {
+        return mapReportSummary(await giabanClient.getReportSummary(fromDate, toDate));
     },
 
-    async saveBankInfo(info: BankInfo): Promise<boolean> {
-        const current = await this.getBankInfo();
-        await giabanClient.updateBankSettings({
+    async getBankInfo(): Promise<BankInfo> {
+        const row = await giabanClient.getBankSettings();
+        return {
+            bankName: String(row.bankName || ''),
+            accountNumber: String(row.accountNumber || ''),
+            accountName: String(row.accountName || ''),
+            qrCodeUrl: String(row.qrCodeUrl || ''),
+            revision: Number(row.revision) || 1,
+        };
+    },
+
+    async saveBankInfo(info: BankInfo, idempotencyKey = newIdempotencyKey()): Promise<BankInfo> {
+        const expected = requireRevision(info.revision, 'Chưa tải được thông tin ngân hàng; không lưu với revision giả.');
+        const saved = await giabanClient.updateBankSettings({
             bankName: info.bankName,
             accountNumber: info.accountNumber,
             accountName: info.accountName,
             qrCodeUrl: info.qrCodeUrl || '',
-        }, current?.revision || 1, newIdempotencyKey());
-        return true;
+        }, expected, idempotencyKey);
+        return {
+            bankName: String(saved.bankName || ''),
+            accountNumber: String(saved.accountNumber || ''),
+            accountName: String(saved.accountName || ''),
+            qrCodeUrl: String(saved.qrCodeUrl || ''),
+            revision: Number(saved.revision) || 1,
+        };
     },
 
-    async getTaxRate(): Promise<number> {
-        try {
-            const row = await giabanClient.getTaxSettings();
-            return Number(row.rate) || 0;
-        } catch {
-            return 0;
-        }
+    async getTaxRate(): Promise<{ rate: number; revision: number }> {
+        const row = await giabanClient.getTaxSettings();
+        const result = { rate: Number(row.rate) || 0, revision: Number(row.revision) || 1 };
+        lastTaxRevision = result.revision;
+        return result;
     },
 
-    async saveTaxRate(rate: number): Promise<boolean> {
-        const current = await giabanClient.getTaxSettings();
-        await giabanClient.updateTaxSettings({ rate }, Number(current.revision) || 1, newIdempotencyKey());
-        return true;
+    async saveTaxRate(rate: number, revision = lastTaxRevision, idempotencyKey = newIdempotencyKey()): Promise<{ rate: number; revision: number }> {
+        const expected = requireRevision(revision, 'Chưa tải được thuế; không lưu với revision giả.');
+        const saved = await giabanClient.updateTaxSettings({ rate }, expected, idempotencyKey);
+        lastTaxRevision = Number(saved.revision) || expected + 1;
+        return { rate: Number(saved.rate) || 0, revision: Number(saved.revision) || 1 };
     },
 
-    async getShopTemplates(): Promise<ShopTemplate[]> {
-        return giabanClient.itemsOf(await giabanClient.listShopTemplates())
-            .filter((row: any) => !row.archived)
-            .map((row: any) => ({
-                id: String(row.id),
-                name: String(row.name || ''),
-                address: String(row.address || ''),
-                phone: String(row.phone || ''),
-                isDefault: Boolean(row.isDefault),
-                revision: Number(row.revision) || 1,
-            }));
+    async getShopTemplates(): Promise<ListedPage<ShopTemplate>> {
+        const collected = await collectPages((cursor) => giabanClient.listShopTemplates({ cursor }));
+        const listed = listedFrom(collected, (row: any) => ({
+            id: String(row.id),
+            name: String(row.name || ''),
+            address: String(row.address || ''),
+            phone: String(row.phone || ''),
+            isDefault: Boolean(row.isDefault),
+            archived: Boolean(row.archived),
+            revision: Number(row.revision) || 1,
+        }));
+        return {
+            ...listed,
+            items: listed.items.filter((row) => !row.archived),
+        };
     },
 
-    async saveShopTemplates(templates: ShopTemplate[]): Promise<boolean> {
-        const existing = await this.getShopTemplates();
-        const existingIds = new Set(existing.map((template) => template.id));
-        for (const template of templates) {
-            if (!existingIds.has(template.id)) {
-                const created = await giabanClient.createShopTemplate({
-                    name: template.name,
-                    address: template.address,
-                    phone: template.phone,
-                    isDefault: Boolean(template.isDefault),
-                }, newIdempotencyKey());
-                template.id = String(created.id);
-                template.revision = Number(created.revision) || 1;
-            } else {
-                await giabanClient.updateShopTemplate(template.id, {
-                    name: template.name,
-                    address: template.address,
-                    phone: template.phone,
-                }, template.revision || 1, newIdempotencyKey());
-            }
+    async saveShopTemplate(template: ShopTemplate): Promise<ShopTemplate> {
+        if (!template.id || template.id.startsWith('temp_')) {
+            const created = await giabanClient.createShopTemplate(toShopTemplateWrite(template), newIdempotencyKey());
+            return {
+                id: String(created.id),
+                name: String(created.name || ''),
+                address: String(created.address || ''),
+                phone: String(created.phone || ''),
+                isDefault: Boolean(created.isDefault),
+                revision: Number(created.revision) || 1,
+            };
         }
-        for (const previous of existing) {
-            if (!templates.some((template) => template.id === previous.id)) {
-                await giabanClient.archiveShopTemplate(previous.id, newIdempotencyKey());
-            }
-        }
-        const defaultTemplate = templates.find((template) => template.isDefault) || templates[0];
-        if (defaultTemplate) {
-            const latest = (await this.getShopTemplates()).find((template) => template.id === defaultTemplate.id);
-            await giabanClient.setDefaultShopTemplate(defaultTemplate.id, latest?.revision || 1, newIdempotencyKey());
-        }
-        return true;
+        const saved = await giabanClient.updateShopTemplate(template.id, toShopTemplateWrite(template), template.revision || 1, newIdempotencyKey());
+        return {
+            id: String(saved.id),
+            name: String(saved.name || ''),
+            address: String(saved.address || ''),
+            phone: String(saved.phone || ''),
+            isDefault: Boolean(saved.isDefault),
+            revision: Number(saved.revision) || 1,
+        };
+    },
+
+    async archiveShopTemplate(id: string, revision?: number): Promise<ListedPage<ShopTemplate>> {
+        await giabanClient.archiveShopTemplate(id, newIdempotencyKey(), revision);
+        return this.getShopTemplates();
+    },
+
+    async setDefaultShopTemplate(id: string, revision: number): Promise<ListedPage<ShopTemplate>> {
+        await giabanClient.setDefaultShopTemplate(id, revision, newIdempotencyKey());
+        return this.getShopTemplates();
     },
 };
+
+export { CloudWriteError };

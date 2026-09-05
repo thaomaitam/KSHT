@@ -1,4 +1,6 @@
-import { apiService } from "../apiService";
+import { apiService } from "../apiService.ts";
+import { parsePage, toListQuery, type ListQuery } from "./giabanPage.ts";
+import { toReportRangeQuery } from "./giabanPayloads.ts";
 
 export class CloudWriteError extends Error {
   code: string;
@@ -47,51 +49,82 @@ const throwIfFailed = async (response: Response): Promise<any> => {
   });
 };
 
+const offlineError = (error: unknown): CloudWriteError => {
+  if (error instanceof CloudWriteError) return error;
+  return new CloudWriteError(error instanceof Error ? error.message : "Không kết nối được máy chủ", {
+    code: "OFFLINE",
+    status: 0,
+    retryable: true,
+    nextAction: "Kiểm tra mạng rồi thử lại. Không ghi thành công cục bộ.",
+  });
+};
+
 const read = async (path: string) => {
-  const response = await fetch(v1(path), { headers: headers() });
-  return throwIfFailed(response);
+  try {
+    const response = await fetch(v1(path), { headers: headers() });
+    return throwIfFailed(response);
+  } catch (error) {
+    throw offlineError(error);
+  }
 };
 
 const write = async (path: string, body: unknown = {}, init: { method?: string; idempotencyKey?: string; revision?: number } = {}) => {
   const extra: Record<string, string> = {};
   if (init.idempotencyKey) extra["Idempotency-Key"] = init.idempotencyKey;
   if (init.revision !== undefined) extra["If-Match-Revision"] = String(init.revision);
-  const response = await fetch(v1(path), {
-    method: init.method ?? "POST",
-    headers: headers(extra),
-    body: init.method === "GET" ? undefined : JSON.stringify(body ?? {}),
-  });
-  return throwIfFailed(response);
+  try {
+    const response = await fetch(v1(path), {
+      method: init.method ?? "POST",
+      headers: headers(extra),
+      body: init.method === "GET" ? undefined : JSON.stringify(body ?? {}),
+    });
+    return throwIfFailed(response);
+  } catch (error) {
+    throw offlineError(error);
+  }
 };
 
-const itemsOf = (page: any): any[] => (Array.isArray(page?.items) ? page.items : Array.isArray(page) ? page : []);
+const itemsOf = (page: any): any[] => parsePage(page).items;
 
 export const newIdempotencyKey = (): string => crypto.randomUUID();
 
 export const giabanClient = {
-  getPublicProducts: () => read("/public/products"),
+  getStatus: () => read("/status"),
+  getCapabilities: () => read("/capabilities"),
+  getPublicProducts: (query: ListQuery = {}) => read(`/public/products?${toListQuery({ limit: 100, ...query })}`),
   getPublicCategories: () => read("/public/categories"),
   getPublicSettings: () => read("/public/settings"),
-  listProducts: (includeArchived = false) => read(`/products?limit=100${includeArchived ? "&includeArchived=true" : ""}`),
+  listProducts: (includeArchived: boolean | ListQuery = false) => {
+    const query = typeof includeArchived === "boolean" ? { includeArchived } : includeArchived;
+    return read(`/products?${toListQuery({ limit: 100, ...query })}`);
+  },
   getProduct: (id: string) => read(`/products/${id}`),
   createProduct: (input: unknown, idempotencyKey: string) => write("/products", input, { idempotencyKey }),
   updateProduct: (id: string, input: unknown, revision: number, idempotencyKey: string) =>
     write(`/products/${id}`, input, { method: "PATCH", revision, idempotencyKey }),
-  archiveProduct: (id: string, idempotencyKey: string) => write(`/products/${id}/archive`, {}, { idempotencyKey }),
-  restoreProduct: (id: string, idempotencyKey: string) => write(`/products/${id}/restore`, {}, { idempotencyKey }),
-  listCategories: (includeArchived = false) => read(`/categories?limit=100${includeArchived ? "&includeArchived=true" : ""}`),
+  archiveProduct: (id: string, idempotencyKey: string, revision?: number) =>
+    write(`/products/${id}/archive`, {}, { idempotencyKey, revision }),
+  restoreProduct: (id: string, idempotencyKey: string, revision?: number) =>
+    write(`/products/${id}/restore`, {}, { idempotencyKey, revision }),
+  listCategories: (includeArchived: boolean | ListQuery = false) => {
+    const query = typeof includeArchived === "boolean" ? { includeArchived } : includeArchived;
+    return read(`/categories?${toListQuery({ limit: 100, ...query })}`);
+  },
   createCategory: (input: unknown, idempotencyKey: string) => write("/categories", input, { idempotencyKey }),
   updateCategory: (id: string, input: unknown, revision: number, idempotencyKey: string) =>
     write(`/categories/${id}`, input, { method: "PATCH", revision, idempotencyKey }),
-  archiveCategory: (id: string, idempotencyKey: string) => write(`/categories/${id}/archive`, {}, { idempotencyKey }),
-  restoreCategory: (id: string, idempotencyKey: string) => write(`/categories/${id}/restore`, {}, { idempotencyKey }),
-  listCustomers: (q?: string) => read(`/customers?limit=100${q ? `&q=${encodeURIComponent(q)}` : ""}`),
+  archiveCategory: (id: string, idempotencyKey: string, revision?: number) =>
+    write(`/categories/${id}/archive`, {}, { idempotencyKey, revision }),
+  restoreCategory: (id: string, idempotencyKey: string, revision?: number) =>
+    write(`/categories/${id}/restore`, {}, { idempotencyKey, revision }),
+  listCustomers: (query: ListQuery = {}) => read(`/customers?${toListQuery({ limit: 100, ...query })}`),
   getCustomer: (id: string) => read(`/customers/${id}`),
   createCustomer: (input: unknown, idempotencyKey: string) => write("/customers", input, { idempotencyKey }),
   updateCustomer: (id: string, input: unknown, revision: number, idempotencyKey: string) =>
     write(`/customers/${id}`, input, { method: "PATCH", revision, idempotencyKey }),
-  archiveCustomer: (id: string, idempotencyKey: string) => write(`/customers/${id}/archive`, {}, { idempotencyKey }),
-  listOrders: () => read("/orders?limit=100"),
+  archiveCustomer: (id: string, idempotencyKey: string, revision?: number) =>
+    write(`/customers/${id}/archive`, {}, { idempotencyKey, revision }),
+  listOrders: (query: ListQuery = {}) => read(`/orders?${toListQuery({ limit: 100, ...query })}`),
   getOrder: (id: string) => read(`/orders/${id}`),
   getOrderInvoice: (id: string) => read(`/orders/${id}/invoice`),
   createDraftOrder: (input: unknown, idempotencyKey: string) => write("/orders", input, { idempotencyKey }),
@@ -106,23 +139,24 @@ export const giabanClient = {
   cloneOrder: (id: string, idempotencyKey: string) => write(`/orders/${id}/clone`, {}, { idempotencyKey }),
   discardDraftOrder: (id: string, revision: number, idempotencyKey: string) =>
     write(`/orders/${id}/discard`, {}, { idempotencyKey, revision }),
-  previewOrderCancellation: (id: string, reason: string) => write(`/orders/${id}/cancel/preview`, { id, reason }),
+  previewOrderCancellation: (id: string, reason: string) => write(`/orders/${id}/cancel/preview`, { reason }),
   confirmOrderCancellation: (orderId: string, confirmationToken: string) =>
     write(`/orders/${orderId}/cancel/confirm`, { confirmationToken }),
   recordPayment: (orderId: string, input: unknown, idempotencyKey: string) =>
     write(`/orders/${orderId}/payments`, input, { idempotencyKey }),
-  listPayments: (orderId?: string) => read(`/payments?limit=100${orderId ? `&orderId=${encodeURIComponent(orderId)}` : ""}`),
-  listReceivables: () => read("/receivables?limit=100"),
+  listPayments: (query: ListQuery = {}) => read(`/payments?${toListQuery({ limit: 100, ...query })}`),
+  listReceivables: (query: ListQuery = {}) => read(`/receivables?${toListQuery({ limit: 100, ...query })}`),
   previewPaymentRefund: (paymentId: string, amount: number, reason: string) =>
-    write(`/payments/${paymentId}/refund/preview`, { paymentId, amount, reason }),
+    write(`/payments/${paymentId}/refund/preview`, { amount, reason }),
   confirmPaymentRefund: (paymentId: string, confirmationToken: string) =>
     write(`/payments/${paymentId}/refund/confirm`, { confirmationToken }),
-  listCashTransactions: () => read("/cash-transactions?limit=100"),
+  listCashTransactions: (query: ListQuery = {}) => read(`/cash-transactions?${toListQuery({ limit: 100, ...query })}`),
   createCashTransaction: (input: unknown, idempotencyKey: string) => write("/cash-transactions", input, { idempotencyKey }),
-  previewCashReversal: (transactionId: string) => write(`/cash-transactions/${transactionId}/reverse/preview`, { transactionId }),
+  previewCashReversal: (transactionId: string, reason: string) =>
+    write(`/cash-transactions/${transactionId}/reverse/preview`, { reason }),
   confirmCashReversal: (transactionId: string, confirmationToken: string) =>
     write(`/cash-transactions/${transactionId}/reverse/confirm`, { confirmationToken }),
-  getReportSummary: () => read("/reports/summary"),
+  getReportSummary: (fromDate: string, toDate: string) => read(`/reports/summary?${toReportRangeQuery(fromDate, toDate)}`),
   getPhoneSettings: () => read("/settings/phone"),
   updatePhoneSettings: (input: unknown, revision: number, idempotencyKey: string) =>
     write("/settings/phone", input, { method: "PATCH", revision, idempotencyKey }),
@@ -135,12 +169,14 @@ export const giabanClient = {
   getTaxSettings: () => read("/settings/tax"),
   updateTaxSettings: (input: unknown, revision: number, idempotencyKey: string) =>
     write("/settings/tax", input, { method: "PATCH", revision, idempotencyKey }),
-  listShopTemplates: () => read("/shop-templates?limit=100"),
+  listShopTemplates: (query: ListQuery = {}) => read(`/shop-templates?${toListQuery({ limit: 100, ...query })}`),
   createShopTemplate: (input: unknown, idempotencyKey: string) => write("/shop-templates", input, { idempotencyKey }),
   updateShopTemplate: (id: string, input: unknown, revision: number, idempotencyKey: string) =>
     write(`/shop-templates/${id}`, input, { method: "PATCH", revision, idempotencyKey }),
-  archiveShopTemplate: (id: string, idempotencyKey: string) => write(`/shop-templates/${id}/archive`, {}, { idempotencyKey }),
+  archiveShopTemplate: (id: string, idempotencyKey: string, revision?: number) =>
+    write(`/shop-templates/${id}/archive`, {}, { idempotencyKey, revision }),
   setDefaultShopTemplate: (id: string, revision: number, idempotencyKey: string) =>
     write(`/shop-templates/${id}/default`, {}, { idempotencyKey, revision }),
   itemsOf,
+  parsePage,
 };

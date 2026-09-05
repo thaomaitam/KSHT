@@ -1,65 +1,76 @@
-import { DurableObject } from "cloudflare:workers";
+import { DurableObject, WorkerEntrypoint } from "cloudflare:workers";
 
-import { GiabanApplication } from "../../server/application/giaban.ts";
-import { handleMcpRequest, hasValidPersonalApiKey, type McpEnv } from "./server.ts";
-import { LiveKvStore, type LiveKvNamespace } from "./liveKvStore.ts";
+import {
+  isBrowserActor,
+  type BrowserApiEnvelope,
+  type BrowserApiResult,
+} from "../../server/http/browserApi.ts";
+import { createOwnerRuntime, type OwnerRuntime } from "./ownerRuntime.ts";
+import { rejectPublicMcpRequest } from "./publicMcp.ts";
+import type { McpEnv } from "./server.ts";
+import type { LiveKvNamespace } from "./liveKvStore.ts";
 
 export interface McpWorkerEnv extends McpEnv {
   GIABAN_SHOP: DurableObjectNamespace<GiabanShop>;
   DB: LiveKvNamespace;
 }
 
+const forbiddenActor = (): BrowserApiResult => ({
+  status: 403,
+  headerPairs: [
+    ["content-type", "application/json"],
+    ["cache-control", "no-store"],
+    ["x-content-type-options", "nosniff"],
+  ],
+  body: JSON.stringify({ code: "FORBIDDEN", message: "Invalid internal actor", retryable: false }),
+});
+
+const uninitialized = (): BrowserApiResult => ({
+  status: 503,
+  headerPairs: [
+    ["content-type", "application/json"],
+    ["cache-control", "no-store"],
+    ["x-content-type-options", "nosniff"],
+  ],
+  body: JSON.stringify({ code: "INTERNAL_ERROR", message: "Giaban coordinator unavailable", retryable: true }),
+});
+
 export class GiabanShop extends DurableObject<McpWorkerEnv> {
-  app: GiabanApplication | null;
-  store: LiveKvStore | null;
-  requestTail: Promise<void>;
+  runtime: OwnerRuntime | null;
 
   constructor(ctx: DurableObjectState, env: McpWorkerEnv) {
     super(ctx, env);
-    this.app = null;
-    this.store = null;
-    this.requestTail = Promise.resolve();
+    this.runtime = null;
     this.ctx.blockConcurrencyWhile(() => this.hydrate());
   }
 
   async hydrate(): Promise<void> {
-    const store = await LiveKvStore.open(this.ctx.storage, this.env.DB);
-    this.store = store;
-    this.app = new GiabanApplication(store);
+    this.runtime = await createOwnerRuntime(this.ctx.storage, this.env.DB, this.env);
+  }
+
+  async handleBrowserApi(envelope: BrowserApiEnvelope): Promise<BrowserApiResult> {
+    if (!this.runtime) return uninitialized();
+    return this.runtime.handleBrowserApi(envelope);
   }
 
   async fetch(request: Request): Promise<Response> {
-    const previous = this.requestTail;
-    let release = () => {};
-    this.requestTail = new Promise<void>((resolve) => { release = resolve; });
-    await previous;
-    try {
-      if (!this.app || !this.store) return Response.json({ error: "uninitialized" }, { status: 503 });
-      await this.store.flushPending();
-      await this.store.refreshConsistency();
-      return await handleMcpRequest(request, this.app, null, this.env);
-    } finally {
-      release();
-    }
+    if (!this.runtime) return Response.json({ error: "uninitialized" }, { status: 503 });
+    return this.runtime.handleMcp(request);
+  }
+}
+
+export class GiabanHttp extends WorkerEntrypoint<McpWorkerEnv> {
+  async handleBrowserApi(envelope: BrowserApiEnvelope): Promise<BrowserApiResult> {
+    if (!isBrowserActor(envelope?.actor)) return forbiddenActor();
+    const stub = this.env.GIABAN_SHOP.get(this.env.GIABAN_SHOP.idFromName("owner"));
+    return stub.handleBrowserApi(envelope);
   }
 }
 
 export default {
   async fetch(request: Request, env: McpWorkerEnv): Promise<Response> {
-    const url = new URL(request.url);
-    if (env.MCP_CHANNEL_DISABLED === "1") return Response.json({ error: "MCP channel disabled" }, { status: 503 });
-    if (url.pathname !== "/mcp") return Response.json({ error: "Not Found" }, { status: 404 });
-    if (request.method !== "POST") return Response.json({ error: "Method not allowed" }, { status: 405 });
-    const contentLength = Number(request.headers.get("content-length") ?? 0);
-    if (Number.isFinite(contentLength) && contentLength > 262_144) {
-      return Response.json({ error: "request_too_large" }, { status: 413 });
-    }
-    if (!await hasValidPersonalApiKey(request, env)) {
-      return Response.json({ error: "invalid_token" }, {
-        status: 401,
-        headers: { "www-authenticate": "Bearer realm=\"mcp\"" },
-      });
-    }
+    const rejected = await rejectPublicMcpRequest(request, env);
+    if (rejected) return rejected;
     const stub = env.GIABAN_SHOP.get(env.GIABAN_SHOP.idFromName("owner"));
     return stub.fetch(request);
   },

@@ -1,5 +1,6 @@
-import { useState, useMemo, useEffect } from 'react';
-import { Product } from '../types';
+import { apiService, SESSION_ENDED_EVENT } from '../apiService';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { CatalogLoad, Product } from '../types';
 import { storageService } from '../storageService';
 import { settingsService, CategoryItem } from '../settingsService';
 import { isAdminAuthenticated } from '../components/LoginModal';
@@ -7,17 +8,40 @@ import { searchProducts } from '../utils/searchUtils';
 
 export type PageType = 'main' | 'admin' | 'settings' | 'business';
 
+const emptyCatalog = (): CatalogLoad => ({ products: [], truncated: false, source: 'empty' });
+
 export const useAppData = () => {
     const [activeCategory, setActiveCategory] = useState<string>('ALL');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [currentPage, setCurrentPage] = useState<PageType>('main');
-    const [products, setProducts] = useState<Product[]>([]);
+    const [catalog, setCatalog] = useState<CatalogLoad>(emptyCatalog);
     const [categories, setCategories] = useState<CategoryItem[]>([]);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showCart, setShowCart] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    // Handle hash-based routing
+    const loadStorefront = useCallback(async () => {
+        setLoading(true);
+        try {
+            const [prods, cats] = await Promise.all([
+                storageService.getStorefrontProducts(),
+                settingsService.getCategoryLoad(),
+            ]);
+            setCatalog(prods);
+            setCategories(cats.categories);
+        } catch (error) {
+            setCatalog({
+                products: [],
+                truncated: false,
+                source: 'empty',
+                error: { message: error instanceof Error ? error.message : 'Không tải được cửa hàng', retryable: true },
+            });
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     useEffect(() => {
         const handleHashChange = async () => {
             const hash = window.location.hash;
@@ -44,10 +68,7 @@ export const useAppData = () => {
                 }
             } else {
                 setCurrentPage('main');
-                const prods = await storageService.getStorefrontProducts();
-                const cats = await settingsService.getCategories();
-                setProducts(prods);
-                setCategories(cats);
+                await loadStorefront();
             }
         };
 
@@ -55,29 +76,39 @@ export const useAppData = () => {
 
         window.addEventListener('hashchange', handleHashChange);
         return () => window.removeEventListener('hashchange', handleHashChange);
-    }, []);
+    }, [loadStorefront]);
 
-    // Listen for open-cart event from ProductModal
     useEffect(() => {
         const handleOpenCart = () => setShowCart(true);
         window.addEventListener('open-cart', handleOpenCart);
         return () => window.removeEventListener('open-cart', handleOpenCart);
     }, []);
 
-    // Reload products when switching back to main
     useEffect(() => {
-        const loadProducts = async () => {
-            if (currentPage === 'main') {
-                const prods = await storageService.getStorefrontProducts();
-                setProducts(prods);
-            }
+        if (currentPage === 'main') void loadStorefront();
+    }, [currentPage, loadStorefront]);
+
+    useEffect(() => {
+        const onSessionEnded = () => {
+            setSelectedProduct(null);
+            setCurrentPage('main');
+            window.location.hash = '#/';
+            setShowLoginModal(true);
         };
-        loadProducts();
+        const checkSession = () => { if (currentPage !== 'main') apiService.getSessionToken(); };
+        window.addEventListener(SESSION_ENDED_EVENT, onSessionEnded);
+        window.addEventListener('focus', checkSession);
+        const timer = window.setInterval(checkSession, 30_000);
+        return () => {
+            window.removeEventListener(SESSION_ENDED_EVENT, onSessionEnded);
+            window.removeEventListener('focus', checkSession);
+            window.clearInterval(timer);
+        };
     }, [currentPage]);
 
     const filteredProducts = useMemo(() => {
-        return searchProducts(products, searchTerm, activeCategory);
-    }, [activeCategory, searchTerm, products]);
+        return searchProducts(catalog.products, searchTerm, activeCategory);
+    }, [activeCategory, searchTerm, catalog.products]);
 
     const handleLoginSuccess = () => {
         setShowLoginModal(false);
@@ -93,7 +124,10 @@ export const useAppData = () => {
         setSelectedProduct,
         currentPage,
         setCurrentPage,
-        products,
+        products: catalog.products,
+        catalog,
+        loading,
+        reloadStorefront: loadStorefront,
         categories,
         showLoginModal,
         setShowLoginModal,

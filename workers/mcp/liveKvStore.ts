@@ -10,7 +10,7 @@ import {
   type ProductRecord,
   type TemplateRecord,
 } from "../../server/persistence/memory/store.ts";
-import { computeOrderTotals, netCollected, normalizePhone, outstandingForOrder } from "../../server/domain/index.ts";
+import { assertFactor, assertVnd, computeOrderTotals, lineAmount, netCollected, normalizePhone, outstandingForOrder } from "../../server/domain/index.ts";
 import { fail } from "../../server/domain/errors.ts";
 import { canonicalJson, sha256Hex } from "../../server/safety/canonical.ts";
 import type { SnapshotStorage } from "./snapshotStore.ts";
@@ -134,8 +134,21 @@ const positiveInteger = (value: unknown, fallback = 1): number => {
 };
 
 const optionalFactor = (value: unknown): number | null => {
-  const number = safeInteger(value, 0);
-  return number > 0 ? number : null;
+  if (value === null || value === undefined || value === "") return null;
+  try {
+    const number = assertFactor(typeof value === "number" ? value : Number(value), "factor");
+    return number > 0 ? number : null;
+  } catch {
+    return null;
+  }
+};
+
+const safeMoney = (value: unknown, fallback = 0): number => {
+  try {
+    return assertVnd(typeof value === "number" ? value : Number(value), "amount");
+  } catch {
+    return fallback;
+  }
 };
 
 const revision = (value: unknown): number => Math.max(1, safeInteger(value, 1));
@@ -187,11 +200,12 @@ const costIndex = (value: unknown) => {
 };
 
 const lineTotal = (item: OrderRecord["items"][number]): number => {
-  const quantity = item.quantity * (item.soCuon && item.soCuon > 0 ? item.soCuon : 1) * (item.soKi && item.soKi > 0 ? item.soKi : 1);
-  const total = quantity * item.unitPrice;
-  return Number.isSafeInteger(total) && total >= 0 ? total : 0;
+  try {
+    return lineAmount(item.unitPrice, item, "sale");
+  } catch {
+    return 0;
+  }
 };
-
 const legacyStatus = (value: unknown): OrderRecord["status"] => {
   if (value === "shipping" || value === "completed" || value === "cancelled" || value === "draft" || value === "discarded") return value;
   return "confirmed";
@@ -378,11 +392,11 @@ export const buildQuarantineReview = (legacy: { orders?: unknown; customers?: un
 
     const computedTotal = computedOrderTotal(row);
     if (computedTotal === null) continue;
-    const recordedPaid = typeof row.paidAmount === "number" && Number.isSafeInteger(row.paidAmount) && row.paidAmount >= 0
-      ? row.paidAmount
+    const recordedPaid = typeof row.paidAmount === "number" && Number.isFinite(row.paidAmount) && row.paidAmount >= 0
+      ? safeMoney(row.paidAmount)
       : null;
-    const legacyDebt = safeInteger(row.debt);
-    const legacyTotal = row.total === undefined ? computedTotal : safeInteger(row.total);
+    const legacyDebt = safeMoney(row.debt);
+    const legacyTotal = row.total === undefined ? computedTotal : safeMoney(row.total);
     if (recordedPaid !== null || (legacyDebt <= 0 && legacyTotal === computedTotal)) continue;
     if (classifyMoney(legacyDebt, legacyTotal, computedTotal) !== "unexplainedTotalMismatch") continue;
     const bucket = review.money.unexplainedTotalMismatch;
@@ -439,14 +453,14 @@ const computedOrderTotal = (row: Record<string, unknown>): number | null => {
     quantity: positiveInteger(item.quantity),
     soCuon: optionalFactor(item.soCuon),
     soKi: optionalFactor(item.soKi),
-    unitPrice: safeInteger(item.unitPrice ?? item.price),
-    costPrice: safeInteger(item.costPrice),
+    unitPrice: safeMoney(item.unitPrice ?? item.price),
+    costPrice: safeMoney(item.costPrice),
     isManual: Boolean(item.isManual),
   }));
   if (items.length === 0) return null;
   const lineSubtotal = items.reduce((sum, item) => sum + lineTotal(item), 0);
-  const discount = Math.min(safeInteger(row.discount), lineSubtotal);
-  return computeOrderTotals(items, discount, safeInteger(row.shippingFee)).total;
+  const discount = Math.min(safeMoney(row.discount), lineSubtotal);
+  return computeOrderTotals(items, discount, safeMoney(row.shippingFee)).total;
 };
 
 const buildLiveReconciliationPlan = async (legacy: LegacyDocuments, sourceHash: string): Promise<LiveReconciliationPlan> => {
@@ -484,8 +498,8 @@ const buildLiveReconciliationPlan = async (legacy: LegacyDocuments, sourceHash: 
     } else {
       quarantineCustomerLinks += 1;
     }
-    const legacyDebt = safeInteger(row.debt);
-    const legacyTotal = row.total === undefined ? computedTotal : safeInteger(row.total);
+    const legacyDebt = safeMoney(row.debt);
+    const legacyTotal = row.total === undefined ? computedTotal : safeMoney(row.total);
     if (legacyDebt > 0 || legacyTotal !== computedTotal) {
       const moneyClass = classifyMoney(legacyDebt, legacyTotal, computedTotal);
       if (moneyClass === "debtMatchingComputedTotal") historicalPayments.push({ orderId, paidAmount: computedTotal - legacyDebt });
@@ -544,7 +558,7 @@ const applyReconciliationPatches = (legacy: LegacyDocuments, plan: LiveReconcili
       if (paidAmount !== undefined) {
         next.debt = 0;
         next.paidAmount = paidAmount;
-        next.paymentStatus = paidAmount > 0 && paidAmount >= safeInteger(next.total, paidAmount) ? "paid" : "unpaid";
+        next.paymentStatus = paidAmount > 0 && paidAmount >= safeMoney(next.total, paidAmount) ? "paid" : "unpaid";
       }
       if (total !== undefined) {
         next.total = total;
@@ -732,8 +746,8 @@ const hydrateLegacyState = (legacy: LegacyDocuments, now: string): {
         quantity: positiveInteger(item.quantity),
         soCuon: optionalFactor(item.soCuon),
         soKi: optionalFactor(item.soKi),
-        unitPrice: safeInteger(item.unitPrice ?? item.price),
-        costPrice: safeInteger(item.costPrice),
+        unitPrice: safeMoney(item.unitPrice ?? item.price),
+        costPrice: safeMoney(item.costPrice),
         isManual: Boolean(item.isManual),
       };
     });
@@ -742,7 +756,7 @@ const hydrateLegacyState = (legacy: LegacyDocuments, now: string): {
       return;
     }
     const lineSubtotal = items.reduce((sum, item) => sum + lineTotal(item), 0);
-    const requestedDiscount = safeInteger(row.discount);
+    const requestedDiscount = safeMoney(row.discount);
     const status = legacyStatus(row.status);
     const createdAt = timestamp(row.createdAt, now);
     const order: OrderRecord = {
@@ -756,7 +770,7 @@ const hydrateLegacyState = (legacy: LegacyDocuments, now: string): {
       items,
       status,
       discount: Math.min(requestedDiscount, lineSubtotal),
-      shippingFee: safeInteger(row.shippingFee),
+      shippingFee: safeMoney(row.shippingFee),
       note: stringOr(row.note),
       shopTemplateId: stringOr(row.shopTemplateId) || null,
       sellerSnapshot: null,
@@ -770,10 +784,10 @@ const hydrateLegacyState = (legacy: LegacyDocuments, now: string): {
     };
     state.orders.set(id, order);
     const totals = computeOrderTotals(items, order.discount, order.shippingFee);
-    const legacyDebt = safeInteger(row.debt);
-    const legacyTotal = row.total === undefined ? totals.total : safeInteger(row.total);
-    const recordedPaid = typeof row.paidAmount === "number" && Number.isSafeInteger(row.paidAmount) && row.paidAmount >= 0
-      ? row.paidAmount
+    const legacyDebt = safeMoney(row.debt);
+    const legacyTotal = row.total === undefined ? totals.total : safeMoney(row.total);
+    const recordedPaid = typeof row.paidAmount === "number" && Number.isFinite(row.paidAmount) && row.paidAmount >= 0
+      ? safeMoney(row.paidAmount)
       : null;
     if (recordedPaid === null && (legacyDebt > 0 || legacyTotal !== totals.total)) {
       migrationBlockers.push(`order:${id}:legacy_total_or_debt_requires_review`);

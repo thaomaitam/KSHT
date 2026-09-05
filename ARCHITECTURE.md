@@ -5,7 +5,7 @@ Two separately deployed Workers share this repository and, after an explicitly a
 ## Live shop (customer-facing)
 
 - Frontend: React 19 + TypeScript + Vite, GitHub Pages, `https://giaban.khosihuythao.com`.
-- Backend: Worker `ksht-api`, entry `cloudflare_worker.js`, `wrangler.jsonc`.
+- Last released backend: Worker `ksht-api`, legacy entry `cloudflare_worker.js`. The uncommitted `wrangler.jsonc` now targets `workers/api/index.ts` for the approved but **not yet deployed** cutover below.
 - Store: Workers KV binding `DB`.
 - Admin auth: time-limited signed session. Browser holds the session in `sessionStorage`. Root admin secrets stay on the Worker; they are never a browser or MCP credential.
 - Public reads: products, categories, settings (no cost price).
@@ -27,13 +27,19 @@ Two separately deployed Workers share this repository and, after an explicitly a
 - Pi config: owner-wide `~/.pi/agent/mcp.json` server `KSHT`, `protocolVersion` `2026-07-28`, header `${KSHT_API_KEY}`. Project `.mcp.json` is optional convenience and is not required. No `npm run mcp:local` for this path.
 - MCP tools are business operations only. They must not deploy, bind, or rotate Cloudflare/GitHub resources.
 
-## Shared domain (source, not live-wired)
+## Shared domain (source cutover implemented; release pending)
 
 - Contract: `contracts/giaban-api.openapi.yaml`.
 - Application: `server/application/giaban.ts` + `server/domain/`.
 - HTTP `/api/v1` adapter exists in source (`server/http/`, `client/giabanClient.ts`). Admin UI in source no longer POSTs `/api/data/:key`.
-- Production `ksht-api` does **not** serve `/api/v1` yet. `DOMAIN_AUTHORITATIVE=1` is not enabled. Pages still runs the previously published bundle and continues reading public catalog documents from KV.
-- Local Domain worker `workers/api/index.ts` + `wrangler.domain.jsonc` is not production-wired.
+- No production release has occurred for this work. The recorded live `ksht-api` still does **not** serve `/api/v1`; Pages remains on its previously published bundle.
+- Approved source path: browser → `ksht-api` (`workers/api/index.ts`) → named Service Binding `GIABAN` → `ksht-mcp#GiabanHttp` → the existing `GiabanShop` owner singleton and `LiveKvStore`. `wrangler.jsonc` targets this edge; `wrangler.domain.jsonc` is a development configuration of the same edge, not a MemoryStore production alternative.
+- `ksht-api` verifies signed session credentials before deriving the capped public/legacyAdmin actor. The actor travels through internal RPC, not a public identity header. Public MCP fetch remains owner-key-only `/mcp` and rejects public `/api/v1`; it never accepts browser session authority.
+- `createOwnerRuntime` owns one queue for both adapters, pending-publish flush and committed-mirror consistency checks. No second writer, D1 migration, fresh DO identity, or `DOMAIN_AUTHORITATIVE` flag is introduced.
+- Source legacy whole-key POSTs return 423 `MIGRATION_READ_ONLY`; compatibility public reads and login remain. Public catalog omits costs; private admin products are not persisted in localStorage. Invalid/expired sessions clear private caches and exit private views.
+- Cursor consumers and pagination share descending createdAt/id ordering; bounded client walks explicitly report incomplete lists. Order summaries do not supply invoice items: printing/recreating explicitly loads invoice detail and preserves its frozen seller snapshot.
+- Release authority and evidence: [production execution plan](docs/plans/active/ksht-production-backend-frontend.md). Required order is provider `ksht-mcp`, edge `ksht-api`, verified API readiness, then GitHub Pages. Both Worker dry runs passed; final integration/typecheck/test proof and all live deployments remain pending.
+- Rollback must preserve the raw-write fence and committed data. Do not restore prior KV over new transactions or roll back to an edge that reopens the legacy writer.
 
 ## Data and money rules (both consumers)
 
@@ -43,8 +49,8 @@ Two separately deployed Workers share this repository and, after an explicitly a
 
 ## Intentionally not done
 
-- Production Domain Worker, D1, `DOMAIN_AUTHORITATIVE=1`.
+- D1 migration or a `DOMAIN_AUTHORITATIVE=1` cutover. The pending KV/shared-DO release replaces the separate Domain Worker proposal.
 - GitHub OAuth MCP (cancelled; not a future requirement for this path).
 - Routing `/mcp` on `giaban.khosihuythao.com` (that host is Pages).
-- Publishing the Phase 6 frontend to Pages.
+- Publishing the updated frontend to Pages before production `/api/v1` readiness.
 - Concurrent use of legacy web-admin writes and MCP writes.

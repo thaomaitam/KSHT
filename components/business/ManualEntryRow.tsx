@@ -1,3 +1,5 @@
+import { lineAmount } from '../../server/domain/quantity.ts';
+
 import React from 'react';
 import { Plus } from 'lucide-react';
 import { NewOrder, OrderItem } from '../../hooks/useBusinessData';
@@ -23,16 +25,15 @@ export const ManualEntryRow: React.FC<ManualEntryRowProps> = ({ newOrder, setNew
         const k = Number(soKi) || 0;
         const p = Number(unitPrice) || 0;
 
-        // Automatic formula detection
         let total = 0;
-        if (newOrder.showSoCuon && c > 0 && newOrder.showSoKi && k > 0) {
-            total = q * c * k * p;
-        } else if (newOrder.showSoCuon && c > 0) {
-            total = q * c * p;
-        } else if (newOrder.showSoKi && k > 0) {
-            total = q * k * p;
-        } else {
-            total = q * p;
+        try {
+            total = lineAmount(p, {
+                quantity: q,
+                soCuon: newOrder.showSoCuon && c > 0 ? c : null,
+                soKi: newOrder.showSoKi && k > 0 ? k : null,
+            });
+        } catch {
+            return;
         }
 
         const newItem: OrderItem = {

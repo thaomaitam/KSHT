@@ -5,7 +5,7 @@ export interface ProductVariant {
   costPrice?: number;
 }
 
-export type Category = 'ALL' | 'PAINT_BRUSH' | 'ROLLER' | 'ACCESSORY';
+export type Category = string;
 
 export interface Product {
   id: string;
@@ -16,4 +16,13 @@ export interface Product {
   variants: ProductVariant[];
   isHot?: boolean;
   revision?: number;
+}
+
+export type LoadSource = 'network' | 'stale-cache' | 'empty';
+
+export interface CatalogLoad {
+  products: Product[];
+  truncated: boolean;
+  source: LoadSource;
+  error?: { message: string; retryable: boolean };
 }

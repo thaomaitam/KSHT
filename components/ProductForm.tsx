@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Product, ProductVariant } from '../types';
-import { storageService } from '../storageService';
 import { settingsService, CategoryItem } from '../settingsService';
 
 interface ProductFormProps {
     product: Product | null;
-    onSave: (product: Product) => void;
+    onSave: (product: Product) => Promise<void> | void;
     onClose: () => void;
 }
 
@@ -14,6 +13,8 @@ const emptyVariant: ProductVariant = { size: '', unit: 'Cây', price: 0, costPri
 
 export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onClose }) => {
     const [categories, setCategories] = useState<CategoryItem[]>([]);
+    const [saving, setSaving] = useState(false);
+    const [formError, setFormError] = useState('');
     const [formData, setFormData] = useState<Omit<Product, 'id'> & { id?: string }>({
         name: '',
         category: '',
@@ -24,37 +25,55 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onClo
     });
 
     useEffect(() => {
-        // Load dynamic categories
         const loadCategories = async () => {
             const allCats = await settingsService.getCategories();
             const cats = allCats.filter(c => c.value !== 'ALL');
             setCategories(cats);
-            // Set default category
             if (!product && cats.length > 0) {
                 setFormData(prev => ({ ...prev, category: cats[0].value }));
             }
         };
-        loadCategories();
+        void loadCategories();
     }, [product]);
 
     useEffect(() => {
         if (product) {
-            setFormData(product);
+            setFormData({
+                ...product,
+                variants: (product.variants || []).map((variant) => ({
+                    ...variant,
+                    costPrice: variant.costPrice ?? 0,
+                })),
+            });
         }
     }, [product]);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const newProduct: Product = {
-            id: product?.id || storageService.generateId(),
-            name: formData.name,
-            category: formData.category,
-            description: formData.description,
-            image: formData.image || 'https://picsum.photos/500/500',
-            variants: formData.variants.filter(v => v.size && v.price > 0),
-            isHot: formData.isHot,
-        };
-        onSave(newProduct);
+        if (saving) return;
+        const variants = formData.variants.filter(v => v.size && Number.isSafeInteger(v.price) && v.price >= 0);
+        if (variants.length < 1) {
+            setFormError('Cần ít nhất một dòng kích thước với giá nguyên.');
+            return;
+        }
+        setSaving(true);
+        setFormError('');
+        try {
+            await onSave({
+                id: product?.id || '',
+                name: formData.name,
+                category: formData.category,
+                description: formData.description,
+                image: formData.image || '',
+                variants,
+                isHot: formData.isHot,
+                revision: product?.revision,
+            });
+        } catch (error) {
+            setFormError(error instanceof Error ? error.message : 'Không lưu được sản phẩm.');
+        } finally {
+            setSaving(false);
+        }
     };
 
     const updateVariant = (index: number, field: keyof ProductVariant, value: string | number) => {
@@ -86,7 +105,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onClo
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                    {/* Product Name */}
+                    {formError && <p className="text-sm text-red-600">{formError}</p>}
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">Tên sản phẩm *</label>
                         <input
@@ -99,7 +118,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onClo
                         />
                     </div>
 
-                    {/* Category */}
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">Danh mục *</label>
                         <select
@@ -113,7 +131,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onClo
                         </select>
                     </div>
 
-                    {/* Description */}
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">Mô tả</label>
                         <textarea
@@ -125,7 +142,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onClo
                         />
                     </div>
 
-                    {/* Image URL */}
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">Link hình ảnh</label>
                         <input
@@ -137,7 +153,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onClo
                         />
                     </div>
 
-                    {/* Is Hot */}
                     <div className="flex items-center gap-3">
                         <input
                             type="checkbox"
@@ -151,10 +166,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onClo
                         </label>
                     </div>
 
-                    {/* Variants */}
                     <div>
                         <div className="flex items-center justify-between mb-3">
-                            <label className="block text-sm font-medium text-slate-700">Kích thước & Giá *</label>
+                            <label className="block text-sm font-medium text-slate-700">Kích thước, giá bán và giá gốc *</label>
                             <button
                                 type="button"
                                 onClick={addVariant}
@@ -182,15 +196,19 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onClo
                                     />
                                     <input
                                         type="number"
+                                        min={0}
+                                        step={1}
                                         value={variant.price || ''}
-                                        onChange={(e) => updateVariant(index, 'price', parseInt(e.target.value) || 0)}
+                                        onChange={(e) => updateVariant(index, 'price', parseInt(e.target.value, 10) || 0)}
                                         className="w-32 px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="Giá bán"
                                     />
                                     <input
                                         type="number"
+                                        min={0}
+                                        step={1}
                                         value={variant.costPrice || ''}
-                                        onChange={(e) => updateVariant(index, 'costPrice', parseInt(e.target.value) || 0)}
+                                        onChange={(e) => updateVariant(index, 'costPrice', parseInt(e.target.value, 10) || 0)}
                                         className="w-32 px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="Giá gốc"
                                     />
@@ -207,20 +225,21 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onClo
                         </div>
                     </div>
 
-                    {/* Buttons */}
                     <div className="flex gap-3 pt-4 border-t border-slate-200">
                         <button
                             type="button"
                             onClick={onClose}
                             className="flex-1 px-4 py-3 border border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors"
+                            disabled={saving}
                         >
                             Hủy
                         </button>
                         <button
                             type="submit"
-                            className="flex-1 px-4 py-3 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition-colors"
+                            disabled={saving}
+                            className="flex-1 px-4 py-3 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition-colors disabled:opacity-60"
                         >
-                            {product ? 'Cập nhật' : 'Thêm sản phẩm'}
+                            {saving ? 'Đang lưu...' : product ? 'Cập nhật' : 'Thêm sản phẩm'}
                         </button>
                     </div>
                 </form>
