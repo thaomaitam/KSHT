@@ -6,7 +6,7 @@ Date: 2026-09-05
 
 ## Status
 
-Active
+Completed
 
 ## Outcome
 
@@ -77,8 +77,8 @@ Out of scope:
  - [x] Contract/domain/client/KV support for fractional soCuon/soKi with exact unrounded line money, plus Asia/Ho_Chi_Minh report date bounds.
 - [x] Finish parent integration review and fresh regression/typecheck/frontend/worker proof on the final state. Native user: platform 113/113, frontend 45/45, tsc exit 0, worker 13/13. Parent vite build 6.4.1: dist/assets/index-BYygNrgr.js 614.09 kB / 160.86 kB gzip (existing >500 kB warning).
 - [x] Wrangler 4.128.0 dry runs previously passed for both production configs (bindings unchanged by the money follow-up). Re-run immediately before deploy; do not treat the earlier dry-run as an upload.
-- [ ] Commit/push task-owned files, deploy ksht-mcp then ksht-api, smoke-test read-only, then deploy Pages and verify artifact.
-- [ ] Record deployment IDs and verified result before finalization.
+- [x] Commit/push task-owned files, deploy ksht-mcp then ksht-api, smoke-test read-only, then deploy Pages and verify artifact.
+- [x] Record deployment IDs and verified result before finalization.
 
 ## Decisions
 
@@ -122,6 +122,7 @@ Promote lasting product or architecture decisions into repository-owned decision
  - Native user npx tsc --noEmit after typeof-copy: no output, treated as exit 0. Current native proof for fractional-kg worktree: frontend 45/45, tsc exit 0, worker 13/13, parent platform 112/112. Build/Wrangler dry-run still predate this money change and are not final-state evidence. Independent review of the money/quantity/timezone slice is next; no commit/deploy yet.
  - Independent Grok xhigh review (read-only, session 52edafc9): no critical/high. Mediums: reports profit/netReceipts used JS minus; shipping/discount inputs used parseInt; invalid kg coerced to 0đ; catalog variants accept non-integer via assertVnd. Parent applied subtractVnd in reports (including payment validGross) plus Number() shipping/discount, and a domain test 0.5 kg × 15001 with discount 0.5. Left catalog integer split and in-progress 0đ display as residual. Fresh platform/frontend/tsc required; previous 45/45 and 112/112 are not proof of this follow-up. No commit/deploy.
  - Native user after reports/shipping-discount follow-up: npm run test:platform 113/113 PASS (includes report fractional profit/net receipts), npm run test:frontend 45/45 PASS, npx tsc --noEmit no output (exit 0). Worker 13/13 still valid (no worker change). npm run build still lacks a receipt on this follow-up; previous build 0fe424f4 is not proof of this state.
+ - Parent vite build after those tests: 6.4.1, dist/assets/index-BYygNrgr.js 614.09 kB / 160.86 kB gzip. Commit 9ae21cc pushed to master. Deployed ksht-mcp 4e60c693 then ksht-api da19dfe5, then gh-pages 2b9e6b9. See Result.
 
 ### Ordered rollout and recovery boundary (not yet executed)
 
@@ -134,4 +135,12 @@ Promote lasting product or architecture decisions into repository-owned decision
 
 ## Result
 
-Pending implementation and executable proof.
+Released on 2026-09-05 from commit `9ae21ccc84aa804a61815218086b98e3de59ea5e` (pushed `f658f04..9ae21cc` on `master`).
+
+- Tests on that tree: platform 113/113, frontend 45/45, tsc exit 0, worker 13/13, Vite 6.4.1 `dist/assets/index-BYygNrgr.js` 614.09 kB / 160.86 kB gzip.
+- `ksht-mcp` version `4e60c693-d7b1-448a-88f9-900ad17c47d2` (`--keep-vars`; GiabanShop + existing KV).
+- `ksht-api` version `da19dfe5-eb5f-4d5a-9720-ab49b01f689a` (`GIABAN=ksht-mcp#GiabanHttp`).
+- Read-only smoke: public `/api/v1/public/products` 200 without `costPrice`; `/api/v1/products` missing/invalid session 401; localhost Origin OPTIONS 403; MCP `/api/v1/status` 404; unauthenticated `/api/data/orders` POST 401; PII-safe `get_status` `writeFence=false`, `migrationReady=false`. No live customer/order/payment writes.
+- Pages: `gh-pages` `2b9e6b9` serves `assets/index-BYygNrgr.js`. Custom domain still showed previous `index-Dlv58Zvm.js` at smoke time (CDN lag). Hard-refresh after cache expires.
+
+Unrelated untracked `.pi/`, `docs/error.md`, and `docs/plans/active/add-mui-khoet-go-rhino-mcp.md` were not committed.
