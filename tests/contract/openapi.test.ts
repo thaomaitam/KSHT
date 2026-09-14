@@ -44,6 +44,21 @@ test("every registry operation exists in the contract with matching MCP tool", (
   }
 });
 
+test("authenticated customer and order lists include name and phone without address", () => {
+  const customer = spec.components.schemas.MaskedCustomer;
+  assert.equal(customer.additionalProperties, false);
+  assert.equal(customer.required.includes("name"), true);
+  assert.equal(customer.required.includes("phone"), true);
+  assert.equal("address" in customer.properties, false);
+  const contact = spec.components.schemas.MaskedContactSnapshot;
+  assert.equal(contact.additionalProperties, false);
+  assert.equal(contact.required.includes("name"), true);
+  assert.equal(contact.required.includes("phone"), true);
+  assert.equal("address" in contact.properties, false);
+  assert.equal(contact.required.includes("displayName"), true);
+  assert.equal(contact.required.includes("phoneMasked"), true);
+});
+
 test("public product schema allowlists fields and excludes cost", () => {
   const schema = spec.components.schemas.PublicProduct;
   assert.equal(schema.additionalProperties, false);

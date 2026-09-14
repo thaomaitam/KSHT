@@ -62,7 +62,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                         />
                     ))}
                 </div>
-            ) : (
+            ) : loading ? null : (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
                     <div className="bg-slate-100 p-6 rounded-full mb-4">
                         <Search size={48} className="text-slate-400" />

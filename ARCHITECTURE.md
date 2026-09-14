@@ -47,9 +47,9 @@ Two separately deployed Workers share this repository and the same shop KV. Prod
 
 ## Data and money rules (both consumers)
 
-- Cloudflare KV is the live business source for this path; the DO is coordination/recovery state. localStorage may cache reads and hold the shopper cart; it is not an admin write source.
+- Cloudflare KV is the live business source for this path; the DO is coordination/recovery state. localStorage may cache public catalog reads (cache-aside, TTL about 10 minutes with jitter) and hold the shopper cart; it is not an admin write source. ksht-api caches GET /api/v1/public/products and GET /api/v1/public/categories (Cache-Control public max-age=600) and purges that cache after a successful catalog write through the same Worker. Private /api/v1 routes stay Cache-Control no-store.
 - Order total excludes previous debt. Receivables are derived. Payments/refunds/reversals are immutable records. Giaban records refunds; it does not move money at a bank.
-- Public product projections omit `costPrice`. `listCustomers` masks phone; `getCustomer` is PII.
+- Public product projections omit costPrice. Authenticated listCustomers, listOrders, and getOrder include name and phone (masked fields remain); address stays on getCustomer and getOrderInvoice.
 
 ## Intentionally not done
 

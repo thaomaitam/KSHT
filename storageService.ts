@@ -3,26 +3,10 @@ import { giabanClient, newIdempotencyKey, CloudWriteError } from './client/giaba
 import { collectPages } from './client/giabanPage.ts';
 import { stripCostFromProduct, toProductWrite } from './client/giabanPayloads.ts';
 import { settingsService } from './settingsService.ts';
-import { apiService, PUBLIC_PRODUCTS_CACHE_KEY } from './apiService.ts';
+import { apiService } from './apiService.ts';
+import { readPublicProductCache, writePublicProductCache } from './client/storefrontCache.ts';
 
-const cacheJson = (key: string, value: unknown) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // quota
-  }
-};
-
-const readCache = (key: string): Product[] | null => {
-  const stored = localStorage.getItem(key);
-  if (!stored) return null;
-  try {
-    const parsed = JSON.parse(stored);
-    return Array.isArray(parsed) ? parsed : null;
-  } catch {
-    return null;
-  }
-};
+let inflightStorefront: Promise<CatalogLoad> | null = null;
 
 const categoryIdFromValue = async (value: string): Promise<string> => {
   const categories = await settingsService.getCategories();
@@ -64,19 +48,42 @@ const asError = (error: unknown): { message: string; retryable: boolean } => {
 };
 
 export const storageService = {
-  async getStorefrontProducts(): Promise<CatalogLoad> {
-    try {
-      const collected = await collectPages((cursor) => giabanClient.getPublicProducts({ cursor }));
-      const byId = await categoryMap();
-      const products = collected.items.map((row) => toUiProduct(row, false, byId)).map(stripCostFromProduct);
-      cacheJson(PUBLIC_PRODUCTS_CACHE_KEY, products);
-      return { products, truncated: collected.truncated, source: 'network' };
-    } catch (error) {
-      const cached = (readCache(PUBLIC_PRODUCTS_CACHE_KEY) || []).map(stripCostFromProduct);
-      if (cached.length) {
-        return { products: cached, truncated: true, source: 'stale-cache', error: asError(error) };
+  peekStorefrontProducts(): CatalogLoad | null {
+    const cached = readPublicProductCache();
+    if (!cached) return null;
+    return {
+      products: cached.products,
+      truncated: !cached.fresh,
+      source: cached.fresh ? "cache" : "stale-cache",
+    };
+  },
+
+  async getStorefrontProducts(options: { bypass?: boolean } = {}): Promise<CatalogLoad> {
+    if (!options.bypass) {
+      const cached = this.peekStorefrontProducts();
+      if (cached?.source === "cache") return cached;
+      if (inflightStorefront) return inflightStorefront;
+    }
+    const pending = (async (): Promise<CatalogLoad> => {
+      try {
+        const collected = await collectPages((cursor) => giabanClient.getPublicProducts({ cursor }, { bypass: options.bypass }));
+        const byId = await categoryMap();
+        const products = collected.items.map((row) => toUiProduct(row, false, byId)).map(stripCostFromProduct);
+        writePublicProductCache(products);
+        return { products, truncated: collected.truncated, source: "network" };
+      } catch (error) {
+        const cached = readPublicProductCache();
+        if (cached?.products.length) {
+          return { products: cached.products, truncated: true, source: "stale-cache", error: asError(error) };
+        }
+        return { products: [], truncated: false, source: "empty", error: asError(error) };
       }
-      return { products: [], truncated: false, source: 'empty', error: asError(error) };
+    })();
+    if (!options.bypass) inflightStorefront = pending;
+    try {
+      return await pending;
+    } finally {
+      if (inflightStorefront === pending) inflightStorefront = null;
     }
   },
 

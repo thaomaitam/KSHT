@@ -5,6 +5,7 @@ import { GiabanApplication, ownerContext } from "../../server/application/giaban
 import { dispatchBrowserApi } from "../../server/http/browserApi.ts";
 import { handleKshtApi } from "../../server/http/ksht.ts";
 import { MemoryStore } from "../../server/persistence/memory/store.ts";
+import { createPublicCatalogStore } from "../../server/http/publicCatalogCache.ts";
 
 const envFor = (app: GiabanApplication, extra: Record<string, unknown> = {}) => ({
   ADMIN_SECRET: "root",
@@ -15,6 +16,7 @@ const envFor = (app: GiabanApplication, extra: Record<string, unknown> = {}) => 
   LOGIN_RATE_LIMITER: { async limit() { return { success: true }; } },
   DB: { async get() { return null; }, async put() { return undefined; } },
   GIABAN: { handleBrowserApi: (envelope: Parameters<typeof dispatchBrowserApi>[1]) => dispatchBrowserApi(app, envelope) },
+  PUBLIC_CATALOG_CACHE: createPublicCatalogStore(),
   ...extra,
 });
 

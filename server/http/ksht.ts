@@ -8,6 +8,20 @@ import {
 } from "./browserApi.ts";
 import { ApiBodyError, MAX_API_BODY_BYTES, readApiBody } from "./limits.ts";
 import { resolveApiV1Route } from "./adapter.ts";
+import {
+  isCatalogMutationPath,
+  isPublicCatalogGet,
+  publicCatalogCacheKey,
+  purgePublicCatalogCache,
+  readPublicCatalogMemory,
+  resolvePublicCatalogStore,
+  responseFromPublicCatalogMemory,
+  runPublicCatalogSingleflight,
+  shouldBypassPublicCatalogCache,
+  storePublicCatalogResponse,
+  withPublicCatalogCacheControl,
+  type PublicCatalogStore,
+} from "./publicCatalogCache.ts";
 
 export interface KshtEnv {
   ALLOWED_ORIGINS?: string;
@@ -16,6 +30,7 @@ export interface KshtEnv {
   GIABAN?: {
     handleBrowserApi(envelope: BrowserApiEnvelope): Promise<BrowserApiResult>;
   };
+  PUBLIC_CATALOG_CACHE?: PublicCatalogStore;
   [key: string]: unknown;
 }
 
@@ -68,7 +83,8 @@ export const handleKshtApi = async (request: Request, env: KshtEnv): Promise<Res
     if (Number.isFinite(contentLength) && contentLength > MAX_API_BODY_BYTES) {
       return withCors(request, env, json({ code: "VALIDATION_ERROR", message: "Request too large", retryable: false }, 413));
     }
-    if (!env.GIABAN) {
+    const giaban = env.GIABAN;
+    if (!giaban) {
       return withCors(request, env, json({
         code: "INTERNAL_ERROR",
         message: "Giaban coordinator unavailable",
@@ -100,9 +116,31 @@ export const handleKshtApi = async (request: Request, env: KshtEnv): Promise<Res
     }
 
     const envelope = envelopeFromVerifiedRequest(request, actor, body);
+    const catalogGet = isPublicCatalogGet(request.method, url.pathname);
+    const cacheKey = publicCatalogCacheKey(request.url);
+    const bypassCache = shouldBypassPublicCatalogCache(request);
+    const catalogStore = resolvePublicCatalogStore(env.PUBLIC_CATALOG_CACHE);
     try {
-      const result = await env.GIABAN.handleBrowserApi(envelope);
-      return withCors(request, env, resultToResponse(result));
+      if (catalogGet && !bypassCache) {
+        const cached = readPublicCatalogMemory(catalogStore, cacheKey);
+        if (cached) return withCors(request, env, responseFromPublicCatalogMemory(cached));
+      }
+      const loadOrigin = async () => {
+        const result = await giaban.handleBrowserApi(envelope);
+        let response = resultToResponse(result);
+        if (catalogGet && result.status === 200) {
+          response = withPublicCatalogCacheControl(response);
+          if (!bypassCache) await storePublicCatalogResponse(catalogStore, cacheKey, response.clone());
+        }
+        if (isCatalogMutationPath(request.method, url.pathname) && result.status < 400) {
+          await purgePublicCatalogCache(catalogStore);
+        }
+        return response;
+      };
+      const response = catalogGet && !bypassCache
+        ? await runPublicCatalogSingleflight(catalogStore, cacheKey, loadOrigin)
+        : await loadOrigin();
+      return withCors(request, env, response);
     } catch {
       return withCors(request, env, json({ code: "INTERNAL_ERROR", message: "Internal error", retryable: true }, 500));
     }

@@ -15,18 +15,35 @@ export const useAppData = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [currentPage, setCurrentPage] = useState<PageType>('main');
-    const [catalog, setCatalog] = useState<CatalogLoad>(emptyCatalog);
+    const [catalog, setCatalog] = useState<CatalogLoad>(() => storageService.peekStorefrontProducts() ?? emptyCatalog());
     const [categories, setCategories] = useState<CategoryItem[]>([]);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showCart, setShowCart] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(() => storageService.peekStorefrontProducts()?.source !== 'cache');
 
-    const loadStorefront = useCallback(async () => {
-        setLoading(true);
+    const loadStorefront = useCallback(async (bypass = false) => {
+        if (!bypass) {
+            const cached = storageService.peekStorefrontProducts();
+            if (cached?.source === 'cache') {
+                setCatalog(cached);
+                setLoading(false);
+                const cats = await settingsService.getCategoryLoad();
+                setCategories(cats.categories);
+                return;
+            }
+            if (cached?.products.length) {
+                setCatalog(cached);
+                setLoading(false);
+            } else {
+                setLoading(true);
+            }
+        } else {
+            setLoading(true);
+        }
         try {
             const [prods, cats] = await Promise.all([
-                storageService.getStorefrontProducts(),
-                settingsService.getCategoryLoad(),
+                storageService.getStorefrontProducts({ bypass }),
+                settingsService.getCategoryLoad({ bypass }),
             ]);
             setCatalog(prods);
             setCategories(cats.categories);
@@ -127,7 +144,7 @@ export const useAppData = () => {
         products: catalog.products,
         catalog,
         loading,
-        reloadStorefront: loadStorefront,
+        reloadStorefront: () => loadStorefront(true),
         categories,
         showLoginModal,
         setShowLoginModal,

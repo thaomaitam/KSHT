@@ -3,6 +3,7 @@ import { apiService } from './apiService.ts';
 import { giabanClient, newIdempotencyKey, CloudWriteError } from './client/giabanClient.ts';
 import { collectPages, parsePage } from './client/giabanPage.ts';
 import { toCategoryWrite, toPhoneSettingsWrite } from './client/giabanPayloads.ts';
+import { readStorefrontEnvelope, writeStorefrontEnvelope, STOREFRONT_CATEGORIES_KEY } from './client/storefrontCache.ts';
 
 const SETTINGS_KEY = 'giaban_settings';
 const CATEGORIES_KEY = 'giaban_categories';
@@ -22,7 +23,7 @@ export interface AppSettings {
 export interface CategoryLoad {
     categories: CategoryItem[];
     truncated: boolean;
-    source: 'network' | 'stale-cache' | 'empty';
+    source: 'network' | 'cache' | 'stale-cache' | 'empty';
 }
 
 const defaultSettings: AppSettings = {
@@ -98,12 +99,19 @@ export const settingsService = {
         return `https://zalo.me/${this.getPhoneNumber()}`;
     },
 
-    async getCategoryLoad(): Promise<CategoryLoad> {
+    async getCategoryLoad(options: { bypass?: boolean } = {}): Promise<CategoryLoad> {
         const admin = Boolean(apiService.getSessionToken());
+        const isCategoryList = (value: unknown): value is CategoryItem[] => Array.isArray(value);
+        if (!admin && !options.bypass) {
+            const cached = readStorefrontEnvelope(STOREFRONT_CATEGORIES_KEY, isCategoryList);
+            if (cached?.fresh) {
+                return { categories: withAll(cached.items), truncated: false, source: 'cache' };
+            }
+        }
         try {
             const collected = admin
                 ? await collectPages((cursor) => giabanClient.listCategories({ cursor }))
-                : { items: parsePage(await giabanClient.getPublicCategories()).items, truncated: false };
+                : { items: parsePage(await giabanClient.getPublicCategories({ bypass: options.bypass })).items, truncated: false };
             const categories = collected.items.map((row: any) => ({
                 id: String(row.id),
                 label: String(row.label),
@@ -111,7 +119,8 @@ export const settingsService = {
                 revision: Number(row.revision) || 1,
             }));
             const withSentinel = withAll(categories);
-            cacheJson(CATEGORIES_KEY, withSentinel);
+            if (admin) cacheJson(CATEGORIES_KEY, withSentinel);
+            else writeStorefrontEnvelope(STOREFRONT_CATEGORIES_KEY, withSentinel);
             return {
                 categories: withSentinel,
                 truncated: Boolean(collected.truncated),
@@ -119,6 +128,10 @@ export const settingsService = {
             };
         } catch (error) {
             if (admin) throw error;
+            const cached = readStorefrontEnvelope(STOREFRONT_CATEGORIES_KEY, isCategoryList);
+            if (cached?.items.length) {
+                return { categories: withAll(cached.items), truncated: true, source: 'stale-cache' };
+            }
             const stored = localStorage.getItem(CATEGORIES_KEY);
             if (stored) {
                 try {

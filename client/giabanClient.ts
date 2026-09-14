@@ -59,9 +59,13 @@ const offlineError = (error: unknown): CloudWriteError => {
   });
 };
 
-const read = async (path: string) => {
+const read = async (path: string, options: { bypass?: boolean } = {}) => {
   try {
-    const response = await fetch(v1(path), { headers: headers() });
+    const extra = options.bypass ? { "Cache-Control": "no-cache" } : {};
+    const response = await fetch(v1(path), {
+      headers: headers(extra),
+      cache: options.bypass ? "reload" : "default",
+    });
     return throwIfFailed(response);
   } catch (error) {
     throw offlineError(error);
@@ -91,8 +95,9 @@ export const newIdempotencyKey = (): string => crypto.randomUUID();
 export const giabanClient = {
   getStatus: () => read("/status"),
   getCapabilities: () => read("/capabilities"),
-  getPublicProducts: (query: ListQuery = {}) => read(`/public/products?${toListQuery({ limit: 100, ...query })}`),
-  getPublicCategories: () => read("/public/categories"),
+  getPublicProducts: (query: ListQuery = {}, options: { bypass?: boolean } = {}) =>
+    read(`/public/products?${toListQuery({ limit: 100, ...query })}`, options),
+  getPublicCategories: (options: { bypass?: boolean } = {}) => read("/public/categories", options),
   getPublicSettings: () => read("/public/settings"),
   listProducts: (includeArchived: boolean | ListQuery = false) => {
     const query = typeof includeArchived === "boolean" ? { includeArchived } : includeArchived;

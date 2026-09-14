@@ -386,8 +386,8 @@ export const businessService = {
         const collected = await collectPages((cursor) => giabanClient.listCustomers({ q, cursor }));
         return listedFrom(collected, (row: any) => ({
             id: String(row.id),
-            name: String(row.displayName || row.name || ''),
-            phone: String(row.phoneMasked || row.phone || ''),
+            name: String(row.name || row.displayName || ''),
+            phone: String(row.phone || row.phoneMasked || ''),
             address: '',
             revision: Number(row.revision) || 1,
             duplicatePhoneWarning: Boolean(row.duplicatePhoneWarning),
@@ -465,8 +465,8 @@ export const businessService = {
         return {
             items: customersParsed.items.map((row: any) => ({
                 id: String(row.id),
-                name: String(row.displayName || row.name || ''),
-                phone: String(row.phoneMasked || row.phone || ''),
+                name: String(row.name || row.displayName || ''),
+                phone: String(row.phone || row.phoneMasked || ''),
                 address: '',
                 revision: Number(row.revision) || 1,
                 duplicatePhoneWarning: Boolean(row.duplicatePhoneWarning),

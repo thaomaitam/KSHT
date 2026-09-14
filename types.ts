@@ -18,7 +18,7 @@ export interface Product {
   revision?: number;
 }
 
-export type LoadSource = 'network' | 'stale-cache' | 'empty';
+export type LoadSource = 'network' | 'cache' | 'stale-cache' | 'empty';
 
 export interface CatalogLoad {
   products: Product[];

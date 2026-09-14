@@ -11,6 +11,7 @@ import { rejectPublicMcpRequest } from "../../workers/mcp/publicMcp.ts";
 import { LIVE_STATE_KEY, type LiveKvNamespace } from "../../workers/mcp/liveKvStore.ts";
 import type { SnapshotStorage } from "../../workers/mcp/snapshotStore.ts";
 import type { BrowserApiEnvelope } from "../../server/http/browserApi.ts";
+import { createPublicCatalogStore } from "../../server/http/publicCatalogCache.ts";
 
 class MemoryCoordinator implements SnapshotStorage {
   values = new Map<string, unknown>();
@@ -80,6 +81,7 @@ const baseEnv = (overrides: Record<string, unknown> = {}) => ({
   ALLOWED_ORIGINS: "https://giaban.khosihuythao.com",
   LOGIN_RATE_LIMITER: { async limit() { return { success: true }; } },
   DB: { async get() { return null; }, async put() { throw new Error("legacy writer must not run"); } },
+  PUBLIC_CATALOG_CACHE: createPublicCatalogStore(),
   ...overrides,
 });
 
@@ -183,7 +185,7 @@ test("verified session /api/v1 catalog order payment and report share the owner 
   const customers = await (await api(env, "/api/v1/customers?limit=100", { headers: authed(token) })).json() as {
     items: Array<{ phone?: string; phoneMasked?: string }>;
   };
-  assert.equal("phone" in customers.items[0], false);
+  assert.equal(customers.items[0].phone, "0901234567");
   assert.equal(typeof customers.items[0].phoneMasked, "string");
 
   const draftRes = await api(env, "/api/v1/orders", {

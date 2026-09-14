@@ -16,6 +16,13 @@ import { storageService } from '../storageService';
 import { Product } from '../types';
 import { createSubmitLock, isRetryableError, stepKey } from '../utils/operationState';
 import { BankInfo } from '../businessService';
+import { SESSION_ENDED_EVENT } from '../apiService';
+import {
+    clearBusinessSessionCache,
+    getBusinessSessionCache,
+    setBusinessSessionCache,
+    type BusinessSessionSnapshot,
+} from '../client/businessSessionCache';
 
 export type TabType = 'orders' | 'history' | 'customers' | 'profit' | 'reports';
 
@@ -100,7 +107,34 @@ export const useBusinessData = () => {
 
     const productDropdownRef = useRef<HTMLDivElement>(null);
 
-    const loadData = async () => {
+    const applySnapshot = (snapshot: BusinessSessionSnapshot) => {
+        setOrders(snapshot.orders);
+        setOrdersTruncated(snapshot.ordersTruncated);
+        setCustomers(snapshot.customers);
+        setCustomersTruncated(snapshot.customersTruncated);
+        setTransactions(snapshot.transactions);
+        setProducts(snapshot.products);
+        setProductsTruncated(snapshot.productsTruncated);
+        setBankInfo(snapshot.bankInfo);
+        setShopTemplates(snapshot.shopTemplates);
+        setReport(snapshot.report);
+        setReview(snapshot.review);
+        const defaultTemplate = snapshot.shopTemplates.find(t => t.isDefault) || snapshot.shopTemplates[0];
+        if (defaultTemplate) {
+            setNewOrder(prev => ({ ...prev, selectedTemplateId: defaultTemplate.id }));
+        }
+    };
+
+    const loadData = async (force = false) => {
+        if (!force) {
+            const cached = getBusinessSessionCache();
+            if (cached) {
+                applySnapshot(cached);
+                setLoadError('');
+                setLoading(false);
+                return;
+            }
+        }
         setLoading(true);
         setLoadError('');
         try {
@@ -117,21 +151,21 @@ export const useBusinessData = () => {
                 businessService.getReportSummary(fromDate, toDate),
                 businessService.getStatusReview(),
             ]);
-            setOrders(ordersData.items);
-            setOrdersTruncated(ordersData.truncated);
-            setCustomers(customersData.items);
-            setCustomersTruncated(customersData.truncated);
-            setTransactions(transactionsData.items);
-            setProducts(productsData.products);
-            setProductsTruncated(productsData.truncated);
-            setBankInfo(bankInfoData);
-            setShopTemplates(shopTemplatesData.items);
-            setReport(reportData);
-            setReview(reviewData);
-            const defaultTemplate = shopTemplatesData.items.find(t => t.isDefault) || shopTemplatesData.items[0];
-            if (defaultTemplate) {
-                setNewOrder(prev => ({ ...prev, selectedTemplateId: defaultTemplate.id }));
-            }
+            const snapshot: BusinessSessionSnapshot = {
+                orders: ordersData.items,
+                ordersTruncated: ordersData.truncated,
+                customers: customersData.items,
+                customersTruncated: customersData.truncated,
+                transactions: transactionsData.items,
+                products: productsData.products,
+                productsTruncated: productsData.truncated,
+                bankInfo: bankInfoData,
+                shopTemplates: shopTemplatesData.items,
+                report: reportData,
+                review: reviewData,
+            };
+            setBusinessSessionCache(snapshot);
+            applySnapshot(snapshot);
         } catch (error) {
             setLoadError(error instanceof Error ? error.message : 'Không tải được dữ liệu kinh doanh.');
         } finally {
@@ -141,6 +175,12 @@ export const useBusinessData = () => {
 
     useEffect(() => {
         void loadData();
+    }, []);
+
+    useEffect(() => {
+        const onSessionEnded = () => clearBusinessSessionCache();
+        window.addEventListener(SESSION_ENDED_EVENT, onSessionEnded);
+        return () => window.removeEventListener(SESSION_ENDED_EVENT, onSessionEnded);
     }, []);
 
     const filteredProducts = products.filter(p =>
@@ -303,7 +343,7 @@ export const useBusinessData = () => {
             });
             submitLock.current.succeed();
             createdCustomerIdRef.current = '';
-            await loadData();
+            await loadData(true);
             resetOrderForm();
             return saved;
         } catch (error) {
@@ -349,6 +389,6 @@ export const useBusinessData = () => {
         addProductFromList, addVariantToOrder, updateItemField, removeItem,
         handleSaveOrder,
         resetOrderForm,
-        reload: loadData,
+        reload: () => loadData(true),
     };
 };

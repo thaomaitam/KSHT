@@ -368,7 +368,7 @@ paths:
         - { name: includeArchived, in: query, schema: { type: boolean, default: false } }
       responses:
         "200":
-          description: Masked customer page
+          description: Customer list with name and phone; address remains on customer detail
           content:
             application/json:
               schema: { $ref: "#/components/schemas/MaskedCustomerPage" }
@@ -575,7 +575,7 @@ paths:
         - { name: toDate, in: query, schema: { type: string, format: date } }
       responses:
         "200":
-          description: Masked order page
+          description: Order list with name and phone; address remains on invoice detail
           content:
             application/json:
               schema: { $ref: "#/components/schemas/MaskedOrderPage" }
@@ -613,7 +613,7 @@ paths:
         - $ref: "#/components/parameters/OrderId"
       responses:
         "200":
-          description: Masked order
+          description: Order summary with name and phone; address remains on invoice detail
           content:
             application/json:
               schema: { $ref: "#/components/schemas/MaskedOrder" }
@@ -2015,9 +2015,11 @@ components:
     MaskedCustomer:
       type: object
       additionalProperties: false
-      required: [id, displayName, phoneMasked, archived, revision, duplicatePhoneWarning]
+      required: [id, name, phone, displayName, phoneMasked, archived, revision, duplicatePhoneWarning]
       properties:
         id: { type: string }
+        name: { type: string }
+        phone: { type: string }
         displayName: { type: string }
         phoneMasked: { type: string }
         archived: { type: boolean }
@@ -2118,8 +2120,10 @@ components:
     MaskedContactSnapshot:
       type: object
       additionalProperties: false
-      required: [displayName, phoneMasked]
+      required: [name, phone, displayName, phoneMasked]
       properties:
+        name: { type: string }
+        phone: { type: string }
         displayName: { type: string }
         phoneMasked: { type: string }
     DraftOrderWrite:

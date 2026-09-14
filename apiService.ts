@@ -1,5 +1,5 @@
 import { PUBLIC_READ_KEYS, PRIVATE_DATA_KEYS } from './workerContract.js';
-import { stripCostFromProduct } from './client/giabanPayloads.ts';
+import { stripPublicProductCacheCosts } from './client/storefrontCache.ts';
 
 const API_URL_KEY = 'giaban_api_url';
 const SESSION_TOKEN_KEY = 'giaban_admin_session_token';
@@ -26,18 +26,7 @@ const removeLegacyCredential = () => {
 };
 
 const stripPublicProductCache = () => {
-    const stored = localStorage.getItem(PUBLIC_PRODUCTS_KEY);
-    if (!stored) return;
-    try {
-        const parsed = JSON.parse(stored);
-        if (!Array.isArray(parsed)) {
-            localStorage.removeItem(PUBLIC_PRODUCTS_KEY);
-            return;
-        }
-        localStorage.setItem(PUBLIC_PRODUCTS_KEY, JSON.stringify(parsed.map((product: any) => stripCostFromProduct(product))));
-    } catch {
-        localStorage.removeItem(PUBLIC_PRODUCTS_KEY);
-    }
+    stripPublicProductCacheCosts();
 };
 
 const clearPrivateCache = () => {

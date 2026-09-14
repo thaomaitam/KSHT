@@ -50,14 +50,27 @@ test("public products never include costPrice", async () => {
   assert.equal("costPrice" in detail.variants[0], false);
 });
 
-test("admin product includes cost and masked customer list hides PII", async () => {
+test("admin product includes cost and customer list includes name and phone without address", async () => {
   const giaban = app();
   const { product, customer } = await seedCatalog(giaban);
   const adminProduct = await giaban.query({ operationId: "getProduct", input: { id: product.id } }, ownerContext());
   assert.equal(adminProduct.variants[0].costPrice, 400);
   const customers = await giaban.query({ operationId: "listCustomers", input: {} }, ownerContext());
+  assert.equal(customers.items[0].name, "Nguyen Van A");
+  assert.equal(customers.items[0].phone, "0901234567");
   assert.equal(customers.items[0].phoneMasked.endsWith("4567"), true);
-  assert.equal("phone" in customers.items[0], false);
+  assert.equal("address" in customers.items[0], false);
+  const draft = await giaban.execute({
+    operationId: "createDraftOrder",
+    input: { customerId: customer.id, items: [line] },
+  }, { ...ownerContext(), idempotencyKey: "ord-list-pii" });
+  const orders = await giaban.query({ operationId: "listOrders", input: {} }, ownerContext());
+  assert.equal(orders.items[0].contact.name, "Nguyen Van A");
+  assert.equal(orders.items[0].contact.phone, "0901234567");
+  assert.equal(orders.items[0].contact.phoneMasked.endsWith("4567"), true);
+  assert.equal("address" in orders.items[0].contact, false);
+  const listed = await giaban.query({ operationId: "getOrder", input: { id: draft.id } }, ownerContext());
+  assert.equal(listed.contact.phone, "0901234567");
   const denied = ownerContext({ scopes: ["customers:read"] });
   giaban.store.state.principals.get("principal_owner")!.scopes = ["customers:read"];
   await assert.rejects(

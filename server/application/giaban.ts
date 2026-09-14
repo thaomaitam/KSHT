@@ -137,6 +137,8 @@ const orderMoney = (store: MemoryStore, order: OrderRecord) => {
 
 const maskCustomer = (customer: CustomerRecord, others: CustomerRecord[]) => ({
   id: customer.id,
+  name: customer.name,
+  phone: customer.phone,
   displayName: maskName(customer.name),
   phoneMasked: maskPhone(customer.phone),
   archived: customer.archived,
@@ -167,7 +169,12 @@ const maskOrder = (store: MemoryStore, order: OrderRecord) => {
   return {
     id: order.id,
     customerId: order.customerId,
-    contact: { displayName: maskName(order.contact.name), phoneMasked: maskPhone(order.contact.phone) },
+    contact: {
+      name: order.contact.name,
+      phone: order.contact.phone,
+      displayName: maskName(order.contact.name),
+      phoneMasked: maskPhone(order.contact.phone),
+    },
     status: order.status,
     total: money.total,
     outstanding: money.outstanding,
