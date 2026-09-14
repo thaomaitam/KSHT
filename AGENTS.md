@@ -5,7 +5,7 @@ These instructions apply to the entire repository.
 ## Project
 
 - The frontend is a Vite + React + TypeScript static application.
-- Live shop backend is `cloudflare_worker.js` (Workers KV). Production `wrangler.jsonc` stays on that path until a named cutover.
+- Production shop API is Worker `ksht-api` (`wrangler.jsonc`, `workers/api/index.ts`) with KV `DB` and service binding `GIABAN` → `ksht-mcp#GiabanHttp`. Compatibility `/api/data` GET, `/api/login`, `/api/status`, and authenticated whole-key POST `423 MIGRATION_READ_ONLY` still run through `cloudflare_worker.js` inside that Worker.
 - Personal MCP is Worker `ksht-mcp` (`wrangler.mcp.jsonc`, `workers/mcp/index.ts`) plus SQLite Durable Object `GiabanShop`; the target implementation binds it to the live shop KV `DB`.
 - `public/CNAME` and GitHub Pages scripts are production frontend assets.
 - Current topology, auth, and cutover gates: `ARCHITECTURE.md`.
@@ -19,7 +19,7 @@ These instructions apply to the entire repository.
 - Do not deploy, publish, push, rewrite Git history, or modify live Cloudflare resources unless explicitly requested for that named action and target.
 - List/set Worker secrets with `--config wrangler.mcp.jsonc` for MCP; do not use the production `wrangler.jsonc` for MCP deploys.
 - For non-trivial or multi-session work, follow the managed Continuity workflow and keep its repository execution plan authoritative.
-- Treat a plan file's Status section as authority, not the `docs/plans/active/` folder name. `docs/plans/active/secure-worker-clean-ai-studio.md` is Status Completed.
+- Treat a plan file's Status section as authority, not the `docs/plans/active/` folder name. `docs/plans/active/secure-worker-clean-ai-studio.md` and `docs/plans/active/ksht-production-backend-frontend.md` are Status Completed. `docs/plans/active/giaban-mcp-domain-platform.md` is Status Active; its older OAuth/D1 topology is historical. Current topology is `ARCHITECTURE.md`.
 
 ## Personal MCP (current path)
 
@@ -36,11 +36,12 @@ These instructions apply to the entire repository.
 - The binding in `wrangler.mcp.jsonc` does not authorize deployment. Do not deploy `ksht-mcp` or initialize its live canonical state without a separate named deploy request.
 - MCP must not operate Cloudflare, deployments, or secrets.
 - `https://giaban.khosihuythao.com/mcp` is GitHub Pages, not an MCP Worker.
+- `npm run mcp:local` and `npm run mcp:stdio` are not the personal MCP path; `localServer.ts` uses `MemoryStore`, not live KV. Owner client remains `~/.pi/agent/mcp.json` server `KSHT`.
 
 ## Frontend / live shop
 
 - Source admin/storefront writers use `/api/v1` (`client/giabanClient.ts`). Do not restore whole-key `POST /api/data/:key` writers.
-- Production Worker still serves KV whole-key routes. Do not `npm run deploy` Pages until a named `/api/v1` production Worker exists; that deploy would fail-closed for admin writes.
+- Compatibility whole-key GET remains; authenticated whole-key POSTs return 423 `MIGRATION_READ_ONLY`. Do not `npm run deploy` Pages unless explicitly requested for that named frontend. Do not restore whole-key POST writers on rollback.
 - Do not nới `ALLOWED_ORIGINS`. `localhost:3000` is intentionally absent.
 
 ## Verification
