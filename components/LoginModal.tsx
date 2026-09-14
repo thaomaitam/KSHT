@@ -15,6 +15,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onSuccess, onClose }) =>
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [needsApiUrl, setNeedsApiUrl] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
 
     React.useEffect(() => {
         const currentUrl = apiService.getApiUrl();
@@ -48,7 +49,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onSuccess, onClose }) =>
 
             if (result.success && result.token && result.expiresAt) {
                 apiService.setApiUrl(urlToUse);
-                apiService.setSession(result.token, result.expiresAt);
+                apiService.setSession(result.token, result.expiresAt, { persist: rememberMe });
                 onSuccess();
             } else {
                 setError('Tài khoản hoặc mật khẩu không đúng');
@@ -138,10 +139,23 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onSuccess, onClose }) =>
                         </div>
                     </div>
 
+                    <label className="flex items-start gap-3 cursor-pointer pt-2">
+                        <input
+                            type="checkbox"
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                            className="mt-1 h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                        />
+                        <span>
+                            <span className="block text-sm font-medium text-slate-700">Ghi nhớ đăng nhập</span>
+                            <span className="block text-xs text-slate-500">Giữ phiên trên trình duyệt này tối đa 8 giờ</span>
+                        </span>
+                    </label>
+
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full px-4 py-3 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+                        className="w-full px-4 py-3 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isLoading ? 'Đang xác thực...' : 'Đăng nhập'}
                     </button>
@@ -152,10 +166,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onSuccess, onClose }) =>
 };
 
 // Auth check helper
-export const isAdminAuthenticated = (): boolean => {
-    return sessionStorage.getItem('giaban_admin_auth') === 'true'
-        && Boolean(apiService.getSessionToken());
-};
+export const isAdminAuthenticated = (): boolean => Boolean(apiService.getSessionToken());
 
 export const logoutAdmin = (): void => {
     apiService.clearSession();

@@ -11,7 +11,7 @@ Two separately deployed Workers share this repository and the same shop KV. Prod
 - Day-to-day admin origin is `https://giaban.khosihuythao.com`. If custom-domain HTML/JS hash disagrees with origin `gh-pages`, check DNS record type (Worker vs CNAME) before assuming Cloudflare cache or republishing Pages.
 - Last released backend: Worker `ksht-api`, entry `workers/api/index.ts`, config `wrangler.jsonc`. Compatibility reads and login still go through `cloudflare_worker.js` inside that Worker. Legacy whole-key POSTs return 423 `MIGRATION_READ_ONLY` once authenticated; unauthenticated writes fail closed.
 - Store: Workers KV binding `DB`.
-- Admin auth: time-limited signed session. Browser holds the session in `sessionStorage`. Root admin secrets stay on the Worker; they are never a browser or MCP credential.
+- Admin auth: time-limited signed session (8 hours). Browser holds it in `sessionStorage` by default, or `localStorage` when the owner checks «Ghi nhớ đăng nhập». Root admin secrets stay on the Worker; they are never a browser or MCP credential.
 - Public reads: products, categories, settings (no cost price).
 - Private KV keys (orders, customers, costPrices, …) require that session.
 - CORS allowlist is not authentication. `localhost:3000` is not in `ALLOWED_ORIGINS`.

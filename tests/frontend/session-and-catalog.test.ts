@@ -139,3 +139,74 @@ test("expired session emits one event to unmount private views", async () => {
     else Reflect.deleteProperty(globalThis, "window");
   }
 });
+
+test("ephemeral admin session lives only in sessionStorage", async () => {
+  const { apiService } = await import("../../apiService.ts");
+  const token = "ephemeral-token-value";
+  apiService.setSession(token, Date.now() + 60_000);
+
+  assert.equal(sessionStorage.getItem("giaban_admin_session_token"), token);
+  assert.equal(sessionStorage.getItem("giaban_admin_auth"), "true");
+  assert.equal(localStorage.getItem("giaban_admin_session_token"), null);
+  assert.equal(localStorage.getItem("giaban_admin_auth"), null);
+
+  sessionStorage.clear();
+  assert.equal(apiService.getSessionToken(), "");
+});
+
+test("persisted admin session remains after sessionStorage is cleared", async () => {
+  const { apiService } = await import("../../apiService.ts");
+  const token = "persist-token-value";
+  apiService.setSession(token, Date.now() + 60_000, { persist: true });
+
+  assert.equal(localStorage.getItem("giaban_admin_session_token"), token);
+  assert.equal(localStorage.getItem("giaban_admin_auth"), "true");
+  assert.equal(sessionStorage.getItem("giaban_admin_session_token"), null);
+
+  sessionStorage.clear();
+  assert.equal(apiService.getSessionToken(), token);
+});
+
+test("ephemeral login replaces a persisted session on this browser", async () => {
+  const { apiService } = await import("../../apiService.ts");
+  apiService.setSession("persist-token-value", Date.now() + 60_000, { persist: true });
+  apiService.setSession("ephemeral-token-value", Date.now() + 60_000);
+
+  assert.equal(sessionStorage.getItem("giaban_admin_session_token"), "ephemeral-token-value");
+  assert.equal(localStorage.getItem("giaban_admin_session_token"), null);
+  assert.equal(localStorage.getItem("giaban_admin_auth"), null);
+});
+
+test("expired persisted session emits one event to unmount private views", async () => {
+  const { apiService, SESSION_ENDED_EVENT } = await import("../../apiService.ts");
+  const originalWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+  const events = new EventTarget();
+  let ended = 0;
+  events.addEventListener(SESSION_ENDED_EVENT, () => { ended += 1; });
+  Object.defineProperty(globalThis, "window", { value: events, configurable: true });
+  try {
+    apiService.setSession("persist-expired-token", Date.now() + 60_000, { persist: true });
+    localStorage.setItem("giaban_admin_session_expiry", "1");
+    assert.equal(apiService.getSessionToken(), "");
+    assert.equal(apiService.getSessionToken(), "");
+    assert.equal(ended, 1);
+    assert.equal(localStorage.getItem("giaban_admin_session_token"), null);
+  } finally {
+    if (originalWindow) Object.defineProperty(globalThis, "window", originalWindow);
+    else Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
+test("clearSession removes persisted and ephemeral session keys", async () => {
+  const { apiService } = await import("../../apiService.ts");
+  apiService.setSession("persist-token-value", Date.now() + 60_000, { persist: true });
+  sessionStorage.setItem("giaban_admin_session_token", "stale-ephemeral");
+  sessionStorage.setItem("giaban_admin_auth", "true");
+  apiService.clearSession();
+
+  assert.equal(apiService.getSessionToken(), "");
+  assert.equal(sessionStorage.getItem("giaban_admin_session_token"), null);
+  assert.equal(localStorage.getItem("giaban_admin_session_token"), null);
+  assert.equal(localStorage.getItem("giaban_admin_session_expiry"), null);
+  assert.equal(localStorage.getItem("giaban_admin_auth"), null);
+});

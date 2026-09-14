@@ -10,7 +10,7 @@
 - Lưu trữ cloud: Workers KV qua binding `DB`.
 - Dữ liệu catalog (`products`, `categories`, `settings`) được đọc công khai; dữ liệu kinh doanh yêu cầu phiên đăng nhập có thời hạn.
 
-Phiên quản trị chỉ được lưu trong `sessionStorage`. Worker không trả hoặc chấp nhận root secret từ trình duyệt.
+Phiên quản trị mặc định nằm trong `sessionStorage`. Ô «Ghi nhớ đăng nhập» lưu token đã ký vào `localStorage` đến hết hạn 8 giờ. Worker không trả hoặc chấp nhận root secret từ trình duyệt.
 
 ## Chạy local
 

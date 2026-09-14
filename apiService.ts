@@ -47,12 +47,33 @@ const clearPrivateCache = () => {
 
 export const SESSION_ENDED_EVENT = 'giaban-session-ended';
 
+const removeSessionKeys = (storage: Storage) => {
+    storage.removeItem(SESSION_TOKEN_KEY);
+    storage.removeItem(SESSION_EXPIRY_KEY);
+    storage.removeItem(ADMIN_AUTH_KEY);
+};
+
+const writeSessionKeys = (storage: Storage, token: string, expiresAt: number) => {
+    storage.setItem(SESSION_TOKEN_KEY, token);
+    storage.setItem(SESSION_EXPIRY_KEY, String(expiresAt));
+    storage.setItem(ADMIN_AUTH_KEY, 'true');
+};
+
+const hasStoredSession = (): boolean => (
+    Boolean(sessionStorage.getItem(SESSION_TOKEN_KEY) || localStorage.getItem(SESSION_TOKEN_KEY))
+);
+
+const readValidSessionToken = (storage: Storage): string => {
+    const token = storage.getItem(SESSION_TOKEN_KEY) || '';
+    const expiresAt = Number(storage.getItem(SESSION_EXPIRY_KEY));
+    if (!token || !Number.isSafeInteger(expiresAt) || expiresAt <= Date.now()) return '';
+    return token;
+};
+
 const clearSession = () => {
-    const hadSession = Boolean(sessionStorage.getItem(SESSION_TOKEN_KEY));
-    sessionStorage.removeItem(SESSION_TOKEN_KEY);
-    sessionStorage.removeItem(SESSION_EXPIRY_KEY);
-    sessionStorage.removeItem(ADMIN_AUTH_KEY);
-    localStorage.removeItem(ADMIN_AUTH_KEY);
+    const hadSession = hasStoredSession();
+    removeSessionKeys(sessionStorage);
+    removeSessionKeys(localStorage);
     removeLegacyCredential();
     clearPrivateCache();
     if (hadSession && typeof window !== 'undefined') window.dispatchEvent(new Event(SESSION_ENDED_EVENT));
@@ -61,9 +82,8 @@ const clearSession = () => {
 const getSessionToken = (): string => {
     removeLegacyCredential();
 
-    const token = sessionStorage.getItem(SESSION_TOKEN_KEY) || '';
-    const expiresAt = Number(sessionStorage.getItem(SESSION_EXPIRY_KEY));
-    if (!token || !Number.isSafeInteger(expiresAt) || expiresAt <= Date.now()) {
+    const token = readValidSessionToken(sessionStorage) || readValidSessionToken(localStorage);
+    if (!token) {
         clearSession();
         return '';
     }
@@ -98,17 +118,13 @@ export const apiService = {
 
     getSessionToken,
 
-    setSession(token: string, expiresAt: number): void {
-        sessionStorage.removeItem(SESSION_TOKEN_KEY);
-        sessionStorage.removeItem(SESSION_EXPIRY_KEY);
-        sessionStorage.removeItem(ADMIN_AUTH_KEY);
-        localStorage.removeItem(ADMIN_AUTH_KEY);
+    setSession(token: string, expiresAt: number, options?: { persist?: boolean }): void {
+        removeSessionKeys(sessionStorage);
+        removeSessionKeys(localStorage);
         removeLegacyCredential();
         if (!token || !Number.isSafeInteger(expiresAt) || expiresAt <= Date.now()) return;
 
-        sessionStorage.setItem(SESSION_TOKEN_KEY, token);
-        sessionStorage.setItem(SESSION_EXPIRY_KEY, String(expiresAt));
-        sessionStorage.setItem(ADMIN_AUTH_KEY, 'true');
+        writeSessionKeys(options?.persist ? localStorage : sessionStorage, token, expiresAt);
     },
 
     clearSession,
