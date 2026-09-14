@@ -141,6 +141,6 @@ Released on 2026-09-05 from commit `9ae21ccc84aa804a61815218086b98e3de59ea5e` (p
 - `ksht-mcp` version `4e60c693-d7b1-448a-88f9-900ad17c47d2` (`--keep-vars`; GiabanShop + existing KV).
 - `ksht-api` version `da19dfe5-eb5f-4d5a-9720-ab49b01f689a` (`GIABAN=ksht-mcp#GiabanHttp`).
 - Read-only smoke: public `/api/v1/public/products` 200 without `costPrice`; `/api/v1/products` missing/invalid session 401; localhost Origin OPTIONS 403; MCP `/api/v1/status` 404; unauthenticated `/api/data/orders` POST 401; PII-safe `get_status` `writeFence=false`, `migrationReady=false`. No live customer/order/payment writes.
-- Pages: `gh-pages` `2b9e6b9` serves `assets/index-BYygNrgr.js`. Custom domain still showed previous `index-Dlv58Zvm.js` at smoke time (CDN lag). Hard-refresh after cache expires.
+- Pages: `gh-pages` `2b9e6b9` serves `assets/index-BYygNrgr.js`. Custom domain still showed previous `index-Dlv58Zvm.js` at smoke time (then recorded as CDN lag; later: leftover Worker hostname, not cache — see `ARCHITECTURE.md`).
 
 Unrelated untracked `.pi/`, `docs/error.md`, and `docs/plans/active/add-mui-khoet-go-rhino-mcp.md` were not committed.

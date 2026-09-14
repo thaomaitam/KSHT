@@ -7,7 +7,7 @@ These instructions apply to the entire repository.
 - The frontend is a Vite + React + TypeScript static application.
 - Production shop API is Worker `ksht-api` (`wrangler.jsonc`, `workers/api/index.ts`) with KV `DB` and service binding `GIABAN` → `ksht-mcp#GiabanHttp`. Compatibility `/api/data` GET, `/api/login`, `/api/status`, and authenticated whole-key POST `423 MIGRATION_READ_ONLY` still run through `cloudflare_worker.js` inside that Worker.
 - Personal MCP is Worker `ksht-mcp` (`wrangler.mcp.jsonc`, `workers/mcp/index.ts`) plus SQLite Durable Object `GiabanShop`; the target implementation binds it to the live shop KV `DB`.
-- `public/CNAME` and GitHub Pages scripts are production frontend assets.
+- `public/CNAME` (`giaban.khosihuythao.com`) and GitHub Pages scripts are production frontend assets. Shop hostname is Pages via CNAME to `thaomaitam.github.io`, not a Worker.
 - Current topology, auth, and cutover gates: `ARCHITECTURE.md`.
 
 ## Working Rules
@@ -19,7 +19,7 @@ These instructions apply to the entire repository.
 - Do not deploy, publish, push, rewrite Git history, or modify live Cloudflare resources unless explicitly requested for that named action and target.
 - List/set Worker secrets with `--config wrangler.mcp.jsonc` for MCP; do not use the production `wrangler.jsonc` for MCP deploys.
 - For non-trivial or multi-session work, follow the managed Continuity workflow and keep its repository execution plan authoritative.
-- Treat a plan file's Status section as authority, not the `docs/plans/active/` folder name. `docs/plans/active/secure-worker-clean-ai-studio.md` and `docs/plans/active/ksht-production-backend-frontend.md` are Status Completed. `docs/plans/active/giaban-mcp-domain-platform.md` is Status Active; its older OAuth/D1 topology is historical. Current topology is `ARCHITECTURE.md`.
+- Treat a plan file's Status section as authority, not the `docs/plans/active/` folder name. `docs/plans/active/secure-worker-clean-ai-studio.md` and `docs/plans/active/ksht-production-backend-frontend.md` are Status Completed. `docs/plans/active/purge-giaban-cdn-cache.md` is Status Cancelled. `docs/plans/active/giaban-mcp-domain-platform.md` is Status Active; its older OAuth/D1 topology is historical. Current topology is `ARCHITECTURE.md`.
 
 ## Personal MCP (current path)
 
@@ -42,7 +42,11 @@ These instructions apply to the entire repository.
 
 - Source admin/storefront writers use `/api/v1` (`client/giabanClient.ts`). Do not restore whole-key `POST /api/data/:key` writers.
 - Compatibility whole-key GET remains; authenticated whole-key POSTs return 423 `MIGRATION_READ_ONLY`. Do not `npm run deploy` Pages unless explicitly requested for that named frontend. Do not restore whole-key POST writers on rollback.
-- Do not nới `ALLOWED_ORIGINS`. `localhost:3000` is intentionally absent.
+- Day-to-day shop/admin origin is `https://giaban.khosihuythao.com`. Do not attach `ksht-api`, `ksht-mcp`, or another Worker custom domain to that hostname. Do not recreate Worker `giaban-khosihuythao`.
+- Shop DNS: Cloudflare CNAME `giaban` → `thaomaitam.github.io`, DNS-only. Pages custom domain is verified on GitHub user `thaomaitam` (Settings → Pages, not repo Pages). Keep `_github-pages-challenge-…` TXT DNS-only.
+- With the custom domain set, `https://thaomaitam.github.io/KSHT/` redirects to the shop host and is not an independent client check. `https://thaomaitam.github.io/` (no `/KSHT/`) 404s; do not create a user-site repo. Catalog/admin fetches from github.io fail CORS.
+- Do not nới `ALLOWED_ORIGINS`. `localhost:3000` is intentionally absent. Do not add `thaomaitam.github.io`.
+- If custom-domain SPA hash disagrees with origin `gh-pages`, check DNS record type (leftover Worker vs CNAME) before assuming CDN cache or another Pages deploy.
 
 ## Verification
 

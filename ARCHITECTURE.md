@@ -4,7 +4,11 @@ Two separately deployed Workers share this repository and the same shop KV. Prod
 
 ## Live shop (customer-facing)
 
-- Frontend: React 19 + TypeScript + Vite, GitHub Pages, `https://giaban.khosihuythao.com`.
+- Frontend: React 19 + TypeScript + Vite, GitHub Pages project site `thaomaitam/KSHT` (`gh-pages` root), `https://giaban.khosihuythao.com`. `public/CNAME` is that hostname.
+- Shop hostname is Pages only. Cloudflare DNS: CNAME `giaban` → `thaomaitam.github.io`, DNS-only (not proxied). Do not attach a Worker custom domain or hostname route to `giaban.khosihuythao.com`. Leftover Worker `giaban-khosihuythao` was deleted; do not recreate it. API stays on `ksht-api` workers.dev.
+- GitHub Pages custom domain requires account-level verification for user `thaomaitam` (Settings → Pages) and the `_github-pages-challenge-…` TXT (DNS-only). Keep that TXT.
+- With the custom domain set, `https://thaomaitam.github.io/KSHT/` redirects to `https://giaban.khosihuythao.com/` and is not an independent health check. `https://thaomaitam.github.io/` (no `/KSHT/`) 404s because there is no user-site repo; do not create one. Admin/catalog fetches from github.io fail CORS (`ALLOWED_ORIGINS` is only the custom domain).
+- Day-to-day admin origin is `https://giaban.khosihuythao.com`. If custom-domain HTML/JS hash disagrees with origin `gh-pages`, check DNS record type (Worker vs CNAME) before assuming Cloudflare cache or republishing Pages.
 - Last released backend: Worker `ksht-api`, entry `workers/api/index.ts`, config `wrangler.jsonc`. Compatibility reads and login still go through `cloudflare_worker.js` inside that Worker. Legacy whole-key POSTs return 423 `MIGRATION_READ_ONLY` once authenticated; unauthenticated writes fail closed.
 - Store: Workers KV binding `DB`.
 - Admin auth: time-limited signed session. Browser holds the session in `sessionStorage`. Root admin secrets stay on the Worker; they are never a browser or MCP credential.
@@ -33,7 +37,7 @@ Two separately deployed Workers share this repository and the same shop KV. Prod
 - Application: `server/application/giaban.ts` + `server/domain/`.
 - HTTP `/api/v1` adapter exists in source (`server/http/`, `client/giabanClient.ts`). Admin UI in source no longer POSTs `/api/data/:key`.
 - Production path: browser → `ksht-api` (`workers/api/index.ts`) → named Service Binding `GIABAN` → `ksht-mcp#GiabanHttp` → the existing `GiabanShop` owner singleton and `LiveKvStore`. `wrangler.domain.jsonc` is a development configuration of the same edge, not a MemoryStore production alternative.
-- Released: `ksht-mcp` version `4e60c693-d7b1-448a-88f9-900ad17c47d2`; `ksht-api` version `da19dfe5-eb5f-4d5a-9720-ab49b01f689a`; GitHub Pages `gh-pages` `2b9e6b9` bundle `assets/index-BYygNrgr.js` (contains `ksht-api.ngthanhhuy951.workers.dev`). Custom-domain HTML at `https://giaban.khosihuythao.com` may lag GitHub until CDN cache expires.
+- Released: `ksht-mcp` version `4e60c693-d7b1-448a-88f9-900ad17c47d2`; `ksht-api` version `da19dfe5-eb5f-4d5a-9720-ab49b01f689a`; GitHub Pages `gh-pages` `2b9e6b9` bundle `assets/index-BYygNrgr.js` (contains `ksht-api.ngthanhhuy951.workers.dev`). Custom domain `https://giaban.khosihuythao.com` is GitHub Pages via CNAME to `thaomaitam.github.io` (DNS-only) and serves that bundle. Grey-cloud Pages does not need Cloudflare cache purge.
 - `ksht-api` verifies signed session credentials before deriving the capped public/legacyAdmin actor. The actor travels through internal RPC, not a public identity header. Public MCP fetch remains owner-key-only `/mcp` and rejects public `/api/v1`; it never accepts browser session authority.
 - `createOwnerRuntime` owns one queue for both adapters, pending-publish flush and committed-mirror consistency checks. No second writer, D1 migration, fresh DO identity, or `DOMAIN_AUTHORITATIVE` flag is introduced.
 - Source legacy whole-key POSTs return 423 `MIGRATION_READ_ONLY`; compatibility public reads and login remain. Public catalog omits costs; private admin products are not persisted in localStorage. Invalid/expired sessions clear private caches and exit private views.
@@ -52,5 +56,8 @@ Two separately deployed Workers share this repository and the same shop KV. Prod
 - D1 migration or a `DOMAIN_AUTHORITATIVE=1` cutover. The pending KV/shared-DO release replaces the separate Domain Worker proposal.
 - GitHub OAuth MCP (cancelled; not a future requirement for this path).
 - Routing `/mcp` on `giaban.khosihuythao.com` (that host is Pages).
+- Binding a Worker custom domain to `giaban.khosihuythao.com`, or recreating Worker `giaban-khosihuythao`.
+- Creating user-site repo `thaomaitam.github.io` to “fix” the user-Pages 404.
+- Widening `ALLOWED_ORIGINS` for `thaomaitam.github.io`.
 - Publishing a future frontend before a matching production `/api/v1` Worker.
 - Concurrent use of legacy web-admin writes and MCP writes.

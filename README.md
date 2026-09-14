@@ -5,8 +5,8 @@
 ## Kiến trúc
 
 - Frontend tĩnh: React 19, TypeScript và Vite.
-- Hosting frontend: GitHub Pages với tên miền trong `public/CNAME`.
-- Backend production: Worker `ksht-api` (`wrangler.jsonc`, `workers/api/index.ts`) → `GIABAN` → `ksht-mcp#GiabanHttp`. `cloudflare_worker.js` còn compatibility `/api/data` GET, login, và fence POST whole-key.
+- Hosting frontend: GitHub Pages, `https://giaban.khosihuythao.com` (`public/CNAME`). DNS: CNAME `giaban` → `thaomaitam.github.io`, DNS-only; không gắn Worker lên hostname shop.
+- Backend production: Worker `ksht-api` trên workers.dev (`wrangler.jsonc`, `workers/api/index.ts`) → `GIABAN` → `ksht-mcp#GiabanHttp`. `cloudflare_worker.js` còn compatibility `/api/data` GET, login, và fence POST whole-key.
 - Lưu trữ cloud: Workers KV qua binding `DB`.
 - Dữ liệu catalog (`products`, `categories`, `settings`) được đọc công khai; dữ liệu kinh doanh yêu cầu phiên đăng nhập có thời hạn.
 
