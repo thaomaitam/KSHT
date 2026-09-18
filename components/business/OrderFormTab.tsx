@@ -54,11 +54,12 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
     const hasSoKiInTable = newOrder.items.some(item => item.soKi !== undefined && item.soKi > 0);
 
     const handleCreateAndExportPDF = async () => {
+        const debt = newOrder.previousDebt || 0;
         const order = await handleSaveOrder(true);
         if (!order) return;
 
         const selectedTemplate = shopTemplates.find(t => t.id === order.shopTemplateId) || shopTemplates[0];
-        const pdfContent = generatePDFContent(order, bankInfo, orderCount + 1, selectedTemplate);
+        const pdfContent = generatePDFContent(order, bankInfo, orderCount + 1, selectedTemplate, debt);
 
         const container = document.createElement('div');
         container.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 800px; background: white;';
@@ -104,11 +105,12 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
     };
 
     const handleThermalPrint = async () => {
+        const debt = newOrder.previousDebt || 0;
         const order = await handleSaveOrder(true);
         if (!order) return;
 
         const selectedTemplate = shopTemplates.find(t => t.id === order.shopTemplateId) || shopTemplates[0];
-        const receiptContent = generateReceiptContent(order, orderCount + 1, selectedTemplate, bankInfo);
+        const receiptContent = generateReceiptContent(order, orderCount + 1, selectedTemplate, bankInfo, debt);
 
         const printWindow = openPrintWindow(receiptContent);
         if (printWindow) {
@@ -156,41 +158,60 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                             Thông tin khách hàng
                         </h3>
                         <div className="space-y-3">
-                            <label className="flex items-center gap-2 text-sm">
-                                <input
-                                    type="checkbox"
-                                    checked={newOrder.createNewCustomer}
-                                    onChange={(e) => setNewOrder({ ...newOrder, createNewCustomer: e.target.checked, customerId: e.target.checked ? '' : newOrder.customerId })}
-                                />
-                                Tạo khách hàng mới (không tự khớp SĐT)
-                            </label>
-                            {!newOrder.createNewCustomer && (
+                            <div className="relative">
                                 <div className="relative">
+                                    <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                                     <input
                                         type="text"
-                                        placeholder="Tìm khách hiện có theo tên hoặc SĐT *"
+                                        placeholder="Tìm khách hiện có theo tên hoặc SĐT..."
                                         onChange={(e) => searchExistingCustomers?.(e.target.value)}
-                                        className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white text-sm"
+                                        className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                    {customerMatches.length > 0 && (
-                                        <div className="absolute z-30 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-56 overflow-auto">
-                                            {customerMatches.map((customer) => (
-                                                <button
-                                                    key={customer.id}
-                                                    type="button"
-                                                    onClick={() => selectCustomer?.(customer.id)}
-                                                    className="w-full text-left px-4 py-2 hover:bg-slate-50 text-sm"
-                                                >
-                                                    {customer.name} · {customer.phone}
-                                                    {customer.duplicatePhoneWarning ? ' · trùng SĐT' : ''}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
                                 </div>
-                            )}
-                            {newOrder.customerId && !newOrder.createNewCustomer && (
-                                <p className="text-xs text-emerald-700 font-medium">Đã chọn {newOrder.customerId}</p>
+                                {customerMatches.length > 0 && (
+                                    <div className="absolute z-30 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-56 overflow-auto">
+                                        {customerMatches.map((customer) => (
+                                            <button
+                                                key={customer.id}
+                                                type="button"
+                                                onClick={() => selectCustomer?.(customer.id)}
+                                                className="w-full text-left px-4 py-2.5 hover:bg-slate-50 text-sm flex items-center justify-between border-b border-slate-100 last:border-0"
+                                            >
+                                                <div>
+                                                    <span className="font-semibold text-slate-800">{customer.name}</span>
+                                                    <span className="text-slate-500 text-xs ml-2">· {customer.phone}</span>
+                                                    {customer.duplicatePhoneWarning ? <span className="text-red-500 text-xs ml-1">· trùng SĐT</span> : ''}
+                                                </div>
+                                                {(customer.outstanding || 0) > 0 && (
+                                                    <span className="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                                                        Nợ: {formatPrice(customer.outstanding || 0)}
+                                                    </span>
+                                                )}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                            {newOrder.customerId && (
+                                <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-blue-50/80 border border-blue-200 rounded-xl text-xs sm:text-sm">
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold text-blue-800">Đã chọn:</span>
+                                        <span className="font-bold text-slate-800">{newOrder.customerName}</span>
+                                        <span className="text-slate-500">({newOrder.phone})</span>
+                                        {(newOrder.previousDebt || 0) > 0 && (
+                                            <span className="font-black text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full text-xs">
+                                                Nợ cũ: {formatPrice(newOrder.previousDebt || 0)}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setNewOrder({ ...newOrder, customerId: '', previousDebt: 0 })}
+                                        className="text-xs text-blue-600 hover:text-blue-800 font-semibold underline"
+                                    >
+                                        Bỏ chọn / Nhập khách khác
+                                    </button>
+                                </div>
                             )}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <input

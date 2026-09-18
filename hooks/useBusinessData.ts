@@ -57,6 +57,7 @@ export interface NewOrder {
     totalAmountInWords: string;
     paymentMethod: 'cod' | 'banking';
     createNewCustomer: boolean;
+    previousDebt?: number;
 }
 
 const emptyOrder = (templateId = 'default'): NewOrder => ({
@@ -76,6 +77,7 @@ const emptyOrder = (templateId = 'default'): NewOrder => ({
     totalAmountInWords: '',
     paymentMethod: 'cod',
     createNewCustomer: false,
+    previousDebt: 0,
 });
 
 export const useBusinessData = () => {
@@ -274,7 +276,13 @@ export const useBusinessData = () => {
         }
         try {
             const result = await businessService.searchCustomers(query.trim());
-            setCustomerMatches(result.items);
+            const enriched = result.items.map(item => {
+                const found = customers.find(c => c.id === item.id);
+                return found && found.outstanding !== undefined
+                    ? { ...item, outstanding: found.outstanding }
+                    : item;
+            });
+            setCustomerMatches(enriched);
         } catch {
             setCustomerMatches([]);
         }
@@ -282,14 +290,16 @@ export const useBusinessData = () => {
 
     const selectCustomer = async (customerId: string) => {
         const detail = await businessService.loadCustomer(customerId);
-        setNewOrder({
-            ...newOrder,
+        const existing = customers.find(c => c.id === customerId);
+        setNewOrder(prev => ({
+            ...prev,
             customerId: detail.id,
             customerName: detail.name,
             phone: detail.phone,
             address: detail.address,
+            previousDebt: existing?.outstanding || 0,
             createNewCustomer: false,
-        });
+        }));
         setCustomerMatches([]);
     };
 
@@ -308,19 +318,19 @@ export const useBusinessData = () => {
         setSaving(true);
         try {
             let customerId = newOrder.customerId || createdCustomerIdRef.current;
-            if (newOrder.createNewCustomer || !customerId) {
-                if (!newOrder.createNewCustomer) {
-                    throw new Error('Chọn khách hàng hiện có hoặc bật "Tạo khách hàng mới". Không tự khớp.');
-                }
-                if (!customerId) {
+            if (!customerId) {
+                const phoneTrimmed = newOrder.phone.trim();
+                const matchedByPhone = customers.find(c => c.phone && c.phone.trim() === phoneTrimmed);
+                if (matchedByPhone) {
+                    customerId = String(matchedByPhone.id);
+                } else {
                     const created = await businessService.createCustomer({
-                        name: newOrder.customerName,
-                        phone: newOrder.phone,
-                        address: newOrder.address,
+                        name: newOrder.customerName.trim(),
+                        phone: phoneTrimmed,
+                        address: newOrder.address.trim(),
                     }, stepKey(key, "customer"));
                     customerId = String(created.id);
                     createdCustomerIdRef.current = customerId;
-                    setNewOrder((prev) => ({ ...prev, customerId, createNewCustomer: false }));
                 }
             }
             const total = getTotal();
@@ -343,7 +353,8 @@ export const useBusinessData = () => {
             });
             submitLock.current.succeed();
             createdCustomerIdRef.current = '';
-            await loadData(true);
+            setOrders(prev => [saved, ...prev.filter(o => o.id !== saved.id)]);
+            void loadData(true);
             resetOrderForm();
             return saved;
         } catch (error) {
