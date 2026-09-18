@@ -71,6 +71,31 @@ test("toDraftOrderWrite requires explicit customerId and integer line money", ()
   }), /customerId/);
 });
 
+test("toDraftOrderWrite allows optional phone and address in contactSnapshot", () => {
+  const payload = toDraftOrderWrite({
+    customerId: "cus_1",
+    contactSnapshot: { name: "Khách lẻ", phone: "", address: "" },
+    items: [{
+      productId: null,
+      name: "Cọ",
+      unit: "Cây",
+      quantity: 1,
+      unitPrice: 1000,
+      costPrice: 400,
+    }],
+  });
+  assert.deepEqual(payload.contactSnapshot, {
+    name: "Khách lẻ",
+    phone: "",
+    address: "",
+  });
+  assert.throws(() => toDraftOrderWrite({
+    customerId: "cus_1",
+    contactSnapshot: { name: "", phone: "", address: "" },
+    items: [{ name: "Cọ", unit: "Cây", quantity: 1, unitPrice: 1000, costPrice: 400 }],
+  }), /contact\.name/);
+});
+
 test("toDraftOrderWrite keeps fractional kilograms and unrounded line factors", () => {
   const payload = toDraftOrderWrite({
     customerId: "cus_1",

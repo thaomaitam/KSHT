@@ -106,8 +106,8 @@ export const toDraftOrderWrite = (input: {
   if (input.contactSnapshot) {
     payload.contactSnapshot = {
       name: requiredText(input.contactSnapshot.name, "contact.name"),
-      phone: requiredText(input.contactSnapshot.phone, "contact.phone"),
-      address: requiredText(input.contactSnapshot.address, "contact.address"),
+      phone: String(input.contactSnapshot.phone ?? "").trim(),
+      address: String(input.contactSnapshot.address ?? "").trim(),
     };
   }
   if (input.shopTemplateId) payload.shopTemplateId = String(input.shopTemplateId);

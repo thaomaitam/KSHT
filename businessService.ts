@@ -378,7 +378,7 @@ export const businessService = {
         return mapOrderFromInvoice(await giabanClient.getOrderInvoice(String(confirmed.id)));
     },
 
-    async createCustomer(input: { name: string; phone: string; address: string }, idempotencyKey?: string) {
+    async createCustomer(input: { name: string; phone?: string; address?: string }, idempotencyKey?: string) {
         return giabanClient.createCustomer(toCustomerWrite(input), idempotencyKey || newIdempotencyKey());
     },
 
