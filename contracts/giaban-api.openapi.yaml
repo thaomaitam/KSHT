@@ -2051,7 +2051,7 @@ components:
     CustomerWrite:
       type: object
       additionalProperties: false
-      required: [name, phone, address]
+      required: [name]
       properties:
         name: { type: string, minLength: 1, maxLength: 200 }
         phone: { type: string, maxLength: 32 }

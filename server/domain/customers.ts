@@ -15,10 +15,8 @@ export const maskName = (name: string): string => {
   return parts.map((part) => `${part[0] ?? "*"}***`).join(" ");
 };
 
-export const assertCustomerWrite = (input: { name: string; phone: string; address: string }): void => {
+export const assertCustomerWrite = (input: { name: string; phone?: string; address?: string }): void => {
   if (!input.name?.trim()) fail("VALIDATION_ERROR", "Customer name is required");
-  if (!input.phone?.trim()) fail("VALIDATION_ERROR", "Customer phone is required");
-  if (!input.address?.trim()) fail("VALIDATION_ERROR", "Customer address is required");
 };
 
 export const duplicatePhoneWarning = (phone: string, otherPhones: string[]): boolean => {

@@ -151,8 +151,8 @@ export const toPaymentWrite = (input: { amount?: number; method?: string; note?:
 
 export const toCustomerWrite = (input: { name?: string; phone?: string; address?: string }) => ({
   name: requiredText(input.name, "name"),
-  phone: requiredText(input.phone, "phone"),
-  address: requiredText(input.address, "address"),
+  phone: String(input.phone ?? "").trim(),
+  address: String(input.address ?? "").trim(),
 });
 
 export const toCategoryWrite = (input: { label?: string; value?: string }) => {

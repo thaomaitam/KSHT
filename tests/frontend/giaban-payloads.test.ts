@@ -98,12 +98,16 @@ test("toPaymentWrite allows partial amounts and contract methods only", () => {
   assert.throws(() => toPaymentWrite({ amount: 100, method: "wallet" }), /method/);
 });
 
-test("toCustomerWrite requires name, phone, and address", () => {
+test("toCustomerWrite requires name, phone and address are optional", () => {
   assert.deepEqual(
     toCustomerWrite({ name: "Lan", phone: "0901222333", address: "Q1" }),
     { name: "Lan", phone: "0901222333", address: "Q1" },
   );
-  assert.throws(() => toCustomerWrite({ name: "Lan", phone: "", address: "Q1" }), /phone/);
+  assert.deepEqual(
+    toCustomerWrite({ name: "Lan", phone: "", address: "" }),
+    { name: "Lan", phone: "", address: "" },
+  );
+  assert.throws(() => toCustomerWrite({ name: "", phone: "0901222333", address: "Q1" }), /name/);
 });
 
 test("toReportRangeQuery always sends fromDate and toDate", () => {

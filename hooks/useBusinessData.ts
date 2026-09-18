@@ -329,8 +329,8 @@ export const useBusinessData = () => {
 
     const handleSaveOrder = async (confirm: boolean): Promise<Order | null> => {
         if (submitLock.current.inFlight) return null;
-        if (!newOrder.customerName.trim() || !newOrder.phone.trim() || !newOrder.address.trim()) {
-            alert('Vui lòng nhập đủ tên, số điện thoại và địa chỉ.');
+        if (!newOrder.customerName.trim()) {
+            alert('Vui lòng nhập tên khách hàng.');
             return null;
         }
         if (newOrder.items.length === 0) {
@@ -344,7 +344,7 @@ export const useBusinessData = () => {
             let customerId = newOrder.customerId || createdCustomerIdRef.current;
             if (!customerId) {
                 const phoneTrimmed = newOrder.phone.trim();
-                const matchedByPhone = customers.find(c => c.phone && c.phone.trim() === phoneTrimmed);
+                const matchedByPhone = phoneTrimmed ? customers.find(c => c.phone && c.phone.trim() === phoneTrimmed) : undefined;
                 if (matchedByPhone) {
                     customerId = String(matchedByPhone.id);
                 } else {

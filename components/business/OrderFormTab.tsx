@@ -264,14 +264,14 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                                 />
                                 <input
                                     type="tel"
-                                    placeholder="Số điện thoại *"
+                                    placeholder="Số điện thoại"
                                     value={newOrder.phone}
                                     onChange={(e) => setNewOrder({ ...newOrder, phone: e.target.value })}
                                     className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-sm"
                                 />
                                 <input
                                     type="text"
-                                    placeholder="Địa chỉ *"
+                                    placeholder="Địa chỉ"
                                     value={newOrder.address}
                                     onChange={(e) => setNewOrder({ ...newOrder, address: e.target.value })}
                                     className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-sm"
