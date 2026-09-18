@@ -62,6 +62,13 @@ export const ManualEntryRow: React.FC<ManualEntryRowProps> = ({ newOrder, setNew
         setUnitPrice(0);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleAddItem();
+        }
+    };
+
     return (
         <div className="border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-white">
             {/* Scrollable container for mobile */}
@@ -72,6 +79,7 @@ export const ManualEntryRow: React.FC<ManualEntryRowProps> = ({ newOrder, setNew
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        onKeyDown={handleKeyDown}
                         placeholder="Tên hàng"
                         className="flex-[2] min-w-[150px] px-3 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
                     />
@@ -80,6 +88,7 @@ export const ManualEntryRow: React.FC<ManualEntryRowProps> = ({ newOrder, setNew
                         type="text"
                         value={unit}
                         onChange={(e) => setUnit(e.target.value)}
+                        onKeyDown={handleKeyDown}
                         placeholder="ĐVT"
                         className="w-16 px-2 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm text-center"
                     />
@@ -89,6 +98,7 @@ export const ManualEntryRow: React.FC<ManualEntryRowProps> = ({ newOrder, setNew
                         min="1"
                         value={quantity || ''}
                         onChange={(e) => setQuantity(parseInt(e.target.value) || 0)}
+                        onKeyDown={handleKeyDown}
                         placeholder="SL"
                         className="w-16 px-2 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm text-center font-medium"
                     />
@@ -100,6 +110,7 @@ export const ManualEntryRow: React.FC<ManualEntryRowProps> = ({ newOrder, setNew
                             step="0.1"
                             value={soCuon || ''}
                             onChange={(e) => setSoCuon(parseFloat(e.target.value) || 0)}
+                            onKeyDown={handleKeyDown}
                             placeholder="Cuộn"
                             className="w-16 px-2 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm text-center"
                         />
@@ -112,6 +123,7 @@ export const ManualEntryRow: React.FC<ManualEntryRowProps> = ({ newOrder, setNew
                             step="0.1"
                             value={soKi || ''}
                             onChange={(e) => setSoKi(parseFloat(e.target.value) || 0)}
+                            onKeyDown={handleKeyDown}
                             placeholder="Kí"
                             className="w-16 px-2 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm text-center"
                         />
@@ -122,6 +134,7 @@ export const ManualEntryRow: React.FC<ManualEntryRowProps> = ({ newOrder, setNew
                         min="0"
                         value={unitPrice || ''}
                         onChange={(e) => setUnitPrice(parseInt(e.target.value) || 0)}
+                        onKeyDown={handleKeyDown}
                         placeholder="Đơn giá"
                         className="w-24 px-2 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm text-right font-medium"
                     />

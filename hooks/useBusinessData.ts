@@ -48,7 +48,8 @@ export interface NewOrder {
     items: OrderItem[];
     shippingFee: number;
     discount: number;
-    collectAmount: number;
+    debt: number;
+    collectAmount?: number;
     note: string;
     isManualEntry: boolean;
     showSoCuon: boolean;
@@ -68,6 +69,7 @@ const emptyOrder = (templateId = 'default'): NewOrder => ({
     items: [],
     shippingFee: 0,
     discount: 0,
+    debt: 0,
     collectAmount: 0,
     note: '',
     isManualEntry: false,
@@ -194,7 +196,7 @@ export const useBusinessData = () => {
     };
 
     const getTotal = (): number => {
-        return getSubtotal() + (newOrder.shippingFee || 0) - (newOrder.discount || 0);
+        return getSubtotal() + (newOrder.shippingFee || 0) + (newOrder.debt || newOrder.previousDebt || 0) - (newOrder.discount || 0);
     };
 
     const addVariantToOrder = (product: Product, variant: import('../types').ProductVariant) => {
@@ -274,6 +276,13 @@ export const useBusinessData = () => {
             setCustomerMatches([]);
             return;
         }
+        const q = query.trim().toLowerCase();
+        const localMatches = customers.filter(c =>
+            (c.name && c.name.toLowerCase().includes(q)) ||
+            (c.phone && c.phone.includes(q))
+        );
+        setCustomerMatches(localMatches);
+
         try {
             const result = await businessService.searchCustomers(query.trim());
             const enriched = result.items.map(item => {
@@ -282,25 +291,40 @@ export const useBusinessData = () => {
                     ? { ...item, outstanding: found.outstanding }
                     : item;
             });
-            setCustomerMatches(enriched);
+            setCustomerMatches(enriched.length > 0 ? enriched : localMatches);
         } catch {
-            setCustomerMatches([]);
+            // Keep local matches if backend search fails
         }
     };
 
     const selectCustomer = async (customerId: string) => {
-        const detail = await businessService.loadCustomer(customerId);
         const existing = customers.find(c => c.id === customerId);
+        const debtVal = existing?.outstanding || 0;
         setNewOrder(prev => ({
             ...prev,
-            customerId: detail.id,
-            customerName: detail.name,
-            phone: detail.phone,
-            address: detail.address,
-            previousDebt: existing?.outstanding || 0,
+            customerId: customerId,
+            customerName: existing?.name || prev.customerName,
+            phone: existing?.phone || prev.phone,
+            address: existing?.address || prev.address,
+            debt: debtVal,
+            previousDebt: debtVal,
             createNewCustomer: false,
         }));
         setCustomerMatches([]);
+
+        try {
+            const detail = await businessService.loadCustomer(customerId);
+            if (detail) {
+                setNewOrder(prev => (prev.customerId === customerId ? {
+                    ...prev,
+                    customerName: detail.name || prev.customerName,
+                    phone: detail.phone || prev.phone,
+                    address: detail.address || prev.address,
+                } : prev));
+            }
+        } catch {
+            // Silently retain existing customer data in state
+        }
     };
 
     const handleSaveOrder = async (confirm: boolean): Promise<Order | null> => {

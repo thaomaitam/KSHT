@@ -50,11 +50,29 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
     productDropdownRef, customerMatches = [], searchExistingCustomers, selectCustomer, saving,
 }) => {
     const [expandedProductId, setExpandedProductId] = React.useState<string | null>(null);
+    const [customerSearchQuery, setCustomerSearchQuery] = React.useState('');
+    const customerDropdownRef = React.useRef<HTMLDivElement>(null);
+
     const hasSoCuonInTable = newOrder.items.some(item => item.soCuon !== undefined && item.soCuon > 0);
     const hasSoKiInTable = newOrder.items.some(item => item.soKi !== undefined && item.soKi > 0);
 
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (customerDropdownRef.current && !customerDropdownRef.current.contains(event.target as Node)) {
+                searchExistingCustomers?.('');
+            }
+            if (productDropdownRef.current && !productDropdownRef.current.contains(event.target as Node)) {
+                setShowProductDropdown(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [productDropdownRef, searchExistingCustomers, setShowProductDropdown]);
+
     const handleCreateAndExportPDF = async () => {
-        const debt = newOrder.previousDebt || 0;
+        const debt = newOrder.debt || newOrder.previousDebt || 0;
         const order = await handleSaveOrder(true);
         if (!order) return;
 
@@ -105,7 +123,7 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
     };
 
     const handleThermalPrint = async () => {
-        const debt = newOrder.previousDebt || 0;
+        const debt = newOrder.debt || newOrder.previousDebt || 0;
         const order = await handleSaveOrder(true);
         if (!order) return;
 
@@ -158,15 +176,31 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                             Thông tin khách hàng
                         </h3>
                         <div className="space-y-3">
-                            <div className="relative">
+                            <div className="relative" ref={customerDropdownRef}>
                                 <div className="relative">
                                     <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                                     <input
                                         type="text"
                                         placeholder="Tìm khách hiện có theo tên hoặc SĐT..."
-                                        onChange={(e) => searchExistingCustomers?.(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        value={customerSearchQuery}
+                                        onChange={(e) => {
+                                            setCustomerSearchQuery(e.target.value);
+                                            searchExistingCustomers?.(e.target.value);
+                                        }}
+                                        className="w-full pl-10 pr-10 py-2.5 border border-slate-200 rounded-xl bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
+                                    {customerSearchQuery && (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setCustomerSearchQuery('');
+                                                searchExistingCustomers?.('');
+                                            }}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm font-bold p-1"
+                                        >
+                                            ✕
+                                        </button>
+                                    )}
                                 </div>
                                 {customerMatches.length > 0 && (
                                     <div className="absolute z-30 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-56 overflow-auto">
@@ -174,7 +208,10 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                                             <button
                                                 key={customer.id}
                                                 type="button"
-                                                onClick={() => selectCustomer?.(customer.id)}
+                                                onClick={() => {
+                                                    selectCustomer?.(customer.id);
+                                                    setCustomerSearchQuery('');
+                                                }}
                                                 className="w-full text-left px-4 py-2.5 hover:bg-slate-50 text-sm flex items-center justify-between border-b border-slate-100 last:border-0"
                                             >
                                                 <div>
@@ -184,7 +221,7 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                                                 </div>
                                                 {(customer.outstanding || 0) > 0 && (
                                                     <span className="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
-                                                        Nợ: {formatPrice(customer.outstanding || 0)}
+                                                        Công nợ: {formatPrice(customer.outstanding || 0)}
                                                     </span>
                                                 )}
                                             </button>
@@ -198,15 +235,19 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                                         <span className="font-bold text-blue-800">Đã chọn:</span>
                                         <span className="font-bold text-slate-800">{newOrder.customerName}</span>
                                         <span className="text-slate-500">({newOrder.phone})</span>
-                                        {(newOrder.previousDebt || 0) > 0 && (
+                                        {(newOrder.debt || newOrder.previousDebt || 0) > 0 && (
                                             <span className="font-black text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full text-xs">
-                                                Nợ cũ: {formatPrice(newOrder.previousDebt || 0)}
+                                                Công nợ: {formatPrice(newOrder.debt || newOrder.previousDebt || 0)}
                                             </span>
                                         )}
                                     </div>
                                     <button
                                         type="button"
-                                        onClick={() => setNewOrder({ ...newOrder, customerId: '', previousDebt: 0 })}
+                                        onClick={() => {
+                                            setNewOrder({ ...newOrder, customerId: '', debt: 0, previousDebt: 0 });
+                                            setCustomerSearchQuery('');
+                                            searchExistingCustomers?.('');
+                                        }}
                                         className="text-xs text-blue-600 hover:text-blue-800 font-semibold underline"
                                     >
                                         Bỏ chọn / Nhập khách khác
@@ -270,6 +311,17 @@ export const OrderFormTab: React.FC<OrderFormTabProps> = ({
                                             setShowProductDropdown(true);
                                         }}
                                         onFocus={() => setShowProductDropdown(true)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && filteredProducts.length > 0) {
+                                                e.preventDefault();
+                                                const p = filteredProducts[0];
+                                                if (p.variants.length === 1) {
+                                                    addProductFromList(p);
+                                                } else {
+                                                    setExpandedProductId(p.id);
+                                                }
+                                            }
+                                        }}
                                         className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-sm"
                                     />
                                     {showProductDropdown && productSearch && (

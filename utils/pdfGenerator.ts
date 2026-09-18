@@ -356,6 +356,7 @@ export const generateImagePreviewContent = (
 `;
 
 export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orderCount: number, shopTemplate?: ShopTemplate | null, previousDebt: number = 0): string => {
+    const debt = previousDebt || (order as any).debt || 0;
     const today = new Date().toLocaleDateString('vi-VN');
 
     // Use provided shop template or show placeholder
@@ -506,22 +507,16 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
                             <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; color: ${PDF_COLORS.accent}; border-left: 1px solid ${PDF_COLORS.grayBorder}; border-top: none;">-${formatPrice(order.discount)}</td>
                         </tr>
                         ` : ''}
-                        ${order.outstanding ? `
+                        ${debt > 0 ? `
                         <tr style="background: ${PDF_COLORS.white};">
-                            <td colspan="${colSpan}" style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 600; color: #F57C00; border-right: none; border-top: none;">Còn phải thu:</td>
-                            <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; color: #F57C00; border-left: 1px solid ${PDF_COLORS.grayBorder}; border-top: none;">${formatPrice(order.outstanding)}</td>
-                        </tr>
-                        ` : ''}
-                        ${previousDebt > 0 ? `
-                        <tr style="background: ${PDF_COLORS.white};">
-                            <td colspan="${colSpan}" style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 600; color: #D97706; border-right: none; border-top: none;">Nợ cũ:</td>
-                            <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; color: #D97706; font-weight: 700; border-left: 1px solid ${PDF_COLORS.grayBorder}; border-top: none;">+${formatPrice(previousDebt)}</td>
+                            <td colspan="${colSpan}" style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; font-weight: 600; color: #D97706; border-right: none; border-top: none;">Công nợ:</td>
+                            <td style="border: 1px solid ${PDF_COLORS.grayBorder}; padding: 8px 15px; text-align: right; font-size: 13px; color: #D97706; font-weight: 700; border-left: 1px solid ${PDF_COLORS.grayBorder}; border-top: none;">+${formatPrice(debt)}</td>
                         </tr>
                         ` : ''}
                         <!-- Total Row - Using Accent Color (Cam đỏ) for payment attention -->
                         <tr style="background: ${PDF_COLORS.accent};">
-                            <td colspan="${colSpan}" style="padding: 12px 15px; text-align: right; font-size: 16px; font-weight: 700; color: ${PDF_COLORS.white}; text-transform: uppercase; border-right: 1px solid rgba(255,255,255,0.3);">${previousDebt > 0 ? 'TỔNG CỘNG (GỒM NỢ CŨ):' : 'TỔNG CỘNG:'}</td>
-                            <td style="padding: 12px 15px; text-align: right; font-size: 16px; color: ${PDF_COLORS.white}; font-weight: 700;">${formatPrice(order.total + (previousDebt > 0 ? previousDebt : 0))}</td>
+                            <td colspan="${colSpan}" style="padding: 12px 15px; text-align: right; font-size: 16px; font-weight: 700; color: ${PDF_COLORS.white}; text-transform: uppercase; border-right: 1px solid rgba(255,255,255,0.3);">TỔNG CỘNG:</td>
+                            <td style="padding: 12px 15px; text-align: right; font-size: 16px; color: ${PDF_COLORS.white}; font-weight: 700;">${formatPrice(order.total)}</td>
                         </tr>
                         <!-- Amount in words -->
                         <tr style="background: ${PDF_COLORS.white};">
@@ -552,6 +547,7 @@ export const generatePDFContent = (order: Order, bankInfo: BankInfo | null, orde
 };
 
 export const generateReceiptContent = (order: Order, orderCount: number, shopTemplate?: ShopTemplate | null, bankInfo?: BankInfo | null, previousDebt: number = 0): string => {
+    const debt = previousDebt || (order as any).debt || 0;
     const today = new Date().toLocaleDateString('vi-VN', {
         day: '2-digit',
         month: '2-digit',
@@ -669,22 +665,16 @@ export const generateReceiptContent = (order: Order, orderCount: number, shopTem
                         <span style="font-size: 11px; color: #E53E3E; padding-right: 10px;">-${formatPrice(order.discount)}</span>
                     </div>
                     ` : ''}
-                    ${order.outstanding ? `
+                    ${debt > 0 ? `
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                        <span style="color: #F57C00; font-size: 11px;">Còn phải thu:</span>
-                        <span style="font-size: 11px; color: #F57C00; padding-right: 10px;">${formatPrice(order.outstanding)}</span>
-                    </div>
-                    ` : ''}
-                    ${previousDebt > 0 ? `
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                        <span style="color: #D97706; font-size: 11px; font-weight: 600;">Nợ cũ:</span>
-                        <span style="font-size: 11px; color: #D97706; font-weight: 700; padding-right: 10px;">+${formatPrice(previousDebt)}</span>
+                        <span style="color: #D97706; font-size: 11px; font-weight: 600;">Công nợ:</span>
+                        <span style="font-size: 11px; color: #D97706; font-weight: 700; padding-right: 10px;">+${formatPrice(debt)}</span>
                     </div>
                     ` : ''}
                     <!-- Total -->
                     <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 6px; border-top: 1px solid #000;">
-                        <span style="font-weight: 700; color: #000; font-size: 13px;">${previousDebt > 0 ? 'TỔNG CỘNG (GỒM NỢ CŨ):' : 'TỔNG CỘNG:'}</span>
-                        <span style="font-size: 16px; font-weight: 700; color: #000; padding-right: 10px;">${formatPrice(order.total + (previousDebt > 0 ? previousDebt : 0))}</span>
+                        <span style="font-weight: 700; color: #000; font-size: 13px;">TỔNG CỘNG:</span>
+                        <span style="font-size: 16px; font-weight: 700; color: #000; padding-right: 10px;">${formatPrice(order.total)}</span>
                     </div>
                 </div>
 

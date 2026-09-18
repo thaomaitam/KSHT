@@ -83,6 +83,8 @@ export const BusinessPage: React.FC = () => {
             items,
             shippingFee: order.shippingFee || 0,
             discount: order.discount || 0,
+            debt: (order as any).debt || 0,
+            previousDebt: (order as any).debt || 0,
             collectAmount: 0,
             note: order.note || '',
             isManualEntry: true,
@@ -97,23 +99,48 @@ export const BusinessPage: React.FC = () => {
     };
 
     const handleCreateOrderFromCustomer = async (customer: { id: string }) => {
-        const detail = await businessService.loadCustomer(customer.id);
-        setNewOrder({
-            ...newOrder,
-            customerId: detail.id,
-            customerName: detail.name,
-            phone: detail.phone,
-            address: detail.address,
-            items: [],
-            shippingFee: 0,
-            discount: 0,
-            collectAmount: 0,
-            note: '',
-            isManualEntry: false,
-            showSoCuon: false,
-            showSoKi: false,
-            createNewCustomer: false,
-        });
+        const existing = customers.find(c => c.id === customer.id);
+        const debtVal = existing?.outstanding || 0;
+        try {
+            const detail = await businessService.loadCustomer(customer.id);
+            setNewOrder({
+                ...newOrder,
+                customerId: detail.id,
+                customerName: detail.name,
+                phone: detail.phone,
+                address: detail.address,
+                items: [],
+                shippingFee: 0,
+                discount: 0,
+                debt: debtVal,
+                previousDebt: debtVal,
+                collectAmount: 0,
+                note: '',
+                isManualEntry: false,
+                showSoCuon: false,
+                showSoKi: false,
+                createNewCustomer: false,
+            });
+        } catch {
+            setNewOrder({
+                ...newOrder,
+                customerId: customer.id,
+                customerName: existing?.name || '',
+                phone: existing?.phone || '',
+                address: existing?.address || '',
+                items: [],
+                shippingFee: 0,
+                discount: 0,
+                debt: debtVal,
+                previousDebt: debtVal,
+                collectAmount: 0,
+                note: '',
+                isManualEntry: false,
+                showSoCuon: false,
+                showSoKi: false,
+                createNewCustomer: false,
+            });
+        }
         setActiveTab('orders');
     };
 
