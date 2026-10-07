@@ -180,6 +180,66 @@ test("report profit and net receipts keep exact fractional dong", () => {
   assert.equal(summary.receivables, 0);
 });
 
+test("report clamps negative profit to zero and flags the loss-making order", () => {
+  const summary = summarizeOrders([
+    {
+      orderId: "ord_good",
+      status: "confirmed",
+      discount: 0,
+      shippingFee: 0,
+      lines: [{ quantity: 1, unitPrice: 10000, costPrice: 4000 }],
+      payments: [],
+    },
+    {
+      orderId: "ord_bad",
+      status: "confirmed",
+      discount: 0,
+      shippingFee: 0,
+      lines: [{ quantity: 1, unitPrice: 5000, costPrice: 9000 }],
+      payments: [],
+    },
+  ]);
+  assert.equal(summary.confirmedSales, 15000);
+  assert.equal(summary.cogs, 13000);
+  assert.equal(summary.profit, 2000);
+  assert.equal(summary.dataQualityFlags.length, 1);
+  assert.equal(summary.dataQualityFlags[0].kind, "cogs_exceeds_sales");
+  assert.equal(summary.dataQualityFlags[0].orderId, "ord_bad");
+});
+
+test("report on aggregate cogs exceeding sales clamps profit and flags culprits", () => {
+  const summary = summarizeOrders([
+    {
+      orderId: "ord_bad",
+      status: "confirmed",
+      discount: 0,
+      shippingFee: 0,
+      lines: [{ quantity: 1, unitPrice: 5000, costPrice: 9000 }],
+      payments: [],
+    },
+  ]);
+  assert.equal(summary.profit, 0);
+  assert.equal(summary.dataQualityFlags.length, 1);
+  assert.equal(summary.dataQualityFlags[0].kind, "cogs_exceeds_sales");
+  assert.equal(summary.dataQualityFlags[0].orderId, "ord_bad");
+});
+
+test("report on consistent data carries no data-quality flags", () => {
+  const summary = summarizeOrders([
+    {
+      orderId: "ord_ok",
+      status: "confirmed",
+      discount: 1000,
+      shippingFee: 0,
+      lines: [{ quantity: 1, unitPrice: 10000, costPrice: 4000 }],
+      payments: [{ amount: 9000, reversedAmount: 0, refundedAmount: 0 }],
+    },
+  ]);
+  assert.deepEqual(summary.dataQualityFlags, []);
+  assert.equal(summary.profit, 5000);
+  assert.equal(summary.netReceipts, 9000);
+});
+
 test("cursors round-trip", () => {
   const cursor = encodeCursor({ createdAt: "2026-01-01T00:00:00.000Z", id: "ord_1" });
   assert.deepEqual(decodeCursor(cursor), { createdAt: "2026-01-01T00:00:00.000Z", id: "ord_1" });

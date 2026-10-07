@@ -34,6 +34,13 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({ report, truncated }) => 
             {truncated && (
                 <NoticeBanner kind="warning" message="Danh sách đơn/khách trên tab khác bị cắt; số liệu tab này vẫn lấy từ getReportSummary." />
             )}
+            {report.dataQualityFlags.length > 0 && (
+                <NoticeBanner
+                    kind="warning"
+                    title={`Có ${report.dataQualityFlags.length} đơn số liệu bất thường (lợi nhuận hiển thị 0 để chờ rà soát)`}
+                    message={report.dataQualityFlags.slice(0, 10).map((f) => `${f.orderId || 'không rõ đơn'}: ${f.detail}`).join(' · ')}
+                />
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {cards.map((card) => (
                     <div key={card.label} className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">

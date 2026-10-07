@@ -1271,6 +1271,7 @@ export class GiabanApplication {
     const orders = this.orders()
       .filter((order) => inBusinessRange(order.createdAt, fromDate, toDate))
       .map((order) => ({
+        orderId: order.id,
         status: order.status,
         discount: order.discount,
         shippingFee: order.shippingFee,

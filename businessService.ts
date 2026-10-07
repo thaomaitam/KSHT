@@ -90,6 +90,12 @@ export interface ShopTemplate {
     revision?: number;
 }
 
+export interface DataQualityFlag {
+    kind: string;
+    orderId?: string;
+    detail: string;
+}
+
 export interface ReportSummary {
     fromDate: string;
     toDate: string;
@@ -103,6 +109,7 @@ export interface ReportSummary {
     shippingFees: number;
     cogs: number;
     profit: number;
+    dataQualityFlags: DataQualityFlag[];
 }
 
 export interface HistoricalReview {
@@ -180,6 +187,15 @@ export const mapReportSummary = (row: any): ReportSummary => ({
     shippingFees: Number(row.shippingFees) || 0,
     cogs: Number(row.cogs) || 0,
     profit: Number(row.profit) || 0,
+    dataQualityFlags: Array.isArray(row.dataQualityFlags)
+        ? row.dataQualityFlags
+            .filter((f: any) => f && typeof f.kind === 'string')
+            .map((f: any) => ({
+                kind: String(f.kind),
+                orderId: typeof f.orderId === 'string' ? f.orderId : undefined,
+                detail: String(f.detail || ''),
+            }))
+        : [],
 });
 
 export const historicalReviewFromStatus = (row: any): HistoricalReview => {

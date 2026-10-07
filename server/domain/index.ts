@@ -34,7 +34,7 @@ export {
   maskPhone,
   normalizePhone,
 } from "./customers.ts";
-export { summarizeOrders, type ReportOrder, type ReportTotals } from "./reports.ts";
+export { summarizeOrders, type DataQualityFlag, type DataQualityFlagKind, type ReportOrder, type ReportTotals } from "./reports.ts";
 export {
   assertPublicProjection,
   assertVariant,
