@@ -540,6 +540,10 @@ export class GiabanApplication {
         return this.previewCancel(input, context);
       case "confirmOrderCancellation":
         return this.confirmCancel(input, context);
+      case "previewOrderLineCostCorrection":
+        return this.previewLineCostCorrection(input, context);
+      case "confirmOrderLineCostCorrection":
+        return this.confirmLineCostCorrection(input, context);
       case "recordPayment":
         return this.recordPayment(input, context);
       case "listPayments":
@@ -1190,6 +1194,78 @@ export class GiabanApplication {
     order.status = transitionOrder(order.status, "cancelled");
     order.cancelReason = String(body.reason);
     return orderDetail(this.store, order);
+  }
+
+  private parseLineCostCorrections(input: Record<string, unknown>) {
+    const raw = input.corrections;
+    if (!Array.isArray(raw) || raw.length < 1) fail("VALIDATION_ERROR", "corrections must be a non-empty array");
+    return (raw as unknown[]).map((entry, index) => {
+      const row = (entry ?? {}) as Record<string, unknown>;
+      const orderId = String(row.orderId ?? "");
+      const lineId = String(row.lineId ?? "");
+      if (!orderId || !lineId) fail("VALIDATION_ERROR", `corrections[${index}] requires orderId and lineId`);
+      const costPrice = assertVnd(row.costPrice, `corrections[${index}].costPrice`);
+      return { orderId, lineId, costPrice };
+    });
+  }
+
+  private assertLineCostCorrectable(order: ReturnType<GiabanApplication["order"]>) {
+    if (order.status === "draft") fail("INVALID_TRANSITION", "Draft order lines are edited via updateDraftOrder");
+    if (order.status !== "confirmed" && order.status !== "shipping" && order.status !== "completed") {
+      fail("INVALID_TRANSITION", `Cannot correct line costs on an order in status ${order.status}`);
+    }
+  }
+
+  private previewLineCostCorrection(input: Record<string, unknown>, context: InvocationContext) {
+    const corrections = this.parseLineCostCorrections(input);
+    const details = corrections.map(({ orderId, lineId, costPrice }) => {
+      const order = this.order(orderId);
+      this.assertLineCostCorrectable(order);
+      const line = order.items.find((item) => item.id === lineId);
+      if (!line) fail("NOT_FOUND", `Order line ${lineId} not found on order ${orderId}`);
+      return {
+        orderId,
+        lineId,
+        productId: line.productId ?? null,
+        quantity: line.quantity,
+        unitPrice: line.unitPrice,
+        oldCostPrice: line.costPrice,
+        newCostPrice: costPrice,
+      };
+    });
+    const expectedRevisions: Record<string, number> = {};
+    for (const { orderId } of corrections) expectedRevisions[orderId] = this.order(orderId).revision;
+    const changed = details.filter((detail) => detail.oldCostPrice !== detail.newCostPrice).length;
+    return {
+      ...this.issuePreview(
+        context,
+        "previewOrderLineCostCorrection",
+        input,
+        `Correct costPrice on ${details.length} order line(s) (${changed} changing).`,
+        [],
+        expectedRevisions,
+      ),
+      corrections: details,
+    };
+  }
+
+  private confirmLineCostCorrection(input: Record<string, unknown>, context: InvocationContext) {
+    this.store.requireWritable();
+    const intent = this.consumeConfirmation(context, "confirmOrderLineCostCorrection", input);
+    const body = intent.input as Record<string, unknown>;
+    const corrections = this.parseLineCostCorrections(body);
+    const applied = [];
+    for (const { orderId, lineId, costPrice } of corrections) {
+      const order = this.order(orderId);
+      this.assertLineCostCorrectable(order);
+      const line = order.items.find((item) => item.id === lineId);
+      if (!line) fail("NOT_FOUND", `Order line ${lineId} not found on order ${orderId}`);
+      this.store.bump(order, intent.expectedRevisions[order.id]);
+      const oldCostPrice = line.costPrice;
+      line.costPrice = costPrice;
+      applied.push({ orderId, lineId, oldCostPrice, newCostPrice: costPrice });
+    }
+    return { corrected: applied.length, corrections: applied };
   }
 
   private recordPayment(input: Record<string, unknown>, context: InvocationContext) {

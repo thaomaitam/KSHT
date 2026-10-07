@@ -818,6 +818,56 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/OrderDetail" }
         default: { $ref: "#/components/responses/Error" }
+  /orders/lines/cost-correction/preview:
+    post:
+      operationId: previewOrderLineCostCorrection
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_preview_order_line_cost_correction
+        annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:write]
+      x-giaban-confirmation: preview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LineCostCorrectionRequest" }
+      responses:
+        "200":
+          description: Cost correction preview with per-line old and new costPrice
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConfirmationPreview" }
+        default: { $ref: "#/components/responses/Error" }
+  /orders/lines/cost-correction/confirm:
+    post:
+      operationId: confirmOrderLineCostCorrection
+      tags: [orders]
+      x-giaban-mcp:
+        tool: giaban_confirm_order_line_cost_correction
+        annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+      x-giaban-scopes: [orders:write]
+      x-giaban-confirmation: confirm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConfirmationExecute" }
+      responses:
+        "200":
+          description: Applied line cost corrections
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [corrected]
+                properties:
+                  corrected: { type: integer, minimum: 0 }
+                  corrections:
+                    type: array
+                    items: { type: object, additionalProperties: true }
+        default: { $ref: "#/components/responses/Error" }
   /orders/{orderId}/payments:
     post:
       operationId: recordPayment
@@ -2212,6 +2262,22 @@ components:
       required: [reason]
       properties:
         reason: { type: string, minLength: 1, maxLength: 500 }
+    LineCostCorrectionRequest:
+      type: object
+      additionalProperties: false
+      required: [corrections]
+      properties:
+        corrections:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            additionalProperties: false
+            required: [orderId, lineId, costPrice]
+            properties:
+              orderId: { type: string }
+              lineId: { type: string }
+              costPrice: { $ref: "#/components/schemas/MoneyVnd" }
     PaymentWrite:
       type: object
       additionalProperties: false

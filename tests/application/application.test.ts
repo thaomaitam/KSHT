@@ -422,3 +422,88 @@ test("confirmOrder idempotency replay precedes stale revision checks", async () 
   const listed = await giaban.query({ operationId: "listPayments", input: { orderId: confirmed.id } }, context);
   assert.equal(listed.items.length, 1);
 });
+
+test("order line cost correction previews then confirms", async () => {
+  const giaban = app();
+  const { customer, context } = await seedCatalog(giaban);
+  const badLine = { ...line, unitPrice: 33000, costPrice: 975000 };
+  const draft = await giaban.execute({
+    operationId: "createDraftOrder",
+    input: { customerId: customer.id, items: [badLine], discount: 0, shippingFee: 0 },
+  }, { ...context, idempotencyKey: "cc-1" });
+  const confirmed = await giaban.execute({
+    operationId: "confirmOrder",
+    input: { id: draft.id },
+  }, { ...context, expectedRevision: 1, idempotencyKey: "cc-2" });
+  const lineId = confirmed.items[0].id;
+  const preview = await giaban.preview({
+    operationId: "previewOrderLineCostCorrection",
+    input: { corrections: [{ orderId: confirmed.id, lineId, costPrice: 1000 }] },
+  }, context);
+  assert.equal(preview.corrections.length, 1);
+  assert.equal(preview.corrections[0].oldCostPrice, 975000);
+  assert.equal(preview.corrections[0].newCostPrice, 1000);
+  assert.ok(preview.confirmationToken);
+  const done = await giaban.confirm({
+    operationId: "confirmOrderLineCostCorrection",
+    input: { confirmationToken: preview.confirmationToken },
+  }, context);
+  assert.equal(done.corrected, 1);
+  assert.equal(done.corrections[0].oldCostPrice, 975000);
+  assert.equal(done.corrections[0].newCostPrice, 1000);
+  const invoice = await giaban.query({ operationId: "getOrderInvoice", input: { id: confirmed.id } }, context);
+  assert.equal(invoice.items[0].costPrice, 1000);
+});
+
+test("order line cost correction rejects drafts, bad input and unknown lines", async () => {
+  const giaban = app();
+  const { customer, context } = await seedCatalog(giaban);
+  const draft = await giaban.execute({
+    operationId: "createDraftOrder",
+    input: { customerId: customer.id, items: [line], discount: 0, shippingFee: 0 },
+  }, { ...context, idempotencyKey: "ccr-1" });
+  await assert.rejects(
+    () => giaban.preview({
+      operationId: "previewOrderLineCostCorrection",
+      input: { corrections: [{ orderId: draft.id, lineId: "lin_x", costPrice: 1000 }] },
+    }, context),
+    (error: DomainError) => error.code === "INVALID_TRANSITION",
+  );
+  await assert.rejects(
+    () => giaban.preview({ operationId: "previewOrderLineCostCorrection", input: { corrections: [] } }, context),
+    (error: DomainError) => error.code === "VALIDATION_ERROR",
+  );
+  await assert.rejects(
+    () => giaban.preview({
+      operationId: "previewOrderLineCostCorrection",
+      input: { corrections: [{ orderId: draft.id, lineId: "lin_x", costPrice: -5 }] },
+    }, context),
+    DomainError,
+  );
+  const confirmed = await giaban.execute({
+    operationId: "confirmOrder",
+    input: { id: draft.id },
+  }, { ...context, expectedRevision: 1, idempotencyKey: "ccr-2" });
+  await assert.rejects(
+    () => giaban.preview({
+      operationId: "previewOrderLineCostCorrection",
+      input: { corrections: [{ orderId: confirmed.id, lineId: "lin_missing", costPrice: 1000 }] },
+    }, context),
+    (error: DomainError) => error.code === "NOT_FOUND",
+  );
+  const cancelPreview = await giaban.preview({
+    operationId: "previewOrderCancellation",
+    input: { id: confirmed.id, reason: "huy test" },
+  }, context);
+  await giaban.confirm({
+    operationId: "confirmOrderCancellation",
+    input: { confirmationToken: cancelPreview.confirmationToken },
+  }, context);
+  await assert.rejects(
+    () => giaban.preview({
+      operationId: "previewOrderLineCostCorrection",
+      input: { corrections: [{ orderId: confirmed.id, lineId: confirmed.items[0].id, costPrice: 1000 }] },
+    }, context),
+    (error: DomainError) => error.code === "INVALID_TRANSITION",
+  );
+});

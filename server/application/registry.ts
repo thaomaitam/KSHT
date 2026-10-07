@@ -142,6 +142,8 @@ export const OPERATIONS: OperationPolicy[] = [
   { operationId: "cloneOrder", tool: "giaban_clone_order", kind: "command", scopes: ["orders:write"], retryable: true },
   { operationId: "previewOrderCancellation", tool: "giaban_preview_order_cancellation", kind: "preview", scopes: ["orders:cancel"] },
   { operationId: "confirmOrderCancellation", tool: "giaban_confirm_order_cancellation", kind: "confirm", scopes: ["orders:cancel"] },
+  { operationId: "previewOrderLineCostCorrection", tool: "giaban_preview_order_line_cost_correction", kind: "preview", scopes: ["orders:write"] },
+  { operationId: "confirmOrderLineCostCorrection", tool: "giaban_confirm_order_line_cost_correction", kind: "confirm", scopes: ["orders:write"] },
   { operationId: "recordPayment", tool: "giaban_record_payment", kind: "command", scopes: ["payments:write"], retryable: true },
   { operationId: "listPayments", tool: "giaban_list_payments", kind: "query", scopes: ["payments:read"] },
   { operationId: "listReceivables", tool: "giaban_list_receivables", kind: "query", scopes: ["payments:read"] },
