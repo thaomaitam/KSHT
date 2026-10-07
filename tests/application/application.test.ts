@@ -507,3 +507,31 @@ test("order line cost correction rejects drafts, bad input and unknown lines", a
     (error: DomainError) => error.code === "INVALID_TRANSITION",
   );
 });
+
+test("order line cost correction applies several lines on the same order", async () => {
+  const giaban = app();
+  const { customer, context } = await seedCatalog(giaban);
+  const badLine = { ...line, unitPrice: 33000, costPrice: 975000 };
+  const badLine2 = { ...line, name: "Cọ 2 inch", unitPrice: 34000, costPrice: 1450000 };
+  const draft = await giaban.execute({
+    operationId: "createDraftOrder",
+    input: { customerId: customer.id, items: [badLine, badLine2], discount: 0, shippingFee: 0 },
+  }, { ...context, idempotencyKey: "ccm-1" });
+  const confirmed = await giaban.execute({
+    operationId: "confirmOrder",
+    input: { id: draft.id },
+  }, { ...context, expectedRevision: 1, idempotencyKey: "ccm-2" });
+  const preview = await giaban.preview({
+    operationId: "previewOrderLineCostCorrection",
+    input: { corrections: confirmed.items.map((item) => ({ orderId: confirmed.id, lineId: item.id, costPrice: 1000 })) },
+  }, context);
+  assert.equal(preview.corrections.length, 2);
+  const done = await giaban.confirm({
+    operationId: "confirmOrderLineCostCorrection",
+    input: { confirmationToken: preview.confirmationToken },
+  }, context);
+  assert.equal(done.corrected, 2);
+  const invoice = await giaban.query({ operationId: "getOrderInvoice", input: { id: confirmed.id } }, context);
+  assert.equal(invoice.items.length, 2);
+  assert.ok(invoice.items.every((item: { costPrice: number }) => item.costPrice === 1000));
+});

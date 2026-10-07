@@ -1254,17 +1254,26 @@ export class GiabanApplication {
     const intent = this.consumeConfirmation(context, "confirmOrderLineCostCorrection", input);
     const body = intent.input as Record<string, unknown>;
     const corrections = this.parseLineCostCorrections(body);
-    const applied = [];
-    for (const { orderId, lineId, costPrice } of corrections) {
+    // Validate everything first so a failure applies nothing.
+    const validated = corrections.map(({ orderId, lineId, costPrice }) => {
       const order = this.order(orderId);
       this.assertLineCostCorrectable(order);
       const line = order.items.find((item) => item.id === lineId);
       if (!line) fail("NOT_FOUND", `Order line ${lineId} not found on order ${orderId}`);
-      this.store.bump(order, intent.expectedRevisions[order.id]);
+      return { order, orderId, line, lineId, costPrice };
+    });
+    // Bump each distinct order once: several corrected lines often share one order.
+    const bumped = new Set<string>();
+    for (const { order, orderId } of validated) {
+      if (bumped.has(orderId)) continue;
+      this.store.bump(order, intent.expectedRevisions[orderId]);
+      bumped.add(orderId);
+    }
+    const applied = validated.map(({ orderId, lineId, line, costPrice }) => {
       const oldCostPrice = line.costPrice;
       line.costPrice = costPrice;
-      applied.push({ orderId, lineId, oldCostPrice, newCostPrice: costPrice });
-    }
+      return { orderId, lineId, oldCostPrice, newCostPrice: costPrice };
+    });
     return { corrected: applied.length, corrections: applied };
   }
 
