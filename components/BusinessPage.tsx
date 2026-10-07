@@ -1,12 +1,10 @@
 import React from 'react';
-import { ArrowLeft, FileText, History, Users, TrendingUp, BarChart3 } from 'lucide-react';
+import { ArrowLeft, FileText, History, Users } from 'lucide-react';
 import { useBusinessData, TabType, OrderItem } from '../hooks/useBusinessData';
 import { Order, businessService } from '../businessService';
 import { OrderFormTab } from './business/OrderFormTab';
 import { OrderHistoryTab } from './business/OrderHistoryTab';
 import { CustomersTab } from './business/CustomersTab';
-import { ProfitTab } from './business/ProfitTab';
-import { ReportsTab } from './business/ReportsTab';
 import { NoticeBanner } from './NoticeBanner';
 
 export const BusinessPage: React.FC = () => {
@@ -33,7 +31,6 @@ export const BusinessPage: React.FC = () => {
         getTotal,
         handleSaveOrder,
         resetOrderForm,
-        report,
         review,
         loading,
         loadError,
@@ -51,8 +48,6 @@ export const BusinessPage: React.FC = () => {
         { id: 'orders', label: 'Tạo đơn', icon: FileText, color: 'text-green-600', bg: 'bg-green-50' },
         { id: 'history', label: 'Lịch sử', icon: History, color: 'text-blue-600', bg: 'bg-blue-50' },
         { id: 'customers', label: 'Khách hàng', icon: Users, color: 'text-purple-600', bg: 'bg-purple-50' },
-        { id: 'profit', label: 'Lợi nhuận', icon: TrendingUp, color: 'text-green-600', bg: 'bg-green-50' },
-        { id: 'reports', label: 'Báo cáo', icon: BarChart3, color: 'text-indigo-600', bg: 'bg-indigo-50' },
     ];
 
     const handleRecreateOrder = (order: Order) => {
@@ -242,14 +237,6 @@ export const BusinessPage: React.FC = () => {
                         onCreateOrder={handleCreateOrderFromCustomer}
                         truncated={customersTruncated}
                     />
-                )}
-
-                {activeTab === 'profit' && (
-                    <ProfitTab report={report} />
-                )}
-
-                {activeTab === 'reports' && (
-                    <ReportsTab report={report} truncated={ordersTruncated || customersTruncated} />
                 )}
             </main>
         </div>

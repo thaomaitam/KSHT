@@ -96,22 +96,6 @@ export interface DataQualityFlag {
     detail: string;
 }
 
-export interface ReportSummary {
-    fromDate: string;
-    toDate: string;
-    timezone: string;
-    confirmedSales: number;
-    grossReceipts: number;
-    refunds: number;
-    netReceipts: number;
-    receivables: number;
-    discounts: number;
-    shippingFees: number;
-    cogs: number;
-    profit: number;
-    dataQualityFlags: DataQualityFlag[];
-}
-
 export interface HistoricalReview {
     ready: boolean;
     count: number;
@@ -173,30 +157,6 @@ export const mapOrderFromInvoice = (row: any): Order => {
             : undefined,
     };
 };
-
-export const mapReportSummary = (row: any): ReportSummary => ({
-    fromDate: String(row.fromDate || ''),
-    toDate: String(row.toDate || ''),
-    timezone: String(row.timezone || 'Asia/Ho_Chi_Minh'),
-    confirmedSales: Number(row.confirmedSales) || 0,
-    grossReceipts: Number(row.grossReceipts) || 0,
-    refunds: Number(row.refunds) || 0,
-    netReceipts: Number(row.netReceipts) || 0,
-    receivables: Number(row.receivables) || 0,
-    discounts: Number(row.discounts) || 0,
-    shippingFees: Number(row.shippingFees) || 0,
-    cogs: Number(row.cogs) || 0,
-    profit: Number(row.profit) || 0,
-    dataQualityFlags: Array.isArray(row.dataQualityFlags)
-        ? row.dataQualityFlags
-            .filter((f: any) => f && typeof f.kind === 'string')
-            .map((f: any) => ({
-                kind: String(f.kind),
-                orderId: typeof f.orderId === 'string' ? f.orderId : undefined,
-                detail: String(f.detail || ''),
-            }))
-        : [],
-});
 
 export const historicalReviewFromStatus = (row: any): HistoricalReview => {
     const types = Array.isArray(row?.migrationBlockerSummary)
@@ -532,10 +492,6 @@ export const businessService = {
         const preview = await giabanClient.previewCashReversal(transactionId, reason);
         await giabanClient.confirmCashReversal(transactionId, String(preview.confirmationToken));
         return this.getTransactions();
-    },
-
-    async getReportSummary(fromDate: string, toDate: string): Promise<ReportSummary> {
-        return mapReportSummary(await giabanClient.getReportSummary(fromDate, toDate));
     },
 
     async getBankInfo(): Promise<BankInfo> {

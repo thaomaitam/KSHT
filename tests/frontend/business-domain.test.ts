@@ -6,7 +6,6 @@ import "./browserStorage.ts";
 import {
   historicalReviewFromStatus,
   mapOrderFromInvoice,
-  mapReportSummary,
   requireCustomerId,
 } from "../../businessService.ts";
 
@@ -37,26 +36,6 @@ test("requireCustomerId rejects fuzzy auto-match", () => {
   assert.equal(requireCustomerId("cus_1"), "cus_1");
   assert.throws(() => requireCustomerId(""), /customerId/);
   assert.throws(() => requireCustomerId(undefined), /customerId/);
-});
-
-test("report mapping uses backend fields only", () => {
-  const summary = mapReportSummary({
-    fromDate: "2026-01-01",
-    toDate: "2026-01-31",
-    timezone: "Asia/Ho_Chi_Minh",
-    confirmedSales: 1000,
-    grossReceipts: 800,
-    refunds: 100,
-    netReceipts: 700,
-    receivables: 300,
-    discounts: 50,
-    shippingFees: 20,
-    cogs: 400,
-    profit: 600,
-  });
-  assert.equal(summary.confirmedSales, 1000);
-  assert.equal(summary.profit, 600);
-  assert.equal(summary.timezone, "Asia/Ho_Chi_Minh");
 });
 
 test("historical review stays explicit and is not treated as repaired identity or money", () => {

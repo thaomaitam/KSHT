@@ -1,6 +1,5 @@
 import { apiService } from "../apiService.ts";
 import { parsePage, toListQuery, type ListQuery } from "./giabanPage.ts";
-import { toReportRangeQuery } from "./giabanPayloads.ts";
 
 export class CloudWriteError extends Error {
   code: string;
@@ -161,7 +160,6 @@ export const giabanClient = {
     write(`/cash-transactions/${transactionId}/reverse/preview`, { reason }),
   confirmCashReversal: (transactionId: string, confirmationToken: string) =>
     write(`/cash-transactions/${transactionId}/reverse/confirm`, { confirmationToken }),
-  getReportSummary: (fromDate: string, toDate: string) => read(`/reports/summary?${toReportRangeQuery(fromDate, toDate)}`),
   getPhoneSettings: () => read("/settings/phone"),
   updatePhoneSettings: (input: unknown, revision: number, idempotencyKey: string) =>
     write("/settings/phone", input, { method: "PATCH", revision, idempotencyKey }),

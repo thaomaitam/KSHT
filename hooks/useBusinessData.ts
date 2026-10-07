@@ -1,4 +1,3 @@
-import { businessDateOnly, businessYearStart } from '../server/domain/timezone.ts';
 import { lineAmount } from '../server/domain/quantity.ts';
 
 import { useState, useEffect, useRef } from 'react';
@@ -8,7 +7,6 @@ import {
     Customer,
     HistoricalReview,
     Order,
-    ReportSummary,
     ShopTemplate,
     Transaction,
 } from '../businessService';
@@ -24,7 +22,7 @@ import {
     type BusinessSessionSnapshot,
 } from '../client/businessSessionCache';
 
-export type TabType = 'orders' | 'history' | 'customers' | 'profit' | 'reports';
+export type TabType = 'orders' | 'history' | 'customers';
 
 export interface OrderItem {
     id: string;
@@ -93,7 +91,6 @@ export const useBusinessData = () => {
     const [productsTruncated, setProductsTruncated] = useState(false);
     const [bankInfo, setBankInfo] = useState<BankInfo | null>(null);
     const [shopTemplates, setShopTemplates] = useState<ShopTemplate[]>([]);
-    const [report, setReport] = useState<ReportSummary | null>(null);
     const [review, setReview] = useState<HistoricalReview | null>(null);
     const [loadError, setLoadError] = useState<string>('');
     const [loading, setLoading] = useState(false);
@@ -121,7 +118,6 @@ export const useBusinessData = () => {
         setProductsTruncated(snapshot.productsTruncated);
         setBankInfo(snapshot.bankInfo);
         setShopTemplates(snapshot.shopTemplates);
-        setReport(snapshot.report);
         setReview(snapshot.review);
         const defaultTemplate = snapshot.shopTemplates.find(t => t.isDefault) || snapshot.shopTemplates[0];
         if (defaultTemplate) {
@@ -142,17 +138,13 @@ export const useBusinessData = () => {
         setLoading(true);
         setLoadError('');
         try {
-            const today = new Date();
-            const toDate = businessDateOnly(today);
-            const fromDate = businessYearStart(today);
-            const [ordersData, customersData, transactionsData, productsData, bankInfoData, shopTemplatesData, reportData, reviewData] = await Promise.all([
+            const [ordersData, customersData, transactionsData, productsData, bankInfoData, shopTemplatesData, reviewData] = await Promise.all([
                 businessService.getOrders(),
                 businessService.getCustomers(),
                 businessService.getTransactions(),
                 storageService.getAdminProducts(),
                 businessService.getBankInfo(),
                 businessService.getShopTemplates(),
-                businessService.getReportSummary(fromDate, toDate),
                 businessService.getStatusReview(),
             ]);
             const snapshot: BusinessSessionSnapshot = {
@@ -165,7 +157,6 @@ export const useBusinessData = () => {
                 productsTruncated: productsData.truncated,
                 bankInfo: bankInfoData,
                 shopTemplates: shopTemplatesData.items,
-                report: reportData,
                 review: reviewData,
             };
             setBusinessSessionCache(snapshot);
@@ -403,7 +394,6 @@ export const useBusinessData = () => {
         transactions,
         bankInfo, setBankInfo,
         shopTemplates, setShopTemplates,
-        report,
         review,
         loading,
         loadError,

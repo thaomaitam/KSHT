@@ -66,30 +66,6 @@ test("writes send Idempotency-Key and omit extra body fields", async () => {
   assert.equal(init?.method, "POST");
 });
 
-test("getReportSummary requires fromDate and toDate query params", async () => {
-  let url = "";
-  globalThis.fetch = async (input: RequestInfo | URL) => {
-    url = String(input);
-    return jsonResponse(200, {
-      fromDate: "2026-01-01",
-      toDate: "2026-01-31",
-      timezone: "Asia/Ho_Chi_Minh",
-      confirmedSales: 0,
-      grossReceipts: 0,
-      refunds: 0,
-      netReceipts: 0,
-      receivables: 0,
-      discounts: 0,
-      shippingFees: 0,
-      cogs: 0,
-      profit: 0,
-    });
-  };
-  const { giabanClient } = await import("../../client/giabanClient.ts");
-  await giabanClient.getReportSummary("2026-01-01", "2026-01-31");
-  assert.match(url, /\/api\/v1\/reports\/summary\?fromDate=2026-01-01&toDate=2026-01-31$/);
-});
-
 test("cancel preview body is reason only", async () => {
   let body = "";
   globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit) => {

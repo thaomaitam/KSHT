@@ -4,7 +4,6 @@ import type {
   Customer,
   HistoricalReview,
   Order,
-  ReportSummary,
   ShopTemplate,
   Transaction,
 } from "../businessService.ts";
@@ -19,7 +18,6 @@ export type BusinessSessionSnapshot = {
   productsTruncated: boolean;
   bankInfo: BankInfo | null;
   shopTemplates: ShopTemplate[];
-  report: ReportSummary | null;
   review: HistoricalReview | null;
 };
 
