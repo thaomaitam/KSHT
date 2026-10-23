@@ -52,6 +52,16 @@ export const writeStorefrontEnvelope = <T>(key: string, items: T): void => {
   }
 };
 
+/** Drop storefront catalog caches (after an admin catalog write on this browser). */
+export const clearStorefrontCatalogCache = (): void => {
+  try {
+    localStorage.removeItem(STOREFRONT_PRODUCTS_KEY);
+    localStorage.removeItem(STOREFRONT_CATEGORIES_KEY);
+  } catch {
+    // storage unavailable
+  }
+};
+
 export const readPublicProductCache = (): { products: Product[]; fresh: boolean } | null => {
   const hit = readStorefrontEnvelope(STOREFRONT_PRODUCTS_KEY, isProductList);
   if (!hit) return null;

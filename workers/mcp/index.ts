@@ -53,6 +53,11 @@ export class GiabanShop extends DurableObject<McpWorkerEnv> {
     return this.runtime.handleBrowserApi(envelope);
   }
 
+  async catalogVersion(): Promise<string> {
+    if (!this.runtime) throw new Error("Giaban coordinator unavailable");
+    return this.runtime.catalogVersion();
+  }
+
   async fetch(request: Request): Promise<Response> {
     if (!this.runtime) return Response.json({ error: "uninitialized" }, { status: 503 });
     return this.runtime.handleMcp(request);
@@ -64,6 +69,12 @@ export class GiabanHttp extends WorkerEntrypoint<McpWorkerEnv> {
     if (!isBrowserActor(envelope?.actor)) return forbiddenActor();
     const stub = this.env.GIABAN_SHOP.get(this.env.GIABAN_SHOP.idFromName("owner"));
     return stub.handleBrowserApi(envelope);
+  }
+
+  /** Public, data-free catalog content version used for ETag / isolate cache keys. */
+  async catalogVersion(): Promise<string> {
+    const stub = this.env.GIABAN_SHOP.get(this.env.GIABAN_SHOP.idFromName("owner"));
+    return stub.catalogVersion();
   }
 }
 

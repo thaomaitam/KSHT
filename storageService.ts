@@ -4,9 +4,32 @@ import { collectPages } from './client/giabanPage.ts';
 import { stripCostFromProduct, toProductWrite } from './client/giabanPayloads.ts';
 import { settingsService } from './settingsService.ts';
 import { apiService } from './apiService.ts';
-import { readPublicProductCache, writePublicProductCache } from './client/storefrontCache.ts';
+import { clearStorefrontCatalogCache, readPublicProductCache, writePublicProductCache } from './client/storefrontCache.ts';
 
 let inflightStorefront: Promise<CatalogLoad> | null = null;
+
+const CATALOG_WALK_ATTEMPTS = 3;
+
+/** Walk every public product page; restart if the catalog version changes mid-walk. */
+const collectPublicProducts = async (bypass?: boolean) => {
+  let collected!: Awaited<ReturnType<typeof collectPages>>;
+  for (let attempt = 0; attempt < CATALOG_WALK_ATTEMPTS; attempt += 1) {
+    const versions = new Set<string>();
+    collected = await collectPages(async (cursor) => {
+      const page = await giabanClient.getPublicProducts({ cursor }, { bypass });
+      const version = (page as { catalogVersion?: string } | null)?.catalogVersion;
+      if (version) versions.add(version);
+      return page;
+    });
+    if (versions.size <= 1) return collected;
+  }
+  return { ...collected, truncated: true };
+};
+
+const afterCatalogWrite = (): void => {
+  clearStorefrontCatalogCache();
+  inflightStorefront = null;
+};
 
 const categoryIdFromValue = async (value: string): Promise<string> => {
   const categories = await settingsService.getCategories();
@@ -58,15 +81,15 @@ export const storageService = {
     };
   },
 
-  async getStorefrontProducts(options: { bypass?: boolean } = {}): Promise<CatalogLoad> {
-    if (!options.bypass) {
+  async getStorefrontProducts(options: { bypass?: boolean; revalidate?: boolean } = {}): Promise<CatalogLoad> {
+    if (!options.bypass && !options.revalidate) {
       const cached = this.peekStorefrontProducts();
       if (cached?.source === "cache") return cached;
       if (inflightStorefront) return inflightStorefront;
     }
     const pending = (async (): Promise<CatalogLoad> => {
       try {
-        const collected = await collectPages((cursor) => giabanClient.getPublicProducts({ cursor }, { bypass: options.bypass }));
+        const collected = await collectPublicProducts(options.bypass);
         const byId = await categoryMap();
         const products = collected.items.map((row) => toUiProduct(row, false, byId)).map(stripCostFromProduct);
         writePublicProductCache(products);
@@ -79,7 +102,7 @@ export const storageService = {
         return { products: [], truncated: false, source: "empty", error: asError(error) };
       }
     })();
-    if (!options.bypass) inflightStorefront = pending;
+    if (!options.bypass && !options.revalidate) inflightStorefront = pending;
     try {
       return await pending;
     } finally {
@@ -110,6 +133,7 @@ export const storageService = {
       isHot: Boolean(product.isHot),
       variants: product.variants,
     }), newIdempotencyKey());
+    afterCatalogWrite();
     return this.getAdminProducts();
   },
 
@@ -123,11 +147,13 @@ export const storageService = {
       isHot: Boolean(updatedProduct.isHot),
       variants: updatedProduct.variants,
     }), updatedProduct.revision || 1, newIdempotencyKey());
+    afterCatalogWrite();
     return this.getAdminProducts();
   },
 
   async deleteProduct(productId: string, revision?: number): Promise<CatalogLoad> {
     await giabanClient.archiveProduct(productId, newIdempotencyKey(), revision);
+    afterCatalogWrite();
     return this.getAdminProducts();
   },
 

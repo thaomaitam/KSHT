@@ -241,6 +241,25 @@ export class GiabanApplication {
     if (owner && owner.scopes.length === 0) owner.scopes = [...ALL_SCOPES];
   }
 
+  private catalogVersionMemo: { source: string; version: string } | null = null;
+
+  /**
+   * Content version of the public catalog (products + categories as customers see them).
+   * Changes on every catalog mutation that alters public output, stable across reads,
+   * restarts and isolates because it is derived from state, not a counter.
+   */
+  async catalogVersion(): Promise<string> {
+    const source = canonicalJson({
+      generationId: this.store.state.generationId,
+      products: this.products(false).map((product) => ({ ...publicProductFromAdmin(product), createdAt: product.createdAt })),
+      categories: this.categories(false).map(({ id, label, value }) => ({ id, label, value })),
+    });
+    if (this.catalogVersionMemo?.source === source) return this.catalogVersionMemo.version;
+    const version = (await sha256Hex(source)).slice(0, 20);
+    this.catalogVersionMemo = { source, version };
+    return version;
+  }
+
   async query(request: { operationId: string; input?: unknown }, context: InvocationContext) {
     return this.invoke("query", request.operationId, request.input ?? {}, context);
   }

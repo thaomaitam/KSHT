@@ -16,7 +16,10 @@ const envFor = (app: GiabanApplication) => ({
   ALLOWED_ORIGINS: "",
   LOGIN_RATE_LIMITER: { async limit() { return { success: true }; } },
   DB: { async get() { return null; }, async put() { return undefined; } },
-  GIABAN: { handleBrowserApi: (envelope: Parameters<typeof dispatchBrowserApi>[1]) => dispatchBrowserApi(app, envelope) },
+  GIABAN: {
+    handleBrowserApi: (envelope: Parameters<typeof dispatchBrowserApi>[1]) => dispatchBrowserApi(app, envelope),
+    catalogVersion: () => app.catalogVersion(),
+  },
   PUBLIC_CATALOG_CACHE: createPublicCatalogStore(),
 });
 
@@ -65,7 +68,7 @@ test("ksht-api caches public catalog GET, bypasses no-cache, and purges after ca
 
   const first = await handleKshtApi(new Request("https://worker.example/api/v1/public/products"), env);
   assert.equal(first.status, 200);
-  assert.equal(first.headers.get("cache-control"), "public, max-age=600");
+  assert.equal(first.headers.get("cache-control"), "public, no-cache");
   const firstBody = await first.json();
   assert.equal(firstBody.items.length, 1);
   const second = await handleKshtApi(new Request("https://worker.example/api/v1/public/products"), env);
