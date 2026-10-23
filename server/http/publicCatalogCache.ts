@@ -1,5 +1,47 @@
+// Isolate memory entries are keyed by catalog version, so a stale entry can never be
+// served after a mutation in another isolate; the TTL only bounds memory use.
 export const PUBLIC_CATALOG_MAX_AGE_SEC = 600;
-export const PUBLIC_CATALOG_CACHE_CONTROL = `public, max-age=${PUBLIC_CATALOG_MAX_AGE_SEC}`;
+// Browsers/proxies may store the response but must revalidate (ETag -> 304) every time.
+export const PUBLIC_CATALOG_CACHE_CONTROL = "public, no-cache";
+export const CATALOG_VERSION_HEADER = "X-Catalog-Version";
+
+export const catalogEtag = (version: string): string => `"cv-${version}"`;
+
+export const etagMatches = (ifNoneMatch: string | null, etag: string): boolean => {
+  if (!ifNoneMatch) return false;
+  return ifNoneMatch.split(",").map((value) => value.trim().replace(/^W\//, "")).some((value) => value === etag || value === "*");
+};
+
+export const versionedCatalogCacheKey = (version: string, key: string): string => `${version}|${key}`;
+
+export const withCatalogHeaders = (response: Response, version: string | null): Response => {
+  const headers = new Headers(response.headers);
+  headers.set("cache-control", PUBLIC_CATALOG_CACHE_CONTROL);
+  if (version) {
+    headers.set("etag", catalogEtag(version));
+    headers.set(CATALOG_VERSION_HEADER, version);
+  } else {
+    headers.delete("etag");
+    headers.delete(CATALOG_VERSION_HEADER);
+  }
+  return new Response(response.body, { status: response.status, headers });
+};
+
+export const catalogNotModified = (version: string): Response => new Response(null, {
+  status: 304,
+  headers: {
+    "cache-control": PUBLIC_CATALOG_CACHE_CONTROL,
+    etag: catalogEtag(version),
+    [CATALOG_VERSION_HEADER]: version,
+    "x-content-type-options": "nosniff",
+  },
+});
+
+/** Drop entries that belong to an older catalog version. */
+export const prunePublicCatalogVersions = (store: PublicCatalogStore, version: string): void => {
+  const prefix = `${version}|`;
+  for (const key of [...store.memory.keys()]) if (!key.startsWith(prefix)) store.memory.delete(key);
+};
 
 type MemoryEntry = {
   status: number;
@@ -77,13 +119,13 @@ export const storePublicCatalogResponse = async (
 export const responseFromPublicCatalogMemory = (entry: MemoryEntry): Response => {
   const headers = new Headers();
   for (const [header, value] of entry.headerPairs) headers.append(header, value);
-  headers.set("Cache-Control", PUBLIC_CATALOG_CACHE_CONTROL);
   return new Response(entry.body, { status: entry.status, headers });
 };
 
 export const purgePublicCatalogCache = async (store: PublicCatalogStore): Promise<void> => {
   for (const key of [...store.memory.keys()]) {
-    if (key.startsWith("/api/v1/public/products") || key.startsWith("/api/v1/public/categories")) {
+    const path = key.includes("|") ? key.slice(key.indexOf("|") + 1) : key;
+    if (path.startsWith("/api/v1/public/products") || path.startsWith("/api/v1/public/categories")) {
       store.memory.delete(key);
     }
   }
@@ -104,10 +146,4 @@ export const runPublicCatalogSingleflight = async (
   store.inflight.set(key, task);
   const response = await task;
   return response.clone();
-};
-
-export const withPublicCatalogCacheControl = (response: Response): Response => {
-  const headers = new Headers(response.headers);
-  headers.set("cache-control", PUBLIC_CATALOG_CACHE_CONTROL);
-  return new Response(response.body, { status: response.status, headers });
 };

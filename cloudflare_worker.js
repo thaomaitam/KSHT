@@ -57,6 +57,41 @@ export const presentedSessionToken = (request) => {
     return typeof token === "string" && token.trim() ? token.trim() : "";
 };
 
+// Allowlist projection for anonymous legacy reads. Mirrors server/domain/catalog.ts
+// publicProductFromAdmin/toPublicVariant and client stripCostFromVariant.
+const asList = (value) => (Array.isArray(value) ? value : []);
+const projectLegacyProduct = (product) => {
+    const projected = {
+        id: String(product?.id ?? ""),
+        name: String(product?.name ?? ""),
+        category: String(product?.category ?? ""),
+        description: String(product?.description ?? ""),
+        image: String(product?.image ?? ""),
+    };
+    if (product?.isHot !== undefined) projected.isHot = Boolean(product.isHot);
+    projected.variants = asList(product?.variants).map((variant) => ({
+        size: String(variant?.size ?? ""),
+        unit: String(variant?.unit ?? ""),
+        price: Number(variant?.price) || 0,
+    }));
+    return projected;
+};
+export const projectLegacyPublic = (key, document) => {
+    if (key === "products") return asList(document).filter((item) => item && typeof item === "object" && !item.archived).map(projectLegacyProduct);
+    if (key === "categories") {
+        return asList(document).filter((item) => item && typeof item === "object" && !item.archived).map((category) => ({
+            id: String(category.id ?? ""),
+            label: String(category.label ?? ""),
+            value: String(category.value ?? ""),
+        }));
+    }
+    if (key === "settings") {
+        const phoneNumber = document && typeof document === "object" ? document.phoneNumber : undefined;
+        return typeof phoneNumber === "string" ? { phoneNumber } : {};
+    }
+    return null;
+};
+
 export const createSessionToken = async (secret) => {
     const issuedAt = Date.now();
     const expiresAt = issuedAt + SESSION_TTL_MS;
@@ -178,13 +213,14 @@ export default {
             if (!DATA_KEYS.has(key)) {
                 return errorResponse("Not Found", 404);
             }
-            if (!PUBLIC_READ_KEY_SET.has(key)) {
-                if (!await isAuthorized()) {
-                    return errorResponse("Unauthorized", 401);
-                }
+            const authorized = await isAuthorized();
+            if (!PUBLIC_READ_KEY_SET.has(key) && !authorized) {
+                return errorResponse("Unauthorized", 401);
             }
             const value = await env.DB.get(key);
-            return jsonResponse(value ? JSON.parse(value) : null);
+            const document = value ? JSON.parse(value) : null;
+            // Anonymous callers only ever see the public projection, never the raw KV document.
+            return jsonResponse(authorized ? document : projectLegacyPublic(key, document));
         }
 
         // 2. POST /api/data/:key (Secured with Secret)

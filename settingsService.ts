@@ -3,7 +3,7 @@ import { apiService } from './apiService.ts';
 import { giabanClient, newIdempotencyKey, CloudWriteError } from './client/giabanClient.ts';
 import { collectPages, parsePage } from './client/giabanPage.ts';
 import { toCategoryWrite, toPhoneSettingsWrite } from './client/giabanPayloads.ts';
-import { readStorefrontEnvelope, writeStorefrontEnvelope, STOREFRONT_CATEGORIES_KEY } from './client/storefrontCache.ts';
+import { clearStorefrontCatalogCache, readStorefrontEnvelope, writeStorefrontEnvelope, STOREFRONT_CATEGORIES_KEY } from './client/storefrontCache.ts';
 
 const SETTINGS_KEY = 'giaban_settings';
 const CATEGORIES_KEY = 'giaban_categories';
@@ -99,10 +99,10 @@ export const settingsService = {
         return `https://zalo.me/${this.getPhoneNumber()}`;
     },
 
-    async getCategoryLoad(options: { bypass?: boolean } = {}): Promise<CategoryLoad> {
+    async getCategoryLoad(options: { bypass?: boolean; revalidate?: boolean } = {}): Promise<CategoryLoad> {
         const admin = Boolean(apiService.getSessionToken());
         const isCategoryList = (value: unknown): value is CategoryItem[] => Array.isArray(value);
-        if (!admin && !options.bypass) {
+        if (!admin && !options.bypass && !options.revalidate) {
             const cached = readStorefrontEnvelope(STOREFRONT_CATEGORIES_KEY, isCategoryList);
             if (cached?.fresh) {
                 return { categories: withAll(cached.items), truncated: false, source: 'cache' };
@@ -154,6 +154,7 @@ export const settingsService = {
 
     async addCategory(label: string): Promise<CategoryItem[]> {
         await giabanClient.createCategory(toCategoryWrite({ label }), newIdempotencyKey());
+        clearStorefrontCatalogCache();
         return this.getCategories();
     },
 
@@ -162,6 +163,7 @@ export const settingsService = {
         const current = categories.find((category) => category.id === id);
         if (!current || current.value === 'ALL') return categories;
         await giabanClient.updateCategory(id, toCategoryWrite({ label, value: current.value }), current.revision || 1, newIdempotencyKey());
+        clearStorefrontCatalogCache();
         return this.getCategories();
     },
 
@@ -169,6 +171,7 @@ export const settingsService = {
         const current = (await this.getCategories()).find((category) => category.id === id);
         if (!current || current.value === 'ALL') return this.getCategories();
         await giabanClient.archiveCategory(id, newIdempotencyKey(), current.revision);
+        clearStorefrontCatalogCache();
         return this.getCategories();
     },
 

@@ -25,10 +25,21 @@ export const useAppData = () => {
         if (!bypass) {
             const cached = storageService.peekStorefrontProducts();
             if (cached?.source === 'cache') {
+                // Stale-while-revalidate: show local cache now, then revalidate (ETag/304) in background.
                 setCatalog(cached);
                 setLoading(false);
                 const cats = await settingsService.getCategoryLoad();
                 setCategories(cats.categories);
+                try {
+                    const [prods, freshCats] = await Promise.all([
+                        storageService.getStorefrontProducts({ revalidate: true }),
+                        settingsService.getCategoryLoad({ revalidate: true }),
+                    ]);
+                    if (prods.source === 'network') setCatalog(prods);
+                    if (freshCats.source === 'network') setCategories(freshCats.categories);
+                } catch {
+                    // keep cached view
+                }
                 return;
             }
             if (cached?.products.length) {
@@ -42,8 +53,8 @@ export const useAppData = () => {
         }
         try {
             const [prods, cats] = await Promise.all([
-                storageService.getStorefrontProducts({ bypass }),
-                settingsService.getCategoryLoad({ bypass }),
+                storageService.getStorefrontProducts({ bypass, revalidate: true }),
+                settingsService.getCategoryLoad({ bypass, revalidate: true }),
             ]);
             setCatalog(prods);
             setCategories(cats.categories);

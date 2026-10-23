@@ -120,6 +120,12 @@ const PATTERNS: Array<[string, RegExp, string, string]> = [
   ["POST", /^\/api\/v1\/backups\/uploads\/([^/]+)\/finalize$/, "finalizeBackupUpload", "uploadId"],
 ];
 
+/** Full route table (for security scans). `public` mirrors the operation registry policy. */
+export const API_V1_ROUTES: Array<{ method: string; path: string | RegExp; operationId: string; public: boolean }> = [
+  ...EXACT.map(([method, path, operationId]) => ({ method, path, operationId, public: Boolean(operationById.get(operationId)?.public) })),
+  ...PATTERNS.map(([method, path, operationId]) => ({ method, path, operationId, public: Boolean(operationById.get(operationId)?.public) })),
+];
+
 const coerceSearchParam = (key: string, value: string): unknown => {
   if (key === "limit" && /^[0-9]+$/.test(value)) return Number(value);
   if (key === "includeArchived") {

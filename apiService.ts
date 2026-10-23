@@ -141,6 +141,8 @@ export const apiService = {
     async get<T>(key: string): Promise<T | null> {
         const data = await apiService.getCloud<T>(key);
         if (data !== null) {
+            // Only public catalog documents may be persisted on this device.
+            if (!PUBLIC_READ_KEY_SET.has(key)) return data;
             try {
                 localStorage.setItem(`giaban_${key}`, JSON.stringify(data));
             } catch {

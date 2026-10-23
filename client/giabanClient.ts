@@ -58,14 +58,20 @@ const offlineError = (error: unknown): CloudWriteError => {
   });
 };
 
-const read = async (path: string, options: { bypass?: boolean } = {}) => {
+const read = async (path: string, options: { bypass?: boolean; revalidate?: boolean } = {}) => {
   try {
     const extra = options.bypass ? { "Cache-Control": "no-cache" } : {};
     const response = await fetch(v1(path), {
       headers: headers(extra),
-      cache: options.bypass ? "reload" : "default",
+      // revalidate: let the browser send If-None-Match and accept 304 from the Worker.
+      cache: options.bypass ? "reload" : options.revalidate ? "no-cache" : "default",
     });
-    return throwIfFailed(response);
+    const body = await throwIfFailed(response);
+    const catalogVersion = response.headers?.get?.("X-Catalog-Version");
+    if (catalogVersion && body && typeof body === "object") {
+      Object.defineProperty(body, "catalogVersion", { value: catalogVersion, enumerable: false });
+    }
+    return body;
   } catch (error) {
     throw offlineError(error);
   }
@@ -95,8 +101,8 @@ export const giabanClient = {
   getStatus: () => read("/status"),
   getCapabilities: () => read("/capabilities"),
   getPublicProducts: (query: ListQuery = {}, options: { bypass?: boolean } = {}) =>
-    read(`/public/products?${toListQuery({ limit: 100, ...query })}`, options),
-  getPublicCategories: (options: { bypass?: boolean } = {}) => read("/public/categories", options),
+    read(`/public/products?${toListQuery({ limit: 100, ...query })}`, { revalidate: true, ...options }),
+  getPublicCategories: (options: { bypass?: boolean } = {}) => read("/public/categories", { revalidate: true, ...options }),
   getPublicSettings: () => read("/public/settings"),
   listProducts: (includeArchived: boolean | ListQuery = false) => {
     const query = typeof includeArchived === "boolean" ? { includeArchived } : includeArchived;

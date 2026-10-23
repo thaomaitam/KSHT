@@ -195,7 +195,8 @@ test('public catalog keys remain readable without authentication', async () => {
   );
 
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), { key: 'products' });
+  // Non-array legacy documents project to an empty public list.
+  assert.deepEqual(await response.json(), []);
 });
 
 test('a browser-exposed root secret cannot forge a session token', async () => {
@@ -280,4 +281,47 @@ test('a tampered session token cannot read sensitive data', async () => {
   );
 
   assert.equal(response.status, 401);
+});
+
+const catalogEnv = () => {
+  const env = createEnv();
+  const values = {
+    products: [{
+      id: 'p1', name: 'Cọ', category: 'PAINT_BRUSH', description: 'd', image: 'i', isHot: true,
+      internalSupplier: 'secret-supplier',
+      variants: [{ size: '1', unit: 'Cây', price: 5000, costPrice: 3000, supplierSecret: 'x' }],
+    }],
+    categories: [{ id: 'c1', label: 'Cọ', value: 'PAINT_BRUSH', internalNote: 'x' }],
+    settings: { phoneNumber: '0909', adminSecret: 'must-not-leak' },
+  };
+  env.DB.get = async (key) => (key in values ? JSON.stringify(values[key]) : null);
+  return env;
+};
+
+test('anonymous legacy catalog reads are projected to public fields only', async () => {
+  const env = catalogEnv();
+  const products = await (await worker.fetch(new Request('https://worker.example.test/api/data/products'), env, {})).json();
+  assert.deepEqual(products, [{
+    id: 'p1', name: 'Cọ', category: 'PAINT_BRUSH', description: 'd', image: 'i', isHot: true,
+    variants: [{ size: '1', unit: 'Cây', price: 5000 }],
+  }]);
+  const categories = await (await worker.fetch(new Request('https://worker.example.test/api/data/categories'), env, {})).json();
+  assert.deepEqual(categories, [{ id: 'c1', label: 'Cọ', value: 'PAINT_BRUSH' }]);
+  const settings = await (await worker.fetch(new Request('https://worker.example.test/api/data/settings'), env, {})).json();
+  assert.deepEqual(settings, { phoneNumber: '0909' });
+});
+
+test('authenticated legacy catalog reads still return the stored document', async () => {
+  const env = catalogEnv();
+  const login = await worker.fetch(new Request('https://worker.example.test/api/login', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ username: 'admin', password: 'correct-password' }),
+  }), env, {});
+  const { token } = await login.json();
+  const products = await (await worker.fetch(new Request('https://worker.example.test/api/data/products', {
+    headers: { Authorization: `Bearer ${token}` },
+  }), env, {})).json();
+  assert.equal(products[0].internalSupplier, 'secret-supplier');
+  assert.equal(products[0].variants[0].costPrice, 3000);
 });

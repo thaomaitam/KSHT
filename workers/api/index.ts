@@ -4,6 +4,7 @@ import type { BrowserApiEnvelope, BrowserApiResult } from "../../server/http/bro
 export interface ApiEnv extends KshtEnv {
   GIABAN?: {
     handleBrowserApi(envelope: BrowserApiEnvelope): Promise<BrowserApiResult>;
+    catalogVersion?(): Promise<string>;
   };
 }
 

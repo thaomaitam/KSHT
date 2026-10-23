@@ -417,3 +417,45 @@ test("v1 bounds streamed UTF-8 bytes without Content-Length before calling the p
   assert.equal(forwarded, 0);
   assert.equal(cancelled, true);
 });
+
+test("owner runtime exposes catalogVersion; admin price PATCH changes the public ETag immediately", async () => {
+  const { runtime, env: base } = await openShop();
+  const env = {
+    ...base,
+    GIABAN: {
+      handleBrowserApi: (envelope: BrowserApiEnvelope) => runtime.handleBrowserApi(envelope),
+      catalogVersion: () => runtime.catalogVersion(),
+    },
+  };
+  const token = await login(env);
+  const auth = { authorization: `Bearer ${token}`, "content-type": "application/json" };
+  const category = await (await handleKshtApi(new Request("https://api.example/api/v1/categories", {
+    method: "POST", headers: { ...auth, "Idempotency-Key": "c" }, body: JSON.stringify({ label: "Cọ", value: "PAINT" }),
+  }), env)).json() as { id: string };
+  const product = await (await handleKshtApi(new Request("https://api.example/api/v1/products", {
+    method: "POST",
+    headers: { ...auth, "Idempotency-Key": "p" },
+    body: JSON.stringify({ name: "Cọ", categoryId: category.id, description: "", image: "", variants: [{ size: "1", unit: "Cây", price: 1000, costPrice: 1 }] }),
+  }), env)).json() as { id: string; revision: number };
+
+  const before = await handleKshtApi(new Request("https://api.example/api/v1/public/products"), env);
+  const etag = before.headers.get("etag")!;
+  assert.match(etag, /^"cv-/);
+  assert.equal((await handleKshtApi(new Request("https://api.example/api/v1/public/products", { headers: { "If-None-Match": etag } }), env)).status, 304);
+
+  const patched = await handleKshtApi(new Request(`https://api.example/api/v1/products/${product.id}`, {
+    method: "PATCH",
+    headers: { ...auth, "Idempotency-Key": "u", "If-Match-Revision": String(product.revision) },
+    body: JSON.stringify({ name: "Cọ", categoryId: category.id, description: "", image: "", variants: [{ size: "1", unit: "Cây", price: 1900, costPrice: 1 }] }),
+  }), env);
+  assert.equal(patched.status < 400, true);
+
+  // A different isolate (fresh memory cache) and the same isolate both see the new price.
+  for (const cacheEnv of [env, { ...env, PUBLIC_CATALOG_CACHE: createPublicCatalogStore() }]) {
+    const after = await handleKshtApi(new Request("https://api.example/api/v1/public/products", { headers: { "If-None-Match": etag } }), cacheEnv);
+    assert.equal(after.status, 200);
+    assert.notEqual(after.headers.get("etag"), etag);
+    const body = await after.json() as { items: Array<{ variants: Array<{ price: number }> }> };
+    assert.equal(body.items[0].variants[0].price, 1900);
+  }
+});

@@ -9,8 +9,12 @@ import {
 import { ApiBodyError, MAX_API_BODY_BYTES, readApiBody } from "./limits.ts";
 import { resolveApiV1Route } from "./adapter.ts";
 import {
+  catalogEtag,
+  catalogNotModified,
+  etagMatches,
   isCatalogMutationPath,
   isPublicCatalogGet,
+  prunePublicCatalogVersions,
   publicCatalogCacheKey,
   purgePublicCatalogCache,
   readPublicCatalogMemory,
@@ -19,7 +23,8 @@ import {
   runPublicCatalogSingleflight,
   shouldBypassPublicCatalogCache,
   storePublicCatalogResponse,
-  withPublicCatalogCacheControl,
+  versionedCatalogCacheKey,
+  withCatalogHeaders,
   type PublicCatalogStore,
 } from "./publicCatalogCache.ts";
 
@@ -29,6 +34,7 @@ export interface KshtEnv {
   SESSION_SIGNING_SECRET?: string;
   GIABAN?: {
     handleBrowserApi(envelope: BrowserApiEnvelope): Promise<BrowserApiResult>;
+    catalogVersion?(): Promise<string>;
   };
   PUBLIC_CATALOG_CACHE?: PublicCatalogStore;
   [key: string]: unknown;
@@ -55,7 +61,8 @@ const withCors = (request: Request, env: KshtEnv, response: Response): Response 
   const headers = new Headers(response.headers);
   headers.set("Access-Control-Allow-Origin", origin);
   headers.set("Vary", "Origin");
-  headers.set("Access-Control-Allow-Headers", "Authorization, Content-Type, Idempotency-Key, If-Match-Revision, X-Admin-Secret");
+  headers.set("Access-Control-Allow-Headers", "Authorization, Content-Type, Idempotency-Key, If-Match-Revision, If-None-Match, X-Admin-Secret");
+  headers.set("Access-Control-Expose-Headers", "ETag, X-Catalog-Version");
   headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS");
   return new Response(response.body, { status: response.status, headers });
 };
@@ -117,27 +124,40 @@ export const handleKshtApi = async (request: Request, env: KshtEnv): Promise<Res
 
     const envelope = envelopeFromVerifiedRequest(request, actor, body);
     const catalogGet = isPublicCatalogGet(request.method, url.pathname);
-    const cacheKey = publicCatalogCacheKey(request.url);
     const bypassCache = shouldBypassPublicCatalogCache(request);
     const catalogStore = resolvePublicCatalogStore(env.PUBLIC_CATALOG_CACHE);
     try {
-      if (catalogGet && !bypassCache) {
+      // Catalog version comes from the coordinator (strongly consistent), so ETag and the
+      // isolate memory key change as soon as any mutation commits, in every isolate.
+      const readVersion = catalogGet && giaban.catalogVersion ? () => giaban.catalogVersion!() : null;
+      const version = readVersion ? await readVersion() : null;
+      if (catalogGet && version && etagMatches(request.headers.get("If-None-Match"), catalogEtag(version))) {
+        return withCors(request, env, catalogNotModified(version));
+      }
+      // Without a version there is no safe memory cache: always go to origin.
+      const cacheKey = version ? versionedCatalogCacheKey(version, publicCatalogCacheKey(request.url)) : null;
+      if (catalogGet && cacheKey && !bypassCache) {
         const cached = readPublicCatalogMemory(catalogStore, cacheKey);
-        if (cached) return withCors(request, env, responseFromPublicCatalogMemory(cached));
+        if (cached) return withCors(request, env, withCatalogHeaders(responseFromPublicCatalogMemory(cached), version));
       }
       const loadOrigin = async () => {
         const result = await giaban.handleBrowserApi(envelope);
         let response = resultToResponse(result);
         if (catalogGet && result.status === 200) {
-          response = withPublicCatalogCacheControl(response);
-          if (!bypassCache) await storePublicCatalogResponse(catalogStore, cacheKey, response.clone());
+          // Only label/store the body with `version` if no mutation slipped in meanwhile.
+          const stable = version && readVersion && (await readVersion()) === version ? version : null;
+          response = withCatalogHeaders(response, stable);
+          if (stable && cacheKey) {
+            prunePublicCatalogVersions(catalogStore, stable);
+            await storePublicCatalogResponse(catalogStore, cacheKey, response.clone());
+          }
         }
         if (isCatalogMutationPath(request.method, url.pathname) && result.status < 400) {
           await purgePublicCatalogCache(catalogStore);
         }
         return response;
       };
-      const response = catalogGet && !bypassCache
+      const response = catalogGet && cacheKey && !bypassCache
         ? await runPublicCatalogSingleflight(catalogStore, cacheKey, loadOrigin)
         : await loadOrigin();
       return withCors(request, env, response);

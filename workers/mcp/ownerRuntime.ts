@@ -8,6 +8,7 @@ export interface OwnerRuntime {
   store: LiveKvStore;
   handleBrowserApi(envelope: BrowserApiEnvelope): Promise<BrowserApiResult>;
   handleMcp(request: Request): Promise<Response>;
+  catalogVersion(): Promise<string>;
 }
 
 export const createOwnerRuntime = async (
@@ -39,6 +40,10 @@ export const createOwnerRuntime = async (
       await store.flushPending();
       await store.refreshConsistency();
       return dispatchBrowserApi(app, envelope);
+    }),
+    catalogVersion: () => runExclusive(async () => {
+      await store.flushPending();
+      return app.catalogVersion();
     }),
     handleMcp: (request) => runExclusive(async () => {
       await store.flushPending();
