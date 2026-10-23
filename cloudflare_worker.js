@@ -77,9 +77,9 @@ const projectLegacyProduct = (product) => {
     return projected;
 };
 export const projectLegacyPublic = (key, document) => {
-    if (key === "products") return asList(document).filter((item) => item && typeof item === "object").map(projectLegacyProduct);
+    if (key === "products") return asList(document).filter((item) => item && typeof item === "object" && !item.archived).map(projectLegacyProduct);
     if (key === "categories") {
-        return asList(document).filter((item) => item && typeof item === "object").map((category) => ({
+        return asList(document).filter((item) => item && typeof item === "object" && !item.archived).map((category) => ({
             id: String(category.id ?? ""),
             label: String(category.label ?? ""),
             value: String(category.value ?? ""),

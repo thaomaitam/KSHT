@@ -875,7 +875,9 @@ export class GiabanApplication {
   }
 
   private publicProduct(id: string) {
-    const projection = publicProductFromAdmin(this.product(id));
+    const product = this.product(id);
+    if (product.archived) fail("NOT_FOUND", "Product not found");
+    const projection = publicProductFromAdmin(product);
     assertPublicProjection(projection);
     return projection;
   }
