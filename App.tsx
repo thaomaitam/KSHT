@@ -42,6 +42,7 @@ const MainApp: React.FC = () => {
         categories={categories}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        setActiveCategory={setActiveCategory}
         setSelectedProduct={setSelectedProduct}
         catalog={catalog}
         loading={loading}
