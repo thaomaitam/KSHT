@@ -4,7 +4,7 @@ import { CatalogLoad, Product } from '../types';
 import { ProductCard } from './ProductCard';
 import { CategoryItem } from '../settingsService';
 import { NoticeBanner } from './NoticeBanner';
-import { CategoryGrid, CategorySidebar, CategorySheetButton, Breadcrumb } from './CategoryNav';
+import { CategorySidebar, CategorySheetButton, Breadcrumb } from './CategoryNav';
 import { groupCategories, displayCategoryLabel } from '../utils/categoryGroups';
 
 interface ProductListProps {
@@ -32,7 +32,6 @@ export const ProductList: React.FC<ProductListProps> = ({
     const allProducts = catalog?.products ?? [];
     const groups = React.useMemo(() => groupCategories(categories, allProducts), [categories, allProducts]);
     const isHome = activeCategory === 'ALL';
-    const showGrid = isHome && !searchTerm.trim() && groups.length > 0;
     const activeLabel = isHome
         ? 'Tất cả sản phẩm'
         : displayCategoryLabel(categories.find(c => c.value === activeCategory)?.label ?? activeCategory);
@@ -61,11 +60,10 @@ export const ProductList: React.FC<ProductListProps> = ({
                     message="Danh sách chưa tải đủ trang; một số sản phẩm có thể chưa hiển thị."
                 />
             )}
-            {showGrid && <CategoryGrid groups={groups} onSelect={select} />}
-            <div className={showGrid ? 'pt-4' : 'md:flex md:gap-6 lg:gap-8'}>
-            {!showGrid && groups.length > 0 && <CategorySidebar {...navProps} />}
+            <div className="md:flex md:gap-6 lg:gap-8">
+            {groups.length > 0 && <CategorySidebar {...navProps} />}
             <div className="flex-1 min-w-0 space-y-4">
-            {!showGrid && groups.length > 0 && <CategorySheetButton {...navProps} activeLabel={activeLabel} />}
+            {groups.length > 0 && <CategorySheetButton {...navProps} activeLabel={activeLabel} />}
             {!isHome && <Breadcrumb label={activeLabel} onHome={() => select('ALL')} />}
             <div className="mb-6 flex items-center justify-between gap-3">
                 <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100">

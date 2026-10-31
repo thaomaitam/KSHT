@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDown, Tags, X, ChevronRight, Package } from 'lucide-react';
+import { ChevronDown, Tags, X, ChevronRight } from 'lucide-react';
 import { CategoryGroup, displayCategoryLabel } from '../utils/categoryGroups';
 import { CategoryItem } from '../settingsService';
 
@@ -11,40 +11,6 @@ interface NavProps {
     onSelect: (value: string) => void;
     totalCount: number;
 }
-
-/** Home view: grouped photo tiles for every non-empty category. */
-export const CategoryGrid: React.FC<Omit<NavProps, 'activeCategory' | 'totalCount'>> = ({ groups, onSelect }) => (
-    <section aria-labelledby="category-grid-title" className="space-y-6">
-        <div>
-            <h2 id="category-grid-title" className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100">Danh mục sản phẩm</h2>
-            <p className="text-slate-500 dark:text-slate-400 mt-1">Bấm vào ảnh để xem sản phẩm</p>
-        </div>
-        {groups.map(group => (
-            <div key={group.name}>
-                <h3 className="text-lg font-bold text-primary-700 dark:text-primary-400 mb-3">{group.name}</h3>
-                <ul className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
-                    {group.items.map(({ category, count, image }) => (
-                        <li key={category.value}>
-                            <button
-                                type="button"
-                                onClick={() => onSelect(category.value)}
-                                className="w-full h-full flex flex-col items-center gap-2 p-2 md:p-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-primary-500 dark:hover:border-primary-400 focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-300 transition-colors text-center"
-                            >
-                                <span className="w-full aspect-square rounded-xl bg-slate-50 dark:bg-slate-700 overflow-hidden flex items-center justify-center">
-                                    {image
-                                        ? <img src={image} alt="" loading="lazy" className="w-full h-full object-contain" />
-                                        : <Package size={36} className="text-slate-300" aria-hidden />}
-                                </span>
-                                <span className="font-bold text-[15px] md:text-base leading-tight text-slate-800 dark:text-slate-100">{displayCategoryLabel(category.label)}</span>
-                                <span className="text-sm text-slate-500 dark:text-slate-400">{count} sản phẩm</span>
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        ))}
-    </section>
-);
 
 const rowClass = (active: boolean) => `w-full min-h-[44px] flex items-center justify-between gap-3 px-3 py-2 rounded-xl text-left text-[15px] md:text-base transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-300 ${active
     ? 'bg-primary-600 text-white font-bold'
