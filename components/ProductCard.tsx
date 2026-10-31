@@ -5,9 +5,11 @@ import { Tag, ArrowRight } from 'lucide-react';
 interface ProductCardProps {
   product: Product;
   onClick: (product: Product) => void;
+  /** Display name for product.category; falls back to the raw code. */
+  categoryLabel?: string;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, categoryLabel }) => {
   // Calculate price range
   const prices = product.variants.map(v => v.price);
   const minPrice = Math.min(...prices);
@@ -40,8 +42,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) =>
       <div className="p-4 md:p-5 flex flex-col flex-grow">
         <div className="flex items-center gap-1.5 mb-2">
           <Tag size={12} className="text-primary-500" />
-          <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-            {product.category}
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+            {categoryLabel ?? product.category}
           </span>
         </div>
 

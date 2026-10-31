@@ -34,6 +34,7 @@ const MainApp: React.FC = () => {
         setShowCart={setShowCart}
         setShowLoginModal={setShowLoginModal}
         currentPage={currentPage}
+        products={catalog.products}
       />
 
       <ProductList

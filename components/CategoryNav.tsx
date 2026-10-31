@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { ChevronDown, Tags, X, ChevronRight } from 'lucide-react';
 import { CategoryGroup, displayCategoryLabel } from '../utils/categoryGroups';
 import { CategoryItem } from '../settingsService';
@@ -52,8 +53,8 @@ export const CategorySidebar: React.FC<NavProps> = (props) => (
     </aside>
 );
 
-/** Mobile: full-width button opening a bottom sheet with the grouped list. */
-export const CategorySheetButton: React.FC<NavProps & { activeLabel: string }> = ({ activeLabel, onSelect, ...props }) => {
+/** Mobile: compact header button (tag + current category + ▾) opening a bottom sheet with the grouped list. */
+export const CategorySheetButton: React.FC<NavProps & { activeLabel: string; className?: string }> = ({ activeLabel, onSelect, className, ...props }) => {
     const [open, setOpen] = React.useState(false);
     const triggerRef = React.useRef<HTMLButtonElement>(null);
     const closeRef = React.useRef<HTMLButtonElement>(null);
@@ -77,19 +78,22 @@ export const CategorySheetButton: React.FC<NavProps & { activeLabel: string }> =
     }, [open, close]);
 
     return (
-        <div className="md:hidden">
+        <div className={className}>
             <button
                 ref={triggerRef}
                 type="button"
                 onClick={() => setOpen(true)}
                 aria-haspopup="dialog"
                 aria-expanded={open}
-                className="w-full min-h-[48px] flex items-center justify-between gap-2 px-4 py-3 rounded-xl border-2 border-primary-600 bg-white dark:bg-slate-800 text-base font-bold text-slate-800 dark:text-slate-100"
+                aria-label={`Danh mục: ${activeLabel}. Bấm để đổi danh mục`}
+                className="w-full min-h-[44px] flex items-center gap-1.5 px-3 py-2 rounded-xl border-2 border-primary-600 bg-white dark:bg-slate-800 text-[15px] font-bold text-slate-800 dark:text-slate-100"
             >
-                <span className="flex items-center gap-2 min-w-0"><Tags size={18} className="flex-none" /> <span className="truncate">Danh mục: <span className="text-primary-700 dark:text-primary-400">{activeLabel}</span></span></span>
-                <span className="flex-none flex items-center text-primary-700 dark:text-primary-400">Đổi <ChevronDown size={18} /></span>
+                <Tags size={18} className="flex-none text-primary-600 dark:text-primary-400" aria-hidden />
+                <span className="flex-1 min-w-0 truncate text-left text-primary-700 dark:text-primary-400">{activeLabel}</span>
+                <ChevronDown size={18} className="flex-none text-primary-700 dark:text-primary-400" aria-hidden />
             </button>
-            {open && (
+            {/* Portal: the sticky header uses backdrop-filter, which would otherwise trap position:fixed */}
+            {open && createPortal((
                 <div className="fixed inset-0 z-50 flex items-end bg-black/40" onClick={close}>
                     <div
                         role="dialog"
@@ -107,7 +111,7 @@ export const CategorySheetButton: React.FC<NavProps & { activeLabel: string }> =
                         <CategoryList {...props} onSelect={v => { onSelect(v); close(); }} />
                     </div>
                 </div>
-            )}
+            ), document.body)}
         </div>
     );
 };
