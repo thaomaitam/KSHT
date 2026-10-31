@@ -38,6 +38,27 @@ export const Header: React.FC<HeaderProps> = ({
     currentPage
 }) => {
     const { isDark, toggleTheme } = useTheme();
+    const categoryBarRef = React.useRef<HTMLDivElement>(null);
+
+    // The chip bar hides its scrollbar, so a vertical mouse wheel would leave
+    // off-screen categories unreachable on desktop. Map vertical wheel to
+    // horizontal scroll while the bar can still move in that direction.
+    React.useEffect(() => {
+        const el = categoryBarRef.current;
+        if (!el) return;
+        const onWheel = (e: WheelEvent) => {
+            if (e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+            const max = el.scrollWidth - el.clientWidth;
+            if (max <= 0) return;
+            const atStart = el.scrollLeft <= 0 && e.deltaY < 0;
+            const atEnd = el.scrollLeft >= max - 1 && e.deltaY > 0;
+            if (atStart || atEnd) return;
+            e.preventDefault();
+            el.scrollLeft += e.deltaY;
+        };
+        el.addEventListener('wheel', onWheel, { passive: false });
+        return () => el.removeEventListener('wheel', onWheel);
+    }, []);
 
     return (
         <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
@@ -138,7 +159,7 @@ export const Header: React.FC<HeaderProps> = ({
 
                 {/* Category Navigation Bar - Desktop & Mobile */}
                 <div className="border-t border-slate-100 dark:border-slate-700 py-3">
-                    <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+                    <div ref={categoryBarRef} className="flex items-center gap-3 overflow-x-auto overscroll-x-contain scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
                         <div className="flex-shrink-0 flex items-center gap-2 text-slate-400 dark:text-slate-500 pr-2 border-r border-slate-100 dark:border-slate-700 mr-1">
                             <Tags size={16} />
                             <span className="text-xs font-bold uppercase tracking-wider hidden sm:inline">Danh mục</span>
@@ -146,7 +167,7 @@ export const Header: React.FC<HeaderProps> = ({
                         {categories.map(cat => (
                             <button
                                 key={cat.id}
-                                onClick={() => setActiveCategory(cat.value)}
+                                onClick={(e) => { setActiveCategory(cat.value); e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }}
                                 className={`flex-none px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border ${activeCategory === cat.value
                                     ? 'bg-primary-600 text-white border-primary-600 shadow-md shadow-primary-100 dark:shadow-primary-900 scale-105'
                                     : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:border-primary-300 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
