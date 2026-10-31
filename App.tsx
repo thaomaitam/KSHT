@@ -13,7 +13,7 @@ import { ProductList } from './components/ProductList';
 
 const MainApp: React.FC = () => {
   const {
-    activeCategory, setActiveCategory, searchTerm, setSearchTerm,
+    selectCategory, navCategory, searching, searchTerm, setSearchTerm,
     selectedProduct, setSelectedProduct, currentPage, categories,
     showLoginModal, setShowLoginModal, showCart, setShowCart,
     filteredProducts, handleLoginSuccess, catalog, loading, reloadStorefront
@@ -26,10 +26,11 @@ const MainApp: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100">
       <Header
-        activeCategory={activeCategory}
-        setActiveCategory={setActiveCategory}
+        activeCategory={navCategory}
+        setActiveCategory={selectCategory}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        searching={searching}
         categories={categories}
         setShowCart={setShowCart}
         setShowLoginModal={setShowLoginModal}
@@ -39,11 +40,12 @@ const MainApp: React.FC = () => {
 
       <ProductList
         filteredProducts={filteredProducts}
-        activeCategory={activeCategory}
+        activeCategory={navCategory}
         categories={categories}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-        setActiveCategory={setActiveCategory}
+        searching={searching}
+        setActiveCategory={selectCategory}
         setSelectedProduct={setSelectedProduct}
         catalog={catalog}
         loading={loading}
