@@ -13,6 +13,8 @@ interface ProductListProps {
     categories: CategoryItem[];
     searchTerm: string;
     setSearchTerm: (term: string) => void;
+    /** True while a keyword query is active (results span all categories). */
+    searching?: boolean;
     setActiveCategory: (cat: string) => void;
     setSelectedProduct: (product: Product) => void;
     catalog?: CatalogLoad;
@@ -26,6 +28,7 @@ export const ProductList: React.FC<ProductListProps> = ({
     categories,
     searchTerm,
     setSearchTerm,
+    searching = false,
     setActiveCategory,
     setSelectedProduct, catalog, loading, onRetry
 }) => {
@@ -44,7 +47,7 @@ export const ProductList: React.FC<ProductListProps> = ({
         [categories],
     );
     const navProps = { groups, activeCategory, onSelect: select, totalCount: allProducts.length };
-    const productsTitle = isHome ? 'Tất cả sản phẩm' : activeLabel;
+    const productsTitle = searching ? `Kết quả cho “${searchTerm.trim()}”` : isHome ? 'Tất cả sản phẩm' : activeLabel;
 
     return (
         <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-4">
@@ -67,7 +70,7 @@ export const ProductList: React.FC<ProductListProps> = ({
             <div className="md:flex md:gap-6 lg:gap-8">
             {groups.length > 0 && <CategorySidebar {...navProps} />}
             <div className="flex-1 min-w-0 space-y-4">
-            {!isHome && <Breadcrumb label={activeLabel} onHome={() => select('ALL')} />}
+            {!isHome && !searching && <Breadcrumb label={activeLabel} onHome={() => select('ALL')} />}
             <div className="mb-6 flex items-center justify-between gap-3">
                 <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100">
                     {productsTitle}
@@ -76,6 +79,9 @@ export const ProductList: React.FC<ProductListProps> = ({
                     {filteredProducts.length} sản phẩm
                 </span>
             </div>
+            {searching && (
+                <p className="-mt-4 mb-4 text-sm text-slate-500 dark:text-slate-400" role="status">Kết quả trong tất cả danh mục</p>
+            )}
 
             {filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
@@ -93,15 +99,15 @@ export const ProductList: React.FC<ProductListProps> = ({
                     <div className="bg-slate-100 p-6 rounded-full mb-4">
                         <Search size={48} className="text-slate-400" />
                     </div>
-                    <h3 className="text-xl font-semibold text-slate-900 mb-2">Không tìm thấy sản phẩm</h3>
+                    <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">Không tìm thấy sản phẩm</h3>
                     <p className="text-slate-500 max-w-md">
                         Rất tiếc, chúng tôi không tìm thấy sản phẩm nào phù hợp với từ khóa "{searchTerm}".
                     </p>
                     <button
-                        onClick={() => setSearchTerm('')}
+                        onClick={() => { setSearchTerm(''); select('ALL'); }}
                         className="mt-6 text-primary-600 font-medium hover:underline"
                     >
-                        Xóa bộ lọc tìm kiếm
+                        Xóa tìm kiếm, xem tất cả sản phẩm
                     </button>
                 </div>
             )}

@@ -13,6 +13,8 @@ interface HeaderProps {
     setActiveCategory: (cat: string) => void;
     searchTerm: string;
     setSearchTerm: (term: string) => void;
+    /** True while a keyword query is active (results span all categories). */
+    searching?: boolean;
     categories: CategoryItem[];
     setShowCart: (show: boolean) => void;
     setShowLoginModal: (show: boolean) => void;
@@ -36,6 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
     setActiveCategory,
     searchTerm,
     setSearchTerm,
+    searching = false,
     categories,
     setShowCart,
     setShowLoginModal,
@@ -44,7 +47,9 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
     const { isDark, toggleTheme } = useTheme();
     const groups = React.useMemo(() => groupCategories(categories, products), [categories, products]);
-    const activeLabel = activeCategory === 'ALL'
+    const activeLabel = searching
+        ? 'Tất cả (đang tìm)'
+        : activeCategory === 'ALL'
         ? 'Tất cả sản phẩm'
         : displayCategoryLabel(categories.find(c => c.value === activeCategory)?.label ?? activeCategory);
     const selectCategory = (value: string) => {

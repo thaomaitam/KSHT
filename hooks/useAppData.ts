@@ -4,7 +4,7 @@ import { CatalogLoad, Product } from '../types';
 import { storageService } from '../storageService';
 import { settingsService, CategoryItem } from '../settingsService';
 import { isAdminAuthenticated } from '../components/LoginModal';
-import { searchProducts } from '../utils/searchUtils';
+import { searchProducts, isActiveQuery } from '../utils/searchUtils';
 
 export type PageType = 'main' | 'admin' | 'settings' | 'business';
 
@@ -134,9 +134,28 @@ export const useAppData = () => {
         };
     }, [currentPage]);
 
+    // Debounce typing (~150ms) so ranking does not run on every keystroke.
+    const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
+    useEffect(() => {
+        if (!searchTerm.trim()) { setDebouncedSearch(searchTerm); return; }
+        const t = window.setTimeout(() => setDebouncedSearch(searchTerm), 150);
+        return () => window.clearTimeout(t);
+    }, [searchTerm]);
+
+    const categoryLabels = useMemo(() => new Map(categories.map(c => [c.value, c.label])), [categories]);
+    // An active query searches across all categories.
+    const searching = isActiveQuery(debouncedSearch);
+    const navCategory = searching ? 'ALL' : activeCategory;
+
     const filteredProducts = useMemo(() => {
-        return searchProducts(catalog.products, searchTerm, activeCategory);
-    }, [activeCategory, searchTerm, catalog.products]);
+        return searchProducts(catalog.products, debouncedSearch, activeCategory, categoryLabels);
+    }, [activeCategory, debouncedSearch, catalog.products, categoryLabels]);
+
+    /** Picking a category from navigation leaves search mode. */
+    const selectCategory = useCallback((value: string) => {
+        setSearchTerm('');
+        setActiveCategory(value);
+    }, []);
 
     const handleLoginSuccess = () => {
         setShowLoginModal(false);
@@ -146,6 +165,9 @@ export const useAppData = () => {
     return {
         activeCategory,
         setActiveCategory,
+        selectCategory,
+        navCategory,
+        searching,
         searchTerm,
         setSearchTerm,
         selectedProduct,
