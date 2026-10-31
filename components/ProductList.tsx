@@ -4,7 +4,7 @@ import { CatalogLoad, Product } from '../types';
 import { ProductCard } from './ProductCard';
 import { CategoryItem } from '../settingsService';
 import { NoticeBanner } from './NoticeBanner';
-import { CategorySidebar, CategorySheetButton, Breadcrumb } from './CategoryNav';
+import { CategorySidebar, Breadcrumb } from './CategoryNav';
 import { groupCategories, displayCategoryLabel } from '../utils/categoryGroups';
 
 interface ProductListProps {
@@ -39,6 +39,10 @@ export const ProductList: React.FC<ProductListProps> = ({
         setActiveCategory(value);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+    const categoryLabels = React.useMemo(
+        () => new Map(categories.map(c => [c.value, displayCategoryLabel(c.label)])),
+        [categories],
+    );
     const navProps = { groups, activeCategory, onSelect: select, totalCount: allProducts.length };
     const productsTitle = isHome ? 'Tất cả sản phẩm' : activeLabel;
 
@@ -63,7 +67,6 @@ export const ProductList: React.FC<ProductListProps> = ({
             <div className="md:flex md:gap-6 lg:gap-8">
             {groups.length > 0 && <CategorySidebar {...navProps} />}
             <div className="flex-1 min-w-0 space-y-4">
-            {groups.length > 0 && <CategorySheetButton {...navProps} activeLabel={activeLabel} />}
             {!isHome && <Breadcrumb label={activeLabel} onHome={() => select('ALL')} />}
             <div className="mb-6 flex items-center justify-between gap-3">
                 <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100">
@@ -80,6 +83,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                         <ProductCard
                             key={product.id}
                             product={product}
+                            categoryLabel={categoryLabels.get(product.category)}
                             onClick={setSelectedProduct}
                         />
                     ))}

@@ -1,6 +1,9 @@
 import React from 'react';
 import { ShoppingBag, Search, ShoppingCart, Package, BarChart3, Settings, RefreshCw, Lock, Sun, Moon } from 'lucide-react';
 import { CategoryItem } from '../../settingsService';
+import { Product } from '../../types';
+import { CategorySheetButton } from '../CategoryNav';
+import { groupCategories, displayCategoryLabel } from '../../utils/categoryGroups';
 import { isAdminAuthenticated, logoutAdmin } from '../LoginModal';
 import { useCart } from '../../CartContext';
 import { useTheme } from '../../hooks/useTheme';
@@ -14,6 +17,7 @@ interface HeaderProps {
     setShowCart: (show: boolean) => void;
     setShowLoginModal: (show: boolean) => void;
     currentPage: string;
+    products: Product[];
 }
 
 const CartBadge: React.FC = () => {
@@ -28,20 +32,31 @@ const CartBadge: React.FC = () => {
 };
 
 export const Header: React.FC<HeaderProps> = ({
+    activeCategory,
     setActiveCategory,
     searchTerm,
     setSearchTerm,
+    categories,
     setShowCart,
     setShowLoginModal,
-    currentPage
+    currentPage,
+    products
 }) => {
     const { isDark, toggleTheme } = useTheme();
+    const groups = React.useMemo(() => groupCategories(categories, products), [categories, products]);
+    const activeLabel = activeCategory === 'ALL'
+        ? 'Tất cả sản phẩm'
+        : displayCategoryLabel(categories.find(c => c.value === activeCategory)?.label ?? activeCategory);
+    const selectCategory = (value: string) => {
+        setActiveCategory(value);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     return (
         <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Top Row: Logo, Search, Actions */}
-                <div className="flex items-center justify-between h-16 md:h-20 gap-4 md:gap-8">
+                <div className="flex items-center justify-between h-16 md:h-20 gap-2 sm:gap-4 md:gap-8">
                     {/* Logo */}
                     <div className="flex items-center gap-2 cursor-pointer flex-shrink-0" onClick={() => { setActiveCategory('ALL'); setSearchTerm(''); }}>
                         <div className="bg-primary-600 p-2 rounded-xl text-white shadow-lg shadow-primary-200 dark:shadow-primary-900">
@@ -51,6 +66,18 @@ export const Header: React.FC<HeaderProps> = ({
                             Giaban
                         </span>
                     </div>
+
+                    {/* Mobile category switcher: stays visible because the header is sticky */}
+                    {groups.length > 0 && (
+                        <CategorySheetButton
+                            className="md:hidden flex-1 min-w-0"
+                            groups={groups}
+                            activeCategory={activeCategory}
+                            onSelect={selectCategory}
+                            totalCount={products.length}
+                            activeLabel={activeLabel}
+                        />
+                    )}
 
                     {/* Desktop Search Bar - Integrated */}
                     <div className="hidden md:flex flex-grow max-w-xl relative">
@@ -68,7 +95,7 @@ export const Header: React.FC<HeaderProps> = ({
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                         {/* Theme Toggle */}
                         <button
                             onClick={toggleTheme}
