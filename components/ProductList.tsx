@@ -4,6 +4,8 @@ import { CatalogLoad, Product } from '../types';
 import { ProductCard } from './ProductCard';
 import { CategoryItem } from '../settingsService';
 import { NoticeBanner } from './NoticeBanner';
+import { CategoryGrid, CategorySidebar, CategorySheetButton, Breadcrumb } from './CategoryNav';
+import { groupCategories, displayCategoryLabel } from '../utils/categoryGroups';
 
 interface ProductListProps {
     filteredProducts: Product[];
@@ -11,6 +13,7 @@ interface ProductListProps {
     categories: CategoryItem[];
     searchTerm: string;
     setSearchTerm: (term: string) => void;
+    setActiveCategory: (cat: string) => void;
     setSelectedProduct: (product: Product) => void;
     catalog?: CatalogLoad;
     loading?: boolean;
@@ -23,8 +26,23 @@ export const ProductList: React.FC<ProductListProps> = ({
     categories,
     searchTerm,
     setSearchTerm,
+    setActiveCategory,
     setSelectedProduct, catalog, loading, onRetry
 }) => {
+    const allProducts = catalog?.products ?? [];
+    const groups = React.useMemo(() => groupCategories(categories, allProducts), [categories, allProducts]);
+    const isHome = activeCategory === 'ALL';
+    const showGrid = isHome && !searchTerm.trim() && groups.length > 0;
+    const activeLabel = isHome
+        ? 'Tất cả sản phẩm'
+        : displayCategoryLabel(categories.find(c => c.value === activeCategory)?.label ?? activeCategory);
+    const select = (value: string) => {
+        setActiveCategory(value);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    const navProps = { groups, activeCategory, onSelect: select, totalCount: allProducts.length };
+    const productsTitle = isHome ? 'Tất cả sản phẩm' : activeLabel;
+
     return (
         <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-4">
             {loading && <NoticeBanner kind="info" message="Đang tải catalog cửa hàng..." />}
@@ -43,17 +61,23 @@ export const ProductList: React.FC<ProductListProps> = ({
                     message="Danh sách chưa tải đủ trang; một số sản phẩm có thể chưa hiển thị."
                 />
             )}
-            <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-xl md:text-2xl font-bold text-slate-800">
-                    {activeCategory === 'ALL' ? 'Tất cả sản phẩm' : categories.find(c => c.value === activeCategory)?.label}
+            {showGrid && <CategoryGrid groups={groups} onSelect={select} />}
+            <div className={showGrid ? 'pt-4' : 'md:flex md:gap-6 lg:gap-8'}>
+            {!showGrid && groups.length > 0 && <CategorySidebar {...navProps} />}
+            <div className="flex-1 min-w-0 space-y-4">
+            {!showGrid && groups.length > 0 && <CategorySheetButton {...navProps} activeLabel={activeLabel} />}
+            {!isHome && <Breadcrumb label={activeLabel} onHome={() => select('ALL')} />}
+            <div className="mb-6 flex items-center justify-between gap-3">
+                <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100">
+                    {productsTitle}
                 </h2>
-                <span className="text-slate-500 text-sm font-medium bg-slate-100 px-3 py-1 rounded-full">
+                <span className="flex-none text-slate-500 dark:text-slate-300 text-sm font-medium bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">
                     {filteredProducts.length} sản phẩm
                 </span>
             </div>
 
             {filteredProducts.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                     {filteredProducts.map(product => (
                         <ProductCard
                             key={product.id}
@@ -79,6 +103,8 @@ export const ProductList: React.FC<ProductListProps> = ({
                     </button>
                 </div>
             )}
+            </div>
+            </div>
         </main>
     );
 };

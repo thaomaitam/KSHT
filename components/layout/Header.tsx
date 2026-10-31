@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingBag, Search, ShoppingCart, Package, BarChart3, Settings, RefreshCw, Lock, Tags, Sun, Moon, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ShoppingBag, Search, ShoppingCart, Package, BarChart3, Settings, RefreshCw, Lock, Sun, Moon } from 'lucide-react';
 import { CategoryItem } from '../../settingsService';
 import { isAdminAuthenticated, logoutAdmin } from '../LoginModal';
 import { useCart } from '../../CartContext';
@@ -28,87 +28,14 @@ const CartBadge: React.FC = () => {
 };
 
 export const Header: React.FC<HeaderProps> = ({
-    activeCategory,
     setActiveCategory,
     searchTerm,
     setSearchTerm,
-    categories,
     setShowCart,
     setShowLoginModal,
     currentPage
 }) => {
     const { isDark, toggleTheme } = useTheme();
-    const categoryBarRef = React.useRef<HTMLDivElement>(null);
-
-    // The chip bar hides its scrollbar, so a vertical mouse wheel would leave
-    // off-screen categories unreachable on desktop. Map vertical wheel to
-    // horizontal scroll while the bar can still move in that direction.
-    React.useEffect(() => {
-        const el = categoryBarRef.current;
-        if (!el) return;
-        const onWheel = (e: WheelEvent) => {
-            if (e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-            const max = el.scrollWidth - el.clientWidth;
-            if (max <= 0) return;
-            const atStart = el.scrollLeft <= 0 && e.deltaY < 0;
-            const atEnd = el.scrollLeft >= max - 1 && e.deltaY > 0;
-            if (atStart || atEnd) return;
-            e.preventDefault();
-            el.scrollLeft += e.deltaY;
-        };
-        el.addEventListener('wheel', onWheel, { passive: false });
-        return () => el.removeEventListener('wheel', onWheel);
-    }, []);
-
-    const [showAll, setShowAll] = React.useState(false);
-    const [canLeft, setCanLeft] = React.useState(false);
-    const [canRight, setCanRight] = React.useState(false);
-    const categoryWrapRef = React.useRef<HTMLDivElement>(null);
-
-    const updateArrows = React.useCallback(() => {
-        const el = categoryBarRef.current;
-        if (!el) return;
-        const max = el.scrollWidth - el.clientWidth;
-        setCanLeft(el.scrollLeft > 1);
-        setCanRight(el.scrollLeft < max - 1);
-    }, []);
-
-    React.useEffect(() => {
-        const el = categoryBarRef.current;
-        if (!el) return;
-        updateArrows();
-        el.addEventListener('scroll', updateArrows, { passive: true });
-        window.addEventListener('resize', updateArrows);
-        return () => {
-            el.removeEventListener('scroll', updateArrows);
-            window.removeEventListener('resize', updateArrows);
-        };
-    }, [updateArrows, categories, showAll]);
-
-    React.useEffect(() => {
-        if (!showAll) return;
-        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowAll(false); };
-        const onDown = (e: PointerEvent) => {
-            if (categoryWrapRef.current && !categoryWrapRef.current.contains(e.target as Node)) setShowAll(false);
-        };
-        document.addEventListener('keydown', onKey);
-        document.addEventListener('pointerdown', onDown);
-        return () => {
-            document.removeEventListener('keydown', onKey);
-            document.removeEventListener('pointerdown', onDown);
-        };
-    }, [showAll]);
-
-    const scrollCategories = (dir: 1 | -1) => {
-        const el = categoryBarRef.current;
-        if (el) el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: 'smooth' });
-    };
-
-    const chipClass = (active: boolean) => `flex-none px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border ${active
-        ? 'bg-primary-600 text-white border-primary-600 shadow-md shadow-primary-100 dark:shadow-primary-900'
-        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:border-primary-300 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
-        }`;
-    const arrowClass = 'absolute top-1/2 -translate-y-1/2 z-10 h-9 w-9 flex items-center justify-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 shadow-md hover:text-primary-600 dark:hover:text-primary-400';
 
     return (
         <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
@@ -136,6 +63,7 @@ export const Header: React.FC<HeaderProps> = ({
                             placeholder="Tìm kiếm sản phẩm..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
+                            aria-label="Tìm kiếm sản phẩm"
                         />
                     </div>
 
@@ -207,73 +135,6 @@ export const Header: React.FC<HeaderProps> = ({
                     </div>
                 </div>
 
-                {/* Category Navigation Bar - Desktop & Mobile */}
-                <div ref={categoryWrapRef} className="border-t border-slate-100 dark:border-slate-700 py-3">
-                    <div className="flex items-center gap-2">
-                        <div className="relative flex-1 min-w-0">
-                            {!showAll && canLeft && (
-                                <button type="button" onClick={() => scrollCategories(-1)} className={`${arrowClass} left-0`} aria-label="Cuộn danh mục sang trái">
-                                    <ChevronLeft size={20} />
-                                </button>
-                            )}
-                            <div ref={categoryBarRef} className={`flex items-center gap-3 overflow-x-auto overscroll-x-contain scrollbar-hide py-1 ${showAll ? 'invisible h-0 py-0' : ''}`} aria-hidden={showAll}>
-                                <div className="flex-shrink-0 flex items-center gap-2 text-slate-400 dark:text-slate-500 pr-2 border-r border-slate-100 dark:border-slate-700 mr-1">
-                                    <Tags size={16} />
-                                    <span className="text-xs font-bold uppercase tracking-wider hidden sm:inline">Danh mục</span>
-                                </div>
-                                {categories.map(cat => (
-                                    <button
-                                        key={cat.id}
-                                        type="button"
-                                        tabIndex={showAll ? -1 : 0}
-                                        onClick={(e) => { setActiveCategory(cat.value); e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }}
-                                        className={chipClass(activeCategory === cat.value)}
-                                    >
-                                        {cat.label}
-                                    </button>
-                                ))}
-                            </div>
-                            {!showAll && canRight && (
-                                <button type="button" onClick={() => scrollCategories(1)} className={`${arrowClass} right-0`} aria-label="Cuộn danh mục sang phải">
-                                    <ChevronRight size={20} />
-                                </button>
-                            )}
-                            {showAll && (
-                                <span className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                                    <Tags size={16} /> Chọn danh mục
-                                </span>
-                            )}
-                        </div>
-                        <button
-                            type="button"
-                            onClick={() => setShowAll(v => !v)}
-                            aria-expanded={showAll}
-                            aria-controls="all-categories-panel"
-                            aria-label={showAll ? 'Thu gọn danh mục' : 'Tất cả danh mục'}
-                            className="flex-none flex items-center gap-1 px-3 py-2 rounded-full text-sm font-bold border border-primary-600 text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-slate-800 hover:bg-primary-100 dark:hover:bg-slate-700 transition-colors"
-                        >
-                            <span className="hidden sm:inline">{showAll ? 'Thu gọn' : 'Tất cả danh mục'}</span>
-                            <span className="sm:hidden">{showAll ? 'Thu gọn' : 'Tất cả'}</span>
-                            <ChevronDown size={18} className={`transition-transform ${showAll ? 'rotate-180' : ''}`} />
-                        </button>
-                    </div>
-                    {showAll && (
-                        <div id="all-categories-panel" role="region" aria-label="Tất cả danh mục" className="mt-3 flex flex-wrap gap-2 sm:gap-3 max-h-[60vh] overflow-y-auto pb-1">
-                            {categories.map(cat => (
-                                <button
-                                    key={cat.id}
-                                    type="button"
-                                    onClick={() => { setActiveCategory(cat.value); setShowAll(false); }}
-                                    aria-pressed={activeCategory === cat.value}
-                                    className={`${chipClass(activeCategory === cat.value)} min-h-[44px] px-5 text-base`}
-                                >
-                                    {cat.label}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-                </div>
-
                 {/* Mobile Search Bar - Visible only on mobile */}
                 <div className="md:hidden py-3 border-t border-slate-50 dark:border-slate-700">
                     <div className="relative">
@@ -286,6 +147,7 @@ export const Header: React.FC<HeaderProps> = ({
                             placeholder="Tìm sản phẩm..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
+                            aria-label="Tìm kiếm sản phẩm"
                         />
                     </div>
                 </div>
